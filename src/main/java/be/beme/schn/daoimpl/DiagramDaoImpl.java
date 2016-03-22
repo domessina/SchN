@@ -5,14 +5,20 @@ package be.beme.schn.daoimpl;
  */
 
 import be.beme.schn.dao.DiagramDao;
+import be.beme.schn.narrative.components.Diagram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by Dorito on 17-03-16.
  */
-@Service
+@Repository
 public class DiagramDaoImpl implements DiagramDao
 {
     @Autowired
@@ -42,13 +48,50 @@ public class DiagramDaoImpl implements DiagramDao
     }
 
 
-    @Override
-    public String setNote(int diagramId, String note) {
 
-        jdbcTemplate.update( "UPDATE Diagram SET notes=? WHERE id=? values (?,?)",
-                note, diagramId);
-        return note;
+
+    @Override
+    public Integer[] getAllDiagramsIdByUser(int userId)
+    {
+      /* jdbcTemplate.queryForList();
+        jdbcTemplate.queryForObject("select id from Diagram where user_id=?",
+                new Object[] {ruleId},Boolean.class);*/
+
+        return null;
     }
+
+    @Override
+    public Diagram getDiagramById(int diagramId)
+    {
+        return jdbcTemplate.queryForObject("select * from Diagram where id=?",
+                new Object[]{diagramId},new DiagramMapper());
+    }
+
+    @Override
+    public List<Diagram> getAllDiagramsByUser(int userId) {
+        return jdbcTemplate.query("select * from Diagram where user_id=?",
+                new Object[]{userId},new DiagramMapper());
+    }
+
+    @Override
+    public void deleteDiagram(int diagramId)
+    {
+        jdbcTemplate.update("delete from Diagram where id=? ",diagramId);
+    }
+
+    private static final class DiagramMapper implements RowMapper<Diagram> {
+
+        public Diagram mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Diagram diagram = new Diagram();
+            diagram.setId(rs.getInt("id"));
+            diagram.setUser_id(rs.getInt("user_id"));
+            diagram.setTitle(rs.getString("title"));
+            return diagram;
+        }
+    }
+
+
+
 
 
 

@@ -1,6 +1,7 @@
 package be.beme.schn.configurations;
 
 import be.beme.schn.dao.DiagramDao;
+import be.beme.schn.daoimpl.DiagramDaoImpl;
 import com.vaadin.spring.annotation.EnableVaadin;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public  class MyConfiguration {
     @Bean
     public DiagramDao diagramServiceImpl()
     {
-        return new DiagramDao();
+        return new DiagramDaoImpl();
     }
 
 

@@ -1,6 +1,6 @@
 package be.beme.schn.vaadin;
 
-import be.beme.schn.dao.DiagramDao;
+import be.beme.schn.daoimpl.DiagramDaoImpl;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MyVaadinUI extends UI {
 
     @Autowired
-    DiagramDao diagramService;
+    DiagramDaoImpl diagramService;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -25,7 +25,7 @@ public class MyVaadinUI extends UI {
 
         Button button= new Button("here victory!");
         button.addClickListener(event ->
-        diagramService.createDiagram(1,3));
+        diagramService.createDiagram(2,"un Livre"));
 
         setContent(button);
     }
