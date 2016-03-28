@@ -1,20 +1,20 @@
 CREATE TABLE public."User"
 (
-  id SERIAL,
-  pseudo character varying(20)[],
-  nb_diagrams integer,
+  id integer NOT NULL DEFAULT nextval('"User_id_seq"'::regclass),
+  pseudo character varying(25) NOT NULL,
+  nb_diagrams integer NOT NULL DEFAULT 0,
   CONSTRAINT "User_pkey" PRIMARY KEY (id)
 );
 
 CREATE TABLE public."Diagram"
 (
-  id integer NOT NULL,
+  id integer NOT NULL DEFAULT nextval('"Diagram_id_seq"'::regclass),
   user_id integer NOT NULL,
-  title character varying(50)[],
+  title character varying NOT NULL,
   CONSTRAINT "Diagram_pkey" PRIMARY KEY (id),
-  CONSTRAINT "Diagram_user_fkey" FOREIGN KEY (user_id)
-      REFERENCES public."User" (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT "Diagram_user_id_fkey" FOREIGN KEY (user_id)
+  REFERENCES public."User" (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE public."Chapter"
@@ -31,7 +31,7 @@ CREATE TABLE public."Chapter"
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-CREATE TABLE public."Property"
+CREATE TABLE public."User_property"
 (
   id integer NOT NULL DEFAULT nextval('"Property_id_seq"'::regclass),
   name character varying(30) NOT NULL,
@@ -45,13 +45,13 @@ CREATE TABLE public."Scene"
 (
   id integer NOT NULL DEFAULT nextval('"Scene_id_seq"'::regclass),
   chapter_id integer NOT NULL,
-  picture bytea,
   previous_scene_id integer NOT NULL,
   notes text,
+  picture_url character varying,
   CONSTRAINT "Scene_pkey" PRIMARY KEY (id),
   CONSTRAINT "Scene_chapter_id_fkey" FOREIGN KEY (chapter_id)
-      REFERENCES public."Chapter" (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  REFERENCES public."Chapter" (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE public."Link"
@@ -68,18 +68,19 @@ CREATE TABLE public."Link"
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+
 CREATE TABLE public."Character"
 (
   id integer NOT NULL DEFAULT nextval('"Character_id_seq"'::regclass),
-  name character varying(20) NOT NULL,			--une clé primaire sur deux colonnes? id et name?
+  name character varying(20) NOT NULL,                        --cle primaire sur deux colonnes ? id et name?
   type character varying NOT NULL,
-  picture bytea,
   notes text,
   diagram_id integer NOT NULL,
+  picture_url character varying,
   CONSTRAINT "Character_pkey" PRIMARY KEY (id),
   CONSTRAINT "Character_diagram_id_fkey" FOREIGN KEY (diagram_id)
-      REFERENCES public."Diagram" (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  REFERENCES public."Diagram" (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 
@@ -87,14 +88,30 @@ CREATE TABLE public."Trait"
 (
   id integer NOT NULL DEFAULT nextval('"Trait_id_seq"'::regclass),
   name character varying(30) NOT NULL,
-  scenes_id character varying[],			-- chaque id sera séparé par un point virgule, AUTRE MOYEN POSSIBLE? Une colonne de plusierus values?
-  character_id integer NOT NULL,		-- c'est le trait/item de qui?
+  character_id integer NOT NULL,                                                                                        -- c'est le trait/item de qui?
   CONSTRAINT "Trait_pkey" PRIMARY KEY (id),
   CONSTRAINT "Trait_character_id_fkey" FOREIGN KEY (character_id)
-      REFERENCES public."Character" (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  REFERENCES public."Character" (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+
+CREATE TABLE public."TraitScene"
+(
+  trait_id integer NOT NULL,
+  scene_id integer NOT NULL,
+  diagram_id integer NOT NULL,
+  CONSTRAINT "TraitScene_pkey" PRIMARY KEY (trait_id, scene_id),
+  CONSTRAINT "TraitScene_diagram_id_fkey" FOREIGN KEY (diagram_id)
+  REFERENCES public."Diagram" (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT "TraitScene_scene_id_fkey" FOREIGN KEY (scene_id)
+  REFERENCES public."Scene" (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT "TraitScene_trait_id_fkey" FOREIGN KEY (trait_id)
+  REFERENCES public."Trait" (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
+);
 	
 CREATE TABLE public."Element"				--élements narratif persos créé par l'user
 (
