@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.object.Diagram;
+import be.beme.schn.narrative.component.Diagram;
 
 import java.util.List;
 

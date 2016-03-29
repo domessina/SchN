@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.daoimpl;
 
-import be.beme.schn.narrative.object.UserProperty;
+import be.beme.schn.narrative.component.UserProperty;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.UserPropertyDao;
 import org.springframework.jdbc.core.RowMapper;

@@ -4,7 +4,7 @@ package be.beme.schn.persistence.daoimpl;
  * Created by Dorito on 21-03-16.
  */
 
-import be.beme.schn.narrative.object.Diagram;
+import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.DiagramDao;
 import org.springframework.jdbc.core.RowMapper;

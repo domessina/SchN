@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.object.Character;
+import be.beme.schn.narrative.component.Character;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface CharacterDao {
 
-    int createCharacter(int diagramId, String name, String type);
+    int create(int diagramId, String name, String type);
 
     void setNote(int characterId, String note);
 
@@ -18,5 +18,7 @@ public interface CharacterDao {
     List<Character> getAllCharactersByDiagram(int diagramId);
 
     void delete(int chapterId);
+
+    void update( Object[] args); //J'aimerais remplacer par update(int characterId, Object[ args);
 
 }

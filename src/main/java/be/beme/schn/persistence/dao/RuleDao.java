@@ -1,7 +1,7 @@
 package be.beme.schn.persistence.dao;
 
 
-import be.beme.schn.narrative.object.Rule;
+import be.beme.schn.narrative.component.Rule;
 
 import java.util.List;
 

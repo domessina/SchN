@@ -1,28 +1,28 @@
-package be.beme.schn.vaadin.narrative.component;
+package be.beme.schn.vaadin.narrative.view;
 
-import be.beme.schn.narrative.object.Character;
-import be.beme.schn.narrative.object.Trait;
-import be.beme.schn.narrative.object.UserProperty;
-import be.beme.schn.vaadin.ImageReceiver;
+import be.beme.schn.narrative.component.Character;
+import be.beme.schn.narrative.component.Trait;
+import be.beme.schn.narrative.component.UserProperty;
+import be.beme.schn.vaadin.ImageUploadPanel;
+import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
+import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.Action;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
-import java.io.File;
 import java.util.List;
 
 /**
  * Created by Dorito on 26-03-16.
  */
-public class CharacterWindow extends Window implements Button.ClickListener{
 
-    private Panel imagePanel;
+//TODO un URI pour chaque Window?
+public class CharacterWindow extends Window implements Button.ClickListener,NarrativeView{
+
     private Panel propertiesPanel;
     private Table tableTrait;
-    private Image image;
     private List<UserProperty> userPropertyList;
     private Character character;
     private Button buttonReferences;
@@ -31,7 +31,7 @@ public class CharacterWindow extends Window implements Button.ClickListener{
     private final static Action ACTION_ADD= new Action("Add");
     private final static Action ACTION_DELETE=new Action("Delete");
     private final static Action ACTION_RENAME=new Action("Rename");
-    private Trait traitFromTraitWindow;
+    private CharacterWindowPresenter characterWindowPresenter;
 
     public CharacterWindow(Character character)
     {
@@ -42,6 +42,8 @@ public class CharacterWindow extends Window implements Button.ClickListener{
         setHeight(99,Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
         this.character= character;
+
+
         setContent(buildContent());
 
     }
@@ -49,18 +51,10 @@ public class CharacterWindow extends Window implements Button.ClickListener{
     private Layout buildContent()
     {
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setSpacing(true);
         verticalLayout.setMargin(true);
         verticalLayout.setSizeFull();
 
-        Upload upload= new Upload("",new ImageReceiver());
-        upload.setButtonCaption("☑");
-        upload.addSucceededListener(event -> {
-
-            //changing the imageSource refresh the image in the browser
-           this.image.setSource(((ImageReceiver)upload.getReceiver()).getFileResource());
-        });
-
+        ImageUploadPanel imageUploadPanel= new ImageUploadPanel();
 
         buttonSave = new Button("Save");
         buttonSave.addClickListener(this);
@@ -78,11 +72,10 @@ public class CharacterWindow extends Window implements Button.ClickListener{
         horizontalLayout.setComponentAlignment(buttonSave,Alignment.MIDDLE_RIGHT);
         horizontalLayout.setWidth(100,Unit.PERCENTAGE);
 
-        verticalLayout.addComponent(getImagePanel());
-       verticalLayout.setExpandRatio(imagePanel,3.5f);
-        verticalLayout.addComponent(upload);
+        verticalLayout.addComponent(imageUploadPanel);
+       verticalLayout.setExpandRatio(imageUploadPanel,5);
         verticalLayout.addComponent(getPropertiesPanel());
-       verticalLayout.setExpandRatio(propertiesPanel,6.5f);
+       verticalLayout.setExpandRatio(propertiesPanel,5);
         verticalLayout.addComponent(horizontalLayout);
 
 
@@ -113,8 +106,11 @@ public class CharacterWindow extends Window implements Button.ClickListener{
         formLayout.setSizeFull();
         TextField name = new TextField("Name");
         name.setValue(this.character.getName());
-        TextField type = new TextField("Type");
-        type.setValue(this.character.getType());
+        ComboBox type= new ComboBox("Type");
+        type.addItems(new Object[]{"Principal","Secondary","Hero","Auxiliary","Opponent","Group"});
+        type.setFilteringMode(FilteringMode.OFF);
+        //type.setReadOnly(true); disable Editing?
+        type.setValue(this.character.getType());//If the type set is not known , blanc is displayed
         formLayout.addComponent(name);
         formLayout.addComponent(type);
         formLayout.addComponent(getTraitTable());
@@ -134,21 +130,6 @@ public class CharacterWindow extends Window implements Button.ClickListener{
         }
 
         return formLayout;
-
-    }
-
-
-    private Component getImagePanel()
-    {
-        imagePanel = new Panel();
-        imagePanel.setSizeFull();
-        imagePanel.setScrollLeft(1111110);
-        File file = new File("C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\"+this.character.getId()+"\\image.jpg");
-        Resource resource= new FileResource(file);
-        image = new Image(null, resource);
-        image.setImmediate(true);
-        imagePanel.setContent(image);
-        return imagePanel;
 
     }
 
@@ -197,5 +178,25 @@ public class CharacterWindow extends Window implements Button.ClickListener{
     @Override
     public void buttonClick(Button.ClickEvent event) {
 
+        if(event.getButton().equals(buttonSave))
+        {
+            this.characterWindowPresenter.saveInDB();
+        }
+        else if(event.getButton().equals(buttonErase))
+        {
+            this.characterWindowPresenter.eraseFromDB();
+        }
+
+        close();
+
+    }
+
+    public Character getCharacter() {
+        return character;
+    }
+
+    @Override
+    public void setHandler(NarrativePresenter narrativePresenter) {
+        this.characterWindowPresenter=(CharacterWindowPresenter)narrativePresenter;
     }
 }

@@ -1,8 +1,10 @@
-package be.beme.schn.vaadin.narrative.component;
+package be.beme.schn.vaadin.narrative.view;
 
-import be.beme.schn.narrative.object.Trait;
+import be.beme.schn.narrative.component.Trait;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.*;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class TraitWindow extends Window {
 
                 if(textField.getValue().isEmpty())
                 {
-                    Notification.show("Must be filled", Notification.Type.ERROR_MESSAGE);
+                    textField.setComponentError(new UserError("Must be filled",null, ErrorMessage.ErrorLevel.INFORMATION));
                 }
 
                 else

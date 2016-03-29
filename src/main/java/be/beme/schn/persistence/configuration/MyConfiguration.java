@@ -1,8 +1,9 @@
-package be.beme.schn.configurations;
+package be.beme.schn.persistence.configuration;
 
+import be.beme.schn.persistence.dao.CharacterDao;
 import be.beme.schn.persistence.dao.DiagramDao;
+import be.beme.schn.persistence.daoimpl.CharacterDaoImpl;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
-import be.beme.schn.persistence.daoimpl.test.DiagramDaoImplTest;
 import com.vaadin.spring.annotation.EnableVaadin;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,7 @@ public  class MyConfiguration {
     }
 
     @Bean
-    public DiagramDao diagramDaoImplTest()
-    {
-        return new DiagramDaoImplTest();
-    }
+    public CharacterDao characterDaoImpl(){return new CharacterDaoImpl();}
 
 
     @Bean
@@ -42,7 +40,7 @@ public  class MyConfiguration {
     @Bean
     public PGSimpleDataSource getDataSource(){
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5433/tfe");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/tfe");
         dataSource.setUser("dorito");
         dataSource.setPassword("barbe");
         return dataSource;

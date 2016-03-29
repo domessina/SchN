@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.object.TraitScene;
+import be.beme.schn.narrative.component.TraitScene;
 
 import java.util.List;
 

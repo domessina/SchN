@@ -1,9 +1,9 @@
-package be.beme.schn.narrative.object;
+package be.beme.schn.narrative.component;
 
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Trait {
+public class Trait implements NarrativeComponent {
 
     private int id;
     private String name;

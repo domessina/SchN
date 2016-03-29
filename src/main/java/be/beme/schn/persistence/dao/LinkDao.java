@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.object.Link;
+import be.beme.schn.narrative.component.Link;
 
 import java.util.List;
 

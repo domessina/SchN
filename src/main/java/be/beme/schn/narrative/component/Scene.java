@@ -1,9 +1,9 @@
-package be.beme.schn.narrative.object;
+package be.beme.schn.narrative.component;
 
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Scene {
+public class Scene implements NarrativeComponent {
 
 
     private int id;

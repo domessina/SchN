@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.object.UserProperty;
+import be.beme.schn.narrative.component.UserProperty;
 
 import java.util.List;
 

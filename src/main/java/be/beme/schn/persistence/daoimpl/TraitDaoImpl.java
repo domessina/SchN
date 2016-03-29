@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.daoimpl;
 
-import be.beme.schn.narrative.object.Trait;
+import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.TraitDao;
 import org.springframework.jdbc.core.RowMapper;

@@ -1,9 +1,9 @@
-package be.beme.schn.narrative.object;
+package be.beme.schn.narrative.component;
 
 /**
  * Created by Dorito on 22-03-16.
  */
-public class UserProperty {
+public class UserProperty implements NarrativeComponent{
 
     private int id;
     private String name;
@@ -15,7 +15,7 @@ public class UserProperty {
     {
 
     }
-    public UserProperty(String name, String value)
+    public UserProperty(String name, String value)//TODO ne garder que constructeur par défaut en private poru tous les NarrativeCompoenent
     {
         this.name=name;
         this.value=value;

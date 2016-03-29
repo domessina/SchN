@@ -1,11 +1,11 @@
-package be.beme.schn.narrative.object;
+package be.beme.schn.narrative.component;
 
 import java.util.List;
 
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Character {
+public class Character implements NarrativeComponent{
 
     private int id;
     private String name;

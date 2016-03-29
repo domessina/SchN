@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.object.Outline;
+import be.beme.schn.narrative.component.Outline;
 
 import java.util.List;
 

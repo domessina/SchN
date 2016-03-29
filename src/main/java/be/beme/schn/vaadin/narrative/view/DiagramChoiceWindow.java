@@ -1,6 +1,6 @@
-package be.beme.schn.vaadin.narrative.component;
+package be.beme.schn.vaadin.narrative.view;
 
-import be.beme.schn.narrative.object.Diagram;
+import be.beme.schn.narrative.component.Diagram;
 import com.vaadin.ui.*;
 
 import java.util.List;
@@ -8,13 +8,13 @@ import java.util.List;
 /**
  * Created by Dorito on 25-03-16.
  */
-public class ChoiceDiagramWindow extends Window implements Button.ClickListener{
+public class DiagramChoiceWindow extends Window implements Button.ClickListener{
 
 
     private List<Diagram> diagramList;
     private GridLayout gridLayout;
 
-    public ChoiceDiagramWindow(List<Diagram> diagramList)
+    public DiagramChoiceWindow(List<Diagram> diagramList)
     {
         super("Choose a narrative diagram");
         setModal(true);

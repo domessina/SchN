@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.daoimpl;
 
-import be.beme.schn.narrative.object.Outline;
+import be.beme.schn.narrative.component.Outline;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.OutlineDao;
 import org.springframework.jdbc.core.RowMapper;

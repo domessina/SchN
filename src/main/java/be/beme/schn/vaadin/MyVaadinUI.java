@@ -1,11 +1,11 @@
 package be.beme.schn.vaadin;
 
-import be.beme.schn.narrative.object.Character;
-import be.beme.schn.narrative.object.Diagram;
-import be.beme.schn.narrative.object.Trait;
-import be.beme.schn.narrative.object.UserProperty;
+import be.beme.schn.narrative.component.Character;
+import be.beme.schn.narrative.component.Diagram;
+import be.beme.schn.narrative.component.Trait;
+import be.beme.schn.narrative.component.UserProperty;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
-import be.beme.schn.vaadin.narrative.component.CharacterWindow;
+import be.beme.schn.vaadin.narrative.view.CharacterWindow;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
@@ -61,6 +61,7 @@ public class MyVaadinUI extends UI {
             arrayList1.add(new Trait("my trait",4));
             character.setTraitList(arrayList1);
             character.setDiagram_id(1);
+            diagramService.createDiagram(1,"depuis spring");
                     this.addWindow(new CharacterWindow(character));
         }
 
@@ -77,7 +78,8 @@ public class MyVaadinUI extends UI {
 
         verticalLayout.addComponent(button);
         verticalLayout.addComponent(label);
-        //this.addWindow(new ChoiceDiagramWindow(listDiagram));
+        //Jcrop jcrop=new Jcrop();
+        //this.addWindow(new DiagramChoiceWindow(listDiagram));
         setContent(verticalLayout);
     }
 }
