@@ -20,8 +20,9 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver 
     private Image image;
     private Panel imagePanel;
     private Jcrop jcrop;
+    private String fileName;
 
-    public ImageUploadPanel()
+    public ImageUploadPanel(String path)
     {
         //super();              //même si tu ne l'écrit pas il l'appelle
         setSizeFull();
@@ -34,9 +35,10 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver 
 
     public OutputStream receiveUpload(String filename, String mimeType)
     {
+        this.fileName=filename;
         FileOutputStream fos = null;
         try {
-            file = new File("C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\Diagrams\\1\\Characters\\1\\"+ filename);
+            file = new File("C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\1\\Diagrams\\1\\Characters\\1\\"+ filename);
             fos = new FileOutputStream(file);
         }
         catch (final Exception e)
@@ -70,6 +72,10 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver 
         image.setImmediate(true);
         imagePanel.setContent(image);
         return imagePanel;
+    }
+
+    public String getFileName(){
+        return fileName;
     }
 
     public FileResource getFileResource()

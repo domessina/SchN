@@ -28,10 +28,15 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     private Button buttonReferences;
     private Button buttonSave;
     private Button buttonErase;
+    private TextField name;
+    private ComboBox type;
+    private TextArea textArea;
+    private  ImageUploadPanel imageUploadPanel;
     private final static Action ACTION_ADD= new Action("Add");
     private final static Action ACTION_DELETE=new Action("Delete");
     private final static Action ACTION_RENAME=new Action("Rename");
     private CharacterWindowPresenter characterWindowPresenter;
+
 
     public CharacterWindow(Character character)
     {
@@ -43,7 +48,6 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         setWidth(30, Unit.EM);
         this.character= character;
 
-
         setContent(buildContent());
 
     }
@@ -53,8 +57,8 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
         verticalLayout.setSizeFull();
-
-        ImageUploadPanel imageUploadPanel= new ImageUploadPanel();
+        C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\1\\Diagrams\\1\\Characters\\1\\"+ filename
+       imageUploadPanel= new ImageUploadPanel( "C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\1\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\"+this.character.getId()+"\\");
 
         buttonSave = new Button("Save");
         buttonSave.addClickListener(this);
@@ -89,8 +93,9 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         verticalLayout.setMargin(true);
         verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>",ContentMode.HTML));
         verticalLayout.addComponent(getFormLayout());
-        TextArea textArea= new TextArea("Notes");
+        textArea= new TextArea("Notes");
         textArea.setValue(character.getNote());
+        textArea.setNullRepresentation("");
         textArea.setWidth(100,Unit.PERCENTAGE);
         verticalLayout.addComponent(textArea);
         verticalLayout.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
@@ -104,9 +109,12 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     {
         FormLayout formLayout = new FormLayout();
         formLayout.setSizeFull();
-        TextField name = new TextField("Name");
+        name = new TextField("Name");
+        name.setRequired(true);
+        name.setNullRepresentation("");
         name.setValue(this.character.getName());
-        ComboBox type= new ComboBox("Type");
+        type= new ComboBox("Type");
+        type.setRequired(true);
         type.addItems(new Object[]{"Principal","Secondary","Hero","Auxiliary","Opponent","Group"});
         type.setFilteringMode(FilteringMode.OFF);
         //type.setReadOnly(true); disable Editing?
@@ -124,13 +132,17 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     {
         userPropertyList = character.getUserPropertyList();
         FormLayout formLayout= new FormLayout();
-        for(UserProperty userProperty : userPropertyList)
-        {
-           formLayout.addComponent(new TextField(userProperty.getName(), userProperty.getValue()));
+        try{
+            for(UserProperty userProperty : userPropertyList)
+            {
+                formLayout.addComponent(new TextField(userProperty.getName(), userProperty.getValue()));
+            }
+        }
+        catch (NullPointerException e){
+
         }
 
         return formLayout;
-
     }
 
     private Table getTraitTable()
@@ -139,9 +151,16 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         tableTrait.setPageLength(3);
         tableTrait.setWidth(100,Unit.PERCENTAGE);
         tableTrait.addContainerProperty("Trait",Trait.class,null);
-        for(Trait trait : this.character.getTraitList())
+        try
         {
-            tableTrait.addItem(new Object[]{trait},trait.getId());
+            for(Trait trait : this.character.getTraitList())
+            {
+                tableTrait.addItem(new Object[]{trait},trait.getId());
+            }
+        }
+        catch (NullPointerException e)
+        {
+
         }
 
         tableTrait.addActionHandler(new Action.Handler() {
@@ -178,17 +197,30 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     @Override
     public void buttonClick(Button.ClickEvent event) {
 
-        if(event.getButton().equals(buttonSave))
+        if(name.isEmpty()||type.isEmpty())
         {
-            this.characterWindowPresenter.saveInDB();
+            //dès qu'il apparait il ne part plus :/
+           // setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
         }
-        else if(event.getButton().equals(buttonErase))
-        {
-            this.characterWindowPresenter.eraseFromDB();
+        else {
+
+            this.character.setName(name.getValue());
+            this.character.setType(type.getValue().toString());
+            this.character.setNote(textArea.getValue());
+            this.character.setPicture(imageUploadPanel.getFileName());
+
+            try {
+                switch (event.getButton().getCaption()){
+
+                    case "Save":{  this.characterWindowPresenter.saveInDB();close();break;}
+                    case "Erase":{  this.characterWindowPresenter.eraseFromDB();close();break;}
+                    case "Show relations":{ break;}
+                }
+
+           } catch (Exception e) {
+                Notification.show("System Error","A report was sent to the developers", Notification.Type.ERROR_MESSAGE);
+            }
         }
-
-        close();
-
     }
 
     public Character getCharacter() {

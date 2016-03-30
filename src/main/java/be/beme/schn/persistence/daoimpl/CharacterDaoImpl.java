@@ -18,13 +18,29 @@ import java.util.List;
 public class CharacterDaoImpl extends AbstractPersistenceService implements CharacterDao{
 
 
-    @Override
-    public int create(int diagramId, String name, String type) {
-        jdbcTemplate.update("insert into Character (diagram_id,name,type) values (?,?,?)"
-                ,diagramId, name, type);
 
-        return jdbcTemplate.queryForObject("select last(id) from Character where diagram_id=?",
+
+    @Override
+    public int create(int diagramId, String name, String type, String note, String picture_url) {
+        jdbcTemplate.update("insert into public.\"Character\" (diagram_id,name,type,notes,picture_url) values (?,?,?,?,?)"
+                ,diagramId, name, type,note, picture_url);
+        return jdbcTemplate.queryForObject("select max(id) from public.\"Character\" where diagram_id=?",
                 new Object[] {diagramId},Integer.class);
+
+    }
+
+    /**
+     * @param args  Must be ordered like the query, the characterId is <b>the last</b>
+     *              element in the array
+     */
+    @Override
+    public void update(Object[] args) {
+        jdbcTemplate.update("UPDATE public.\"Character\" SET name=?,type=?,notes=?,picture_url=? WHERE id=?",args,new int[]{
+                Types.VARCHAR,
+                Types.VARCHAR,
+                Types.LONGNVARCHAR,
+                Types.VARCHAR,
+                Types.INTEGER});//si probleme avec LONGVARCHAR, use VARCHAR
     }
 
     @Override
@@ -33,6 +49,8 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
         jdbcTemplate.update("update Character SET notes=? where id=?",
                 note, characterId);
     }
+
+
 
     @Override
     public void setPicture(int characterId,String pictureURL) {
@@ -51,14 +69,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
         jdbcTemplate.update("delete from Character where id=? ",characterId);
     }
 
-    /**
-     * @param args  Must be ordered like the query, the characterId is <b>the last</b>
-     *              element in the array
-     */
-    @Override
-    public void update(Object[] args) {
-        jdbcTemplate.update("UPDATE public.\"Character\" SET name=?,type=?,notes=?,diagram_id=?,picture_url=? WHERE id=?",args,new int[]{Types.VARCHAR,Types.VARCHAR,Types.LONGNVARCHAR, Types.INTEGER,Types.VARCHAR,Types.INTEGER});//si probleme avec LONGVARCHAR, use VARCHAR
-    }
+
 
     private static final class CharacterMapper implements RowMapper<Character> {
 

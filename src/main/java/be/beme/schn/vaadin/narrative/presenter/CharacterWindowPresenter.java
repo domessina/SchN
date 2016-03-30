@@ -5,10 +5,12 @@ import be.beme.schn.persistence.daoimpl.CharacterDaoImpl;
 import be.beme.schn.vaadin.narrative.view.CharacterWindow;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Dorito on 29-03-16.
  */
+@Component
 public class CharacterWindowPresenter implements WindowPresenter {
 
     //TODO y a til des variables ou une méthode ou l'autre qui se répètent entre les windowPresenter? Si ou ialors transformer cet interface en classe Abstraite, du coup certaines variables seront protected
@@ -17,21 +19,27 @@ public class CharacterWindowPresenter implements WindowPresenter {
     private Character character;
 
     @Autowired
-    private CharacterDaoImpl characterDao;
+    private CharacterDaoImpl characterService;
 
     @Override
     public void saveInDB() {
 
+        this.character=this.characterWindow.getCharacter();
         if(character.getId()==0)
         {
-            this.characterDao.create(character.getDiagram_id(),character.getName(),character.getType());
+            this.characterService.create(
+                    character.getDiagram_id(),
+                    character.getName(),
+                    character.getType(),
+                    character.getNote(),
+                    character.getPicture());
         }
         else{
 
-            this.characterDao.update(new Object[]{character.getName(),
+            this.characterService.update(new Object[]{
+                    character.getName(),
                     character.getType(),
                     character.getNote(),
-                    character.getDiagram_id(),
                     character.getPicture(),
                     character.getId()});
         }
@@ -40,12 +48,13 @@ public class CharacterWindowPresenter implements WindowPresenter {
 
     @Override
     public void eraseFromDB() {
-            this.characterDao.delete(this.character.getId());
+
+        this.character=this.characterWindow.getCharacter();
+        this.characterService.delete(this.character.getId());
     }
 
     @Override
     public void setView(NarrativeView narrativeView) {
         this.characterWindow=(CharacterWindow) narrativeView;
-        this.character=this.characterWindow.getCharacter();
     }
 }

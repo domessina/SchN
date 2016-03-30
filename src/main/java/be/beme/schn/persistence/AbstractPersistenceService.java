@@ -11,4 +11,7 @@ public abstract class AbstractPersistenceService  {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
+
+
+
 }

@@ -2,9 +2,8 @@ package be.beme.schn.vaadin;
 
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Diagram;
-import be.beme.schn.narrative.component.Trait;
-import be.beme.schn.narrative.component.UserProperty;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
+import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.view.CharacterWindow;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -31,7 +30,8 @@ public class MyVaadinUI extends UI {
     @Autowired
     DiagramDaoImpl diagramService;
 
-
+    @Autowired
+    CharacterWindowPresenter presenter;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -43,9 +43,10 @@ public class MyVaadinUI extends UI {
         Button button= new Button("here victory!");
         button.addClickListener(event ->{
 
+
             Character character = new Character();
-            character.setId(1);
-            character.setName("Christero");
+            //character.setId(1);
+            /*character.setName("Christero");
             character.setType("Principal");
             character.setNote("Des informations complémentaires");
             ArrayList<UserProperty> arrayList = new ArrayList();
@@ -59,10 +60,13 @@ public class MyVaadinUI extends UI {
             arrayList1.add(new Trait("my trait",2));
             arrayList1.add(new Trait("my trait",3));
             arrayList1.add(new Trait("my trait",4));
-            character.setTraitList(arrayList1);
-            character.setDiagram_id(1);
-            diagramService.createDiagram(1,"depuis spring");
-                    this.addWindow(new CharacterWindow(character));
+            character.setTraitList(arrayList1);*/
+            character.setDiagram_id(2);
+            //diagramService.createDiagram(1,"depuis spring");
+            CharacterWindow characterWindow= new CharacterWindow(character);
+            characterWindow.setHandler(presenter);
+            presenter.setView(characterWindow);
+                    this.addWindow(characterWindow);
         }
 
                 //label.setValue(String.valueOf(diagramService.createDiagram(1,"un Livre")))

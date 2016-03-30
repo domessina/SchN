@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface CharacterDao {
 
-    int create(int diagramId, String name, String type);
+    int create(int diagramId, String name, String type, String note, String picture_url);
 
     void setNote(int characterId, String note);
 
