@@ -44,7 +44,8 @@ public class MyVaadinUI extends UI {
         button.addClickListener(event ->{
 
 
-            Character character = new Character();
+           //Character character =presenter.getCharacterService().getCharacterById(25);
+            Character character= new Character();
             //character.setId(1);
             /*character.setName("Christero");
             character.setType("Principal");
@@ -60,8 +61,9 @@ public class MyVaadinUI extends UI {
             arrayList1.add(new Trait("my trait",2));
             arrayList1.add(new Trait("my trait",3));
             arrayList1.add(new Trait("my trait",4));
-            character.setTraitList(arrayList1);*/
+            character.setAllTraits(arrayList1);*/
             character.setDiagram_id(2);
+            //character.setPicture("4.jpg");
             //diagramService.createDiagram(1,"depuis spring");
             CharacterWindow characterWindow= new CharacterWindow(character);
             characterWindow.setHandler(presenter);

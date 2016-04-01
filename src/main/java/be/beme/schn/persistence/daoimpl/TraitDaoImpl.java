@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 /**
@@ -18,12 +19,21 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
 
 
     @Override
-    public int createTrait(int characterId, String name) {
-        jdbcTemplate.update("insert into Trait (character_id) values (?)"
-                ,characterId);
+    public int create(int characterId, String name) {
+        jdbcTemplate.update("insert into public.\"Trait\" (character_id,name) values (?,?)"
+                ,characterId,name);
 
-        return jdbcTemplate.queryForObject("select last(id) from Trait where character_id=?",
+        return jdbcTemplate.queryForObject("select max(id) from public.\"Trait\" where character_id=?",
                 new Object[] {characterId},Integer.class);
+    }
+
+    @Override
+    public void update(Object[] args)
+    {
+        jdbcTemplate.update("UPDATE public.\"Trait\" SET character_id=?,name=? WHERE id=?",args,new int[]{
+                Types.INTEGER,
+                Types.VARCHAR,
+                Types.INTEGER});
     }
 
     @Override
@@ -43,7 +53,7 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
     @Override
     public void delete(int traitId)
     {
-        jdbcTemplate.update("delete from Trait where id=? ",traitId);
+        jdbcTemplate.update("delete from public.\"Trait\" where id=? ",traitId);
     }
 
     private static final class TraitMapper implements RowMapper<Trait> {

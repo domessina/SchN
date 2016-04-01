@@ -17,6 +17,8 @@ public interface CharacterDao {
 
     List<Character> getAllCharactersByDiagram(int diagramId);
 
+    Character getCharacterById(int id);
+
     void delete(int chapterId);
 
     void update( Object[] args); //J'aimerais remplacer par update(int characterId, Object[ args);

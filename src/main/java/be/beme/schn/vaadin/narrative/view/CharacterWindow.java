@@ -1,16 +1,20 @@
 package be.beme.schn.vaadin.narrative.view;
 
+import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.narrative.component.UserProperty;
 import be.beme.schn.vaadin.ImageUploadPanel;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
+import be.beme.schn.vaadin.narrative.presenter.TraitWindowFieldPresenter;
 import com.vaadin.event.Action;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -19,11 +23,14 @@ import java.util.List;
  */
 
 //TODO un URI pour chaque Window?
+@org.springframework.stereotype.Component
+@UIScope
 public class CharacterWindow extends Window implements Button.ClickListener,NarrativeView{
 
     private Panel propertiesPanel;
     private Table tableTrait;
     private List<UserProperty> userPropertyList;
+    private List<Trait> traitList;
     private Character character;
     private Button buttonReferences;
     private Button buttonSave;
@@ -37,17 +44,20 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     private final static Action ACTION_RENAME=new Action("Rename");
     private CharacterWindowPresenter characterWindowPresenter;
 
+    @Autowired
+    private TraitWindowFieldPresenter traitPresenter;
+    //private TraitWindowField traitWindowField;
+
 
     public CharacterWindow(Character character)
     {
         super("Character Informations");
+        this.character= character;
         setResizable(false);
         setModal(true);
-        setId(this.getClass().getName());
+        setId("CharacterWindow");
         setHeight(99,Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
-        this.character= character;
-
         setContent(buildContent());
 
     }
@@ -57,9 +67,9 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
         verticalLayout.setSizeFull();
-        C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\1\\Diagrams\\1\\Characters\\1\\"+ filename
-       imageUploadPanel= new ImageUploadPanel( "C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\1\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\"+this.character.getId()+"\\");
-
+       //imageUploadPanel= new ImageUploadPanel( "C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\1\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\"+this.character.getId()+"\\");
+        //TODO ici changer le dir user 1
+        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
         buttonSave = new Button("Save");
         buttonSave.addClickListener(this);
         buttonSave.setStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -139,7 +149,7 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
             }
         }
         catch (NullPointerException e){
-
+            System.out.println("This character has no user properties");                 //TODO à bn'afficher que pou run certain niveau de debug
         }
 
         return formLayout;
@@ -153,14 +163,14 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         tableTrait.addContainerProperty("Trait",Trait.class,null);
         try
         {
-            for(Trait trait : this.character.getTraitList())
+            for(Trait trait : this.character.getAllTraits())
             {
                 tableTrait.addItem(new Object[]{trait},trait.getId());
             }
         }
         catch (NullPointerException e)
         {
-
+            System.out.println("This character has no traits");                         //TODO à n'afficher qye pour un certain niveau de debug
         }
 
         tableTrait.addActionHandler(new Action.Handler() {
@@ -173,15 +183,21 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
             public void handleAction(Action action, Object sender, Object target) {
                     if(action == ACTION_ADD)
                     {
-                        UI.getCurrent().addWindow(new TraitWindow(new Trait()));
+                        traitPresenter.setView(new TraitWindowField(new Trait()));
+                        traitPresenter.getTraitView().setHandler(traitPresenter);
+                        UI.getCurrent().addWindow(traitPresenter.getTraitView());
                     }
                     else if(action==ACTION_RENAME)
                     {
-                        UI.getCurrent().addWindow(new TraitWindow(
-                                (Trait)tableTrait.getItem(target).getItemProperty("Trait").getValue()));
+                        traitPresenter.setView(new TraitWindowField( (Trait)tableTrait.getItem(target).getItemProperty("Trait").getValue()));
+                        traitPresenter.getTraitView().setHandler(traitPresenter);
+                        UI.getCurrent().addWindow(traitPresenter.getTraitView());
+
                     }
                 else if(action== ACTION_DELETE)
                     {
+                        traitPresenter.setCurrentTrait((Trait)tableTrait.getItem(target).getItemProperty("Trait").getValue());
+                        traitPresenter.erase();
                         tableTrait.removeItem(target);
                     }
             }
@@ -189,10 +205,11 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         return tableTrait;
     }
 
-    public void setTraitFromTraitWindow(Trait trait)    //TODO si je retire le public, eset ce que cela sera public pour le package et private à l'extérieur? si oui alors faire ainsi pour ne limiter l'accès de cette méthode à TraitWindow
+    public void addItemTraitFromTraitWindow(Trait trait)    //TODO si je retire le public, eset ce que cela sera public pour le package et private à l'extérieur? si oui alors faire ainsi pour ne limiter l'accès de cette méthode à TraitWindowField
     {
         this.tableTrait.addItem(new Object[]{trait},trait.getId());
     }
+
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
@@ -208,18 +225,25 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
             this.character.setType(type.getValue().toString());
             this.character.setNote(textArea.getValue());
             this.character.setPicture(imageUploadPanel.getFileName());
+           // this.character.setAllTraits(null);                          //reinit Character's list of traits
+            //for(int i=0; i < tableTrait.
 
-            try {
+             boolean eraseOK=false;
                 switch (event.getButton().getCaption()){
 
-                    case "Save":{  this.characterWindowPresenter.saveInDB();close();break;}
-                    case "Erase":{  this.characterWindowPresenter.eraseFromDB();close();break;}
+                    case "Save":{ this.character= this.characterWindowPresenter.save();break;}
+                    case "Erase":{ eraseOK=this.characterWindowPresenter.erase();break;}
                     case "Show relations":{ break;}
                 }
-
-           } catch (Exception e) {
-                Notification.show("System Error","A report was sent to the developers", Notification.Type.ERROR_MESSAGE);
+            if(eraseOK||(this.character!=null))
+            {
+                close();
             }
+            else
+            {
+                Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            }
+
         }
     }
 

@@ -1,15 +1,24 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
+import be.beme.schn.narrative.component.NarrativeComponent;
+
 /**
  * Created by Dorito on 29-03-16.
  */
 public interface WindowPresenter extends NarrativePresenter {
 
-    void saveInDB();
+    /**
+     *
+     * @return the last NarrativeComponent saved with new informations given
+     *                 by the database. Or null if exception during data access
+     */
+    NarrativeComponent save();
 
-    //boolean saveInDB();   renvoyer si echec ou réussite?
-
-    void eraseFromDB();
+    /**
+     *
+     * @return true if successful erasure.
+     */
+    boolean erase();
 
 
 

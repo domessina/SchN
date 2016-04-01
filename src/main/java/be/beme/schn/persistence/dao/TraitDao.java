@@ -9,7 +9,9 @@ import java.util.List;
  */
 public interface TraitDao {
 
-    int createTrait(int characterId, String name);
+    int create(int characterId, String name);
+
+    void update(Object[] args);
 
     void setScenes(int traitId, String[] scenesArray);
 

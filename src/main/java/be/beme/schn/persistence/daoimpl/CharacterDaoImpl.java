@@ -50,7 +50,11 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
                 note, characterId);
     }
 
-
+    @Override
+    public Character getCharacterById(int id)
+    {
+        return jdbcTemplate.queryForObject("select * from public.\"Character\" where id = ?",new Object[]{id}, new CharacterMapper());
+    }
 
     @Override
     public void setPicture(int characterId,String pictureURL) {
@@ -66,7 +70,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
     @Override
     public void delete(int characterId)
     {
-        jdbcTemplate.update("delete from Character where id=? ",characterId);
+        jdbcTemplate.update("delete from public.\"Character\" where id=? ",characterId);
     }
 
 

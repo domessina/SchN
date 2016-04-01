@@ -13,7 +13,7 @@ public class Character implements NarrativeComponent{
     private String picture;
     private String note;
     private List<UserProperty> userPropertyList;
-    private List<Trait> traitList;
+    private List<Trait> allTraits;
     private int diagram_id;
 
     public int getId() {
@@ -72,11 +72,11 @@ public class Character implements NarrativeComponent{
         this.userPropertyList = userPropertyList;
     }
 
-    public List<Trait> getTraitList() {
-        return traitList;
+    public List<Trait> getAllTraits() {
+        return allTraits;
     }
 
-    public void setTraitList(List<Trait> traitList) {
-        this.traitList = traitList;
+    public void setAllTraits(List<Trait> allTraits) {
+        this.allTraits = allTraits;
     }
 }

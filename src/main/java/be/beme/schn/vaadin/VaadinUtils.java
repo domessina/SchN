@@ -1,13 +1,12 @@
 package be.beme.schn.vaadin;
 
 
-        import com.vaadin.server.FileResource;
-        import com.vaadin.server.VaadinService;
-        import com.vaadin.ui.Component;
-        import com.vaadin.ui.HasComponents;
-        import com.vaadin.ui.Image;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
+import com.vaadin.ui.*;
 
-        import java.io.File;
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Dorito on 12-03-16.
@@ -47,5 +46,21 @@ public final class VaadinUtils {
         Image image= new Image(null, imgres);
 
         return image;
+    }
+
+    public static Window findWindowById(String id)
+    {
+        ArrayList<Window> arrayList=new ArrayList<>(UI.getCurrent().getWindows());
+
+        for(Window window: arrayList)
+        {
+            if(window.getId().equals(id))
+            {
+                return window;
+            }
+        }
+
+        return null;
+
     }
 }
