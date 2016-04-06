@@ -48,13 +48,6 @@ public class TraitTableCrud extends TableCrud {
 
     }
 
-
-
-    public Trait getTraitFromItemId(Object itemId)
-    {
-        return (Trait)getItem(itemId).getItemProperty("Trait").getValue();
-    }
-
 //-----------------------------------------------------------------------
 
     private class TraitWindow extends WindowCrud implements FieldEvents.FocusListener {
