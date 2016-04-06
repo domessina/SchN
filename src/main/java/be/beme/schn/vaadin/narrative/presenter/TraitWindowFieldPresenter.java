@@ -8,6 +8,8 @@ import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by Dorito on 01-04-16.
  */
@@ -66,7 +68,7 @@ public class TraitWindowFieldPresenter implements WindowPresenter {
         return false;
     }
 
-   public void setCurrentTrait(Trait trait){
+   public void setTrait(Trait trait){
        this.trait=trait;
    }
 

@@ -2,8 +2,10 @@ package be.beme.schn.vaadin;
 
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Diagram;
+import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
+import be.beme.schn.vaadin.narrative.presenter.TraitWindowFieldPresenter;
 import be.beme.schn.vaadin.narrative.view.CharacterWindow;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -31,7 +33,11 @@ public class MyVaadinUI extends UI {
     DiagramDaoImpl diagramService;
 
     @Autowired
-    CharacterWindowPresenter presenter;
+    CharacterWindowPresenter characterPresenter;
+
+
+    @Autowired
+    private TraitWindowFieldPresenter traitPresenter;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -44,9 +50,9 @@ public class MyVaadinUI extends UI {
         button.addClickListener(event ->{
 
 
-           //Character character =presenter.getCharacterService().getCharacterById(25);
-            Character character= new Character();
-            //character.setId(1);
+           Character character = characterPresenter.getCharacterService().getCharacterById(4);
+           // Character character= new Character();
+           // character.setId(4);
             /*character.setName("Christero");
             character.setType("Principal");
             character.setNote("Des informations complémentaires");
@@ -55,19 +61,19 @@ public class MyVaadinUI extends UI {
             arrayList.add(new UserProperty("name","value"));
             arrayList.add(new UserProperty("name","value"));
             arrayList.add(new UserProperty("name","value"));
-            character.setUserPropertyList(arrayList);
+            character.setUserPropertyList(arrayList);*/
             ArrayList<Trait> arrayList1=new ArrayList<>();
             arrayList1.add(new Trait("my trait",1));
             arrayList1.add(new Trait("my trait",2));
             arrayList1.add(new Trait("my trait",3));
             arrayList1.add(new Trait("my trait",4));
-            character.setAllTraits(arrayList1);*/
-            character.setDiagram_id(2);
+            character.setAllTraits(arrayList1);
+            //character.setDiagram_id(2);
             //character.setPicture("4.jpg");
             //diagramService.createDiagram(1,"depuis spring");
-            CharacterWindow characterWindow= new CharacterWindow(character);
-            characterWindow.setHandler(presenter);
-            presenter.setView(characterWindow);
+            CharacterWindow characterWindow= new CharacterWindow(character, traitPresenter);
+            characterWindow.setHandler(characterPresenter);
+            characterPresenter.setView(characterWindow);
                     this.addWindow(characterWindow);
         }
 

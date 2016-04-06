@@ -62,7 +62,6 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
             Trait trait = new Trait();
             trait.setId(rs.getInt("id"));
             trait.setName(rs.getString("name"));
-           // trait.setScenes_id(rs.getArray("scenes_id"));           //TODO pas trouver comment prendre tabelau de varchar
             trait.setCharacterId(rs.getInt("character_id"));
             return trait;
         }

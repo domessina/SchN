@@ -68,6 +68,7 @@ public class CharacterWindowPresenter implements WindowPresenter {
 
         try
         {
+
             this.character=this.characterWindow.getCharacter();
             this.characterService.delete(this.character.getId());
             Files.delete(Paths.get(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+String.valueOf(character.getDiagram_id())+"\\Characters\\"+character.getPicture()));

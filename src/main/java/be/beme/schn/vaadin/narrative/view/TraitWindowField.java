@@ -56,19 +56,10 @@ public class TraitWindowField extends Window implements NarrativeView {
                 }
 
                 else
-                {
-                    if(trait.getId()==0)
-                    {
-                        trait.setName(textField.getValue());
-                        trait.setCharacterId(parentWindow.getCharacter().getId());
-                        trait=traitPresenter.save();
-                     }
-                     else
-                     {
-                         trait.setName(textField.getValue());
-                         trait=traitPresenter.save();
-                     }
-                   parentWindow.addItemTraitFromTraitWindow(trait);
+                {//si trait =0 alors c'est un insert
+                    //si trait!=0 alors upadte
+                   trait.setName(textField.getValue());
+                //   parentWindow.addTraitFromTraitWindow(trait);
                     close();
                 }
             }

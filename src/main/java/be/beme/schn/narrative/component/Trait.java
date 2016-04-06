@@ -1,5 +1,8 @@
 package be.beme.schn.narrative.component;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by Dorito on 22-03-16.
  */
@@ -17,6 +20,7 @@ public class Trait implements NarrativeComponent {
         this.name=name;
         this.id=id;
     }
+
 
     public int getId() {
         return id;
@@ -51,7 +55,7 @@ public class Trait implements NarrativeComponent {
     }
 
     @Override
-    public String toString() {
+   public String toString() {
         return this.getName();
     }
 }

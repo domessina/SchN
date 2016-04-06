@@ -52,7 +52,7 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver{
 
 
         try {
-            file = new File(this.path +this.fileName);//TODO changer le filename ici par 1.qqch
+            file = new File(this.path +this.fileName);
             fos = new FileOutputStream(file);
         }
         catch (final Exception e)
