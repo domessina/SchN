@@ -17,6 +17,8 @@ public interface TraitDao {
 
     List<Trait> getAllTraitsByCharacter(int characterId);
 
+    void deleteAllTraitsByCharacter(int characterId);
+
     void delete(int traitId);
 
 

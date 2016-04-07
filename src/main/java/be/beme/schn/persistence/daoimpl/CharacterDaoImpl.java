@@ -38,7 +38,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
         jdbcTemplate.update("UPDATE public.\"Character\" SET name=?,type=?,notes=?,picture_url=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
                 Types.VARCHAR,
-                Types.LONGNVARCHAR,
+                Types.VARCHAR,
                 Types.VARCHAR,
                 Types.INTEGER});//si probleme avec LONGVARCHAR, use VARCHAR
     }

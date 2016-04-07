@@ -9,6 +9,7 @@ import com.vaadin.ui.*;
 public abstract class WindowCrud extends Window implements Button.ClickListener{
 
     protected FormLayout formLayout;
+    protected Button OKBtn;
 
     public abstract boolean isObjCreated();
     public abstract boolean isObjUpdated();
@@ -31,7 +32,7 @@ public abstract class WindowCrud extends Window implements Button.ClickListener{
 
     private Layout buildContent()
     {
-        Button OKBtn= new Button("OK");
+        OKBtn= new Button("OK");
         OKBtn.addClickListener(this);
         formLayout.setMargin(true);
         formLayout.addComponent(OKBtn);

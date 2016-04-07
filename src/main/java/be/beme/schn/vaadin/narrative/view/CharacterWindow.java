@@ -9,7 +9,10 @@ import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.narrative.TraitTableCrud;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
-import be.beme.schn.vaadin.narrative.presenter.TraitWindowFieldPresenter;
+import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
@@ -36,14 +39,15 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     private TextField name;
     private ComboBox type;
     private TextArea textArea;
+    private ArrayList<Trait> createTraits;
+    private ArrayList<Trait> updateTraits;
+    private ArrayList<Trait> deleteTraits;
     private  ImageUploadPanel imageUploadPanel;
-    private ArrayList<Trait> traitList;
     private CharacterWindowPresenter characterWindowPresenter;
-    private TraitWindowFieldPresenter traitPresenter;
-    //private TraitWindowField traitWindowField;
+    private TraitCrudPresenter traitPresenter;
 
 
-    public CharacterWindow(Character character, TraitWindowFieldPresenter traitPresenter)
+    public CharacterWindow(Character character, TraitCrudPresenter traitPresenter)
     {
         super("Character Informations");
         this.character= character;
@@ -73,6 +77,10 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         buttonErase.addClickListener(this);
         buttonErase.setStyleName(ValoTheme.BUTTON_DANGER,true);
         buttonErase.setStyleName(ValoTheme.BUTTON_TINY,true);
+        if(this.character.getId()==0)
+        {
+            buttonErase.setEnabled(false);
+        }
 
         HorizontalLayout horizontalLayout= new HorizontalLayout();
         horizontalLayout.addComponent(buttonErase);
@@ -83,7 +91,7 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
 
         verticalLayout.addComponent(imageUploadPanel);
        verticalLayout.setExpandRatio(imageUploadPanel,5);
-        verticalLayout.addComponent(getPropertiesPanel());
+        verticalLayout.addComponent(buildPropertiesPanel());
        verticalLayout.setExpandRatio(propertiesPanel,5);
         verticalLayout.addComponent(horizontalLayout);
 
@@ -92,25 +100,25 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         return verticalLayout;
     }
 
-    private Panel getPropertiesPanel()
+    private Panel buildPropertiesPanel()
     {
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
         verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>",ContentMode.HTML));
-        verticalLayout.addComponent(getFormLayout());
+        verticalLayout.addComponent(buildFormLayout());
         textArea= new TextArea("Notes");
         textArea.setValue(character.getNote());
         textArea.setNullRepresentation("");
         textArea.setWidth(100,Unit.PERCENTAGE);
         verticalLayout.addComponent(textArea);
         verticalLayout.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
-        verticalLayout.addComponent(getFormLayoutUserProperties());
+        verticalLayout.addComponent(buildFormLayoutUserProperties());
         propertiesPanel = new Panel(verticalLayout);
         propertiesPanel.setSizeFull();
         return propertiesPanel;
     }
 
-    private Component getFormLayout()
+    private Component buildFormLayout()
     {
         FormLayout formLayout = new FormLayout();
         formLayout.setSizeFull();
@@ -126,14 +134,14 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         type.setValue(this.character.getType());//If the type set is not known , blanc is displayed
         formLayout.addComponent(name);
         formLayout.addComponent(type);
-        formLayout.addComponent(getTraitTableCrud());
+        formLayout.addComponent(buildTraitTableCrud());
         buttonReferences = new Button("Show relations");
         buttonReferences.addClickListener(this);
         formLayout.addComponent(buttonReferences);
         return formLayout;
     }
 
-    public Component getFormLayoutUserProperties()
+    private Component buildFormLayoutUserProperties()
     {
         userPropertyList = character.getUserPropertyList();
         FormLayout formLayout= new FormLayout();
@@ -150,12 +158,14 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         return formLayout;
     }
 
-    private Table getTraitTableCrud()
+    private Table buildTraitTableCrud()
     {
-
-        traitList = new ArrayList<>(this.character.getAllTraits());
-        traitTableCrud = new TraitTableCrud("List of traits",traitList);
+        traitTableCrud = new TraitTableCrud("List of traits");
         traitTableCrud.addCrudListener(this);
+        traitTableCrud.fillTable(traitPresenter.getTraitService().getAllTraitsByCharacter(this.character.getId()));
+        createTraits=new ArrayList<>();
+        updateTraits=new ArrayList<>();
+        deleteTraits=new ArrayList<>();
         return traitTableCrud;
     }
 
@@ -165,10 +175,12 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     @Override
     public void buttonClick(Button.ClickEvent event) {
 
+        name.setComponentError(null);
+        type.setComponentError(null);
         if(name.isEmpty()||type.isEmpty())
         {
-            //dès qu'il apparait il ne part plus :/
-           // setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
+            name.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
+            type.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
         }
         else {
 
@@ -176,29 +188,46 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
             this.character.setType(type.getValue().toString());
             this.character.setNote(textArea.getValue());
             this.character.setPicture(imageUploadPanel.getFileName());
-           // this.character.setAllTraits(null);                          //reinit Character's list of traits
-            //for(int i=0; i < tableTrait.
+//            this.character.setAllTraits(traitTableCrud.getAllTraits());                          //reinit Character's list of traits
 
-             boolean eraseOK=false;
-                switch (event.getButton().getCaption()){
+             boolean eraseCok=false;
+            try {
+                switch (event.getButton().getCaption()) {
 
-                    case "Save":{
-                        this.character= this.characterWindowPresenter.save();
-                        this.traitPresenter.save();
+                    case "Save": {
+                        this.character = this.characterWindowPresenter.save();
+                        createTraits();
+                        updateTraits();
+                        deleteTraits();
+
+                        //TODO gérer si exception durant crud
+                        if (this.character != null) {
+                            close();
+                        } else {
+                            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                        }
+
                         break;
                     }
-                    case "Erase":{ eraseOK=this.characterWindowPresenter.erase();break;}
-                    case "Show relations":{ break;}
+                    case "Erase": {
+                       // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
+                        eraseCok = this.characterWindowPresenter.erase();
+                        if (eraseCok) {
+                            close();
+                        } else {
+                            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                        }
+                        break;
+                    }
+                    case "Show relations": {
+                        break;
+                    }
                 }
-            if(eraseOK||(this.character!=null))
-            {
-                close();
             }
-            else
+            catch (Exception e)
             {
-                Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                e.printStackTrace();
             }
-
         }
     }
 
@@ -212,29 +241,47 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     }
 
     @Override
-    public void created(Object o) {              //it's better to get itemId, in this case the programmer can choose witch itemProperty to work on. here , there is only one "Trait", but there could be more.
-       // traitList.add(traitTableCrud.getTraitFromItemId(itemId));
+    public void created(Object o) {
 
+        createTraits.add((Trait)o);
+
+    }
+
+    private void createTraits()
+    {
+        for(Trait t:createTraits)
+        {
+            t.setCharacterId(this.character.getId());
+            traitPresenter.create(t);
+        }
     }
 
     @Override
     public void updated(Object o) {
-       /* Trait trait=traitTableCrud.getTraitFromItemId(itemId);
-        for(Trait trait2:traitList)
-        {
-            if(trait2==trait)
-            {
-                trait2
-            }
-        }   */
+        updateTraits.add((Trait)o);
+    }
 
+    private void updateTraits()
+    {
+        for(Trait t:updateTraits)
+        {
+            traitPresenter.update(t);
+        }
     }
 
     @Override
     public void deleted(Object o) {
-       // traitList.remove(traitTableCrud.getTraitFromItemId(itemId));
-
+        deleteTraits.add((Trait)o);
     }
+
+    private void deleteTraits()
+    {
+        for(Trait t:deleteTraits)
+        {
+            traitPresenter.delete(t);
+        }
+    }
+
 
 
 }

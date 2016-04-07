@@ -71,7 +71,10 @@ public class CharacterWindowPresenter implements WindowPresenter {
 
             this.character=this.characterWindow.getCharacter();
             this.characterService.delete(this.character.getId());
-            Files.delete(Paths.get(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+String.valueOf(character.getDiagram_id())+"\\Characters\\"+character.getPicture()));
+            if(character.getPicture()!=null)
+            {
+                Files.delete(Paths.get(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+String.valueOf(character.getDiagram_id())+"\\Characters\\"+character.getPicture()));
+            }
         }
         catch (Exception e)                 //doens't matter if it's SQLException or other.
         {

@@ -20,17 +20,17 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
 
     @Override
     public int create(int characterId, String name) {
-        jdbcTemplate.update("insert into public.\"Trait\" (character_id,name) values (?,?)"
+        jdbcTemplate.update("insert into \"Trait\" (character_id,name) values (?,?)"
                 ,characterId,name);
 
-        return jdbcTemplate.queryForObject("select max(id) from public.\"Trait\" where character_id=?",
+        return jdbcTemplate.queryForObject("select max(id) from \"Trait\" where character_id=?",
                 new Object[] {characterId},Integer.class);
     }
 
     @Override
     public void update(Object[] args)
     {
-        jdbcTemplate.update("UPDATE public.\"Trait\" SET character_id=?,name=? WHERE id=?",args,new int[]{
+        jdbcTemplate.update("UPDATE \"Trait\" SET character_id=?,name=? WHERE id=?",args,new int[]{
                 Types.INTEGER,
                 Types.VARCHAR,
                 Types.INTEGER});
@@ -46,8 +46,13 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
 
     @Override
     public List<Trait> getAllTraitsByCharacter(int characterId) {
-        return jdbcTemplate.query("select * from Trait where character_id=?",
+        return jdbcTemplate.query("select * from \"Trait\" where character_id=?",
                 new Object[]{characterId},new TraitMapper());
+    }
+
+    @Override
+    public void deleteAllTraitsByCharacter(int characterId) {
+        jdbcTemplate.update("delete from public.\"Trait\" where character_id=? ",characterId);
     }
 
     @Override

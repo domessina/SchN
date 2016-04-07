@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.1
--- Dumped by pg_dump version 9.5.1
+-- Dumped from database version 9.5.2
+-- Dumped by pg_dump version 9.5.2
 
--- Started on 2016-04-05 18:55:39
+-- Started on 2016-04-07 15:01:54
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -33,7 +33,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- TOC entry 1 (class 3079 OID 16384)
+-- TOC entry 1 (class 3079 OID 16587)
 -- Name: adminpack; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -54,7 +54,7 @@ SET search_path = public, pg_catalog;
 SET default_with_oids = false;
 
 --
--- TOC entry 187 (class 1259 OID 17865)
+-- TOC entry 182 (class 1259 OID 16596)
 -- Name: Chapter; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -69,7 +69,7 @@ CREATE TABLE "Chapter" (
 
 
 --
--- TOC entry 186 (class 1259 OID 17863)
+-- TOC entry 183 (class 1259 OID 16602)
 -- Name: Chapter_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -83,7 +83,7 @@ CREATE SEQUENCE "Chapter_id_seq"
 
 --
 -- TOC entry 2224 (class 0 OID 0)
--- Dependencies: 186
+-- Dependencies: 183
 -- Name: Chapter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -91,7 +91,7 @@ ALTER SEQUENCE "Chapter_id_seq" OWNED BY "Chapter".id;
 
 
 --
--- TOC entry 195 (class 1259 OID 17921)
+-- TOC entry 184 (class 1259 OID 16604)
 -- Name: Character; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -106,7 +106,7 @@ CREATE TABLE "Character" (
 
 
 --
--- TOC entry 194 (class 1259 OID 17919)
+-- TOC entry 185 (class 1259 OID 16610)
 -- Name: Character_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -120,7 +120,7 @@ CREATE SEQUENCE "Character_id_seq"
 
 --
 -- TOC entry 2225 (class 0 OID 0)
--- Dependencies: 194
+-- Dependencies: 185
 -- Name: Character_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -128,7 +128,7 @@ ALTER SEQUENCE "Character_id_seq" OWNED BY "Character".id;
 
 
 --
--- TOC entry 185 (class 1259 OID 17843)
+-- TOC entry 186 (class 1259 OID 16612)
 -- Name: Diagram; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -140,7 +140,7 @@ CREATE TABLE "Diagram" (
 
 
 --
--- TOC entry 184 (class 1259 OID 17841)
+-- TOC entry 187 (class 1259 OID 16618)
 -- Name: Diagram_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -154,7 +154,7 @@ CREATE SEQUENCE "Diagram_id_seq"
 
 --
 -- TOC entry 2226 (class 0 OID 0)
--- Dependencies: 184
+-- Dependencies: 187
 -- Name: Diagram_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -162,7 +162,7 @@ ALTER SEQUENCE "Diagram_id_seq" OWNED BY "Diagram".id;
 
 
 --
--- TOC entry 200 (class 1259 OID 17970)
+-- TOC entry 188 (class 1259 OID 16620)
 -- Name: Element; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -175,7 +175,7 @@ CREATE TABLE "Element" (
 
 
 --
--- TOC entry 199 (class 1259 OID 17968)
+-- TOC entry 189 (class 1259 OID 16626)
 -- Name: Element_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -189,7 +189,7 @@ CREATE SEQUENCE "Element_id_seq"
 
 --
 -- TOC entry 2227 (class 0 OID 0)
--- Dependencies: 199
+-- Dependencies: 189
 -- Name: Element_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -197,7 +197,7 @@ ALTER SEQUENCE "Element_id_seq" OWNED BY "Element".id;
 
 
 --
--- TOC entry 193 (class 1259 OID 17908)
+-- TOC entry 190 (class 1259 OID 16628)
 -- Name: Link; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -212,7 +212,7 @@ CREATE TABLE "Link" (
 
 
 --
--- TOC entry 192 (class 1259 OID 17906)
+-- TOC entry 191 (class 1259 OID 16631)
 -- Name: Link_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -226,7 +226,7 @@ CREATE SEQUENCE "Link_id_seq"
 
 --
 -- TOC entry 2228 (class 0 OID 0)
--- Dependencies: 192
+-- Dependencies: 191
 -- Name: Link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -234,7 +234,7 @@ ALTER SEQUENCE "Link_id_seq" OWNED BY "Link".id;
 
 
 --
--- TOC entry 202 (class 1259 OID 17986)
+-- TOC entry 192 (class 1259 OID 16633)
 -- Name: Outline; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -248,7 +248,7 @@ CREATE TABLE "Outline" (
 
 
 --
--- TOC entry 201 (class 1259 OID 17984)
+-- TOC entry 193 (class 1259 OID 16639)
 -- Name: Outline_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -262,7 +262,7 @@ CREATE SEQUENCE "Outline_id_seq"
 
 --
 -- TOC entry 2229 (class 0 OID 0)
--- Dependencies: 201
+-- Dependencies: 193
 -- Name: Outline_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -270,7 +270,7 @@ ALTER SEQUENCE "Outline_id_seq" OWNED BY "Outline".id;
 
 
 --
--- TOC entry 189 (class 1259 OID 17881)
+-- TOC entry 194 (class 1259 OID 16641)
 -- Name: User_property; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -284,7 +284,7 @@ CREATE TABLE "User_property" (
 
 
 --
--- TOC entry 188 (class 1259 OID 17879)
+-- TOC entry 195 (class 1259 OID 16647)
 -- Name: Property_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -298,7 +298,7 @@ CREATE SEQUENCE "Property_id_seq"
 
 --
 -- TOC entry 2230 (class 0 OID 0)
--- Dependencies: 188
+-- Dependencies: 195
 -- Name: Property_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -306,7 +306,7 @@ ALTER SEQUENCE "Property_id_seq" OWNED BY "User_property".id;
 
 
 --
--- TOC entry 204 (class 1259 OID 18002)
+-- TOC entry 196 (class 1259 OID 16649)
 -- Name: Rule; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -319,7 +319,7 @@ CREATE TABLE "Rule" (
 
 
 --
--- TOC entry 203 (class 1259 OID 18000)
+-- TOC entry 197 (class 1259 OID 16655)
 -- Name: Rule_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -333,7 +333,7 @@ CREATE SEQUENCE "Rule_id_seq"
 
 --
 -- TOC entry 2231 (class 0 OID 0)
--- Dependencies: 203
+-- Dependencies: 197
 -- Name: Rule_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -341,7 +341,7 @@ ALTER SEQUENCE "Rule_id_seq" OWNED BY "Rule".id;
 
 
 --
--- TOC entry 191 (class 1259 OID 17892)
+-- TOC entry 198 (class 1259 OID 16657)
 -- Name: Scene; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -355,7 +355,7 @@ CREATE TABLE "Scene" (
 
 
 --
--- TOC entry 190 (class 1259 OID 17890)
+-- TOC entry 199 (class 1259 OID 16663)
 -- Name: Scene_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -369,7 +369,7 @@ CREATE SEQUENCE "Scene_id_seq"
 
 --
 -- TOC entry 2232 (class 0 OID 0)
--- Dependencies: 190
+-- Dependencies: 199
 -- Name: Scene_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -377,7 +377,7 @@ ALTER SEQUENCE "Scene_id_seq" OWNED BY "Scene".id;
 
 
 --
--- TOC entry 197 (class 1259 OID 17937)
+-- TOC entry 200 (class 1259 OID 16665)
 -- Name: Trait; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -389,7 +389,7 @@ CREATE TABLE "Trait" (
 
 
 --
--- TOC entry 198 (class 1259 OID 17948)
+-- TOC entry 201 (class 1259 OID 16668)
 -- Name: TraitScene; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -401,7 +401,7 @@ CREATE TABLE "TraitScene" (
 
 
 --
--- TOC entry 196 (class 1259 OID 17935)
+-- TOC entry 202 (class 1259 OID 16671)
 -- Name: Trait_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -415,7 +415,7 @@ CREATE SEQUENCE "Trait_id_seq"
 
 --
 -- TOC entry 2233 (class 0 OID 0)
--- Dependencies: 196
+-- Dependencies: 202
 -- Name: Trait_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -423,7 +423,7 @@ ALTER SEQUENCE "Trait_id_seq" OWNED BY "Trait".id;
 
 
 --
--- TOC entry 183 (class 1259 OID 17832)
+-- TOC entry 203 (class 1259 OID 16673)
 -- Name: User; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -435,7 +435,7 @@ CREATE TABLE "User" (
 
 
 --
--- TOC entry 182 (class 1259 OID 17830)
+-- TOC entry 204 (class 1259 OID 16677)
 -- Name: User_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -449,7 +449,7 @@ CREATE SEQUENCE "User_id_seq"
 
 --
 -- TOC entry 2234 (class 0 OID 0)
--- Dependencies: 182
+-- Dependencies: 204
 -- Name: User_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -457,7 +457,7 @@ ALTER SEQUENCE "User_id_seq" OWNED BY "User".id;
 
 
 --
--- TOC entry 2057 (class 2604 OID 17868)
+-- TOC entry 2054 (class 2604 OID 16679)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -465,7 +465,7 @@ ALTER TABLE ONLY "Chapter" ALTER COLUMN id SET DEFAULT nextval('"Chapter_id_seq"
 
 
 --
--- TOC entry 2061 (class 2604 OID 17924)
+-- TOC entry 2055 (class 2604 OID 16680)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -473,7 +473,7 @@ ALTER TABLE ONLY "Character" ALTER COLUMN id SET DEFAULT nextval('"Character_id_
 
 
 --
--- TOC entry 2056 (class 2604 OID 17846)
+-- TOC entry 2056 (class 2604 OID 16681)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -481,7 +481,7 @@ ALTER TABLE ONLY "Diagram" ALTER COLUMN id SET DEFAULT nextval('"Diagram_id_seq"
 
 
 --
--- TOC entry 2063 (class 2604 OID 17973)
+-- TOC entry 2057 (class 2604 OID 16682)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -489,7 +489,7 @@ ALTER TABLE ONLY "Element" ALTER COLUMN id SET DEFAULT nextval('"Element_id_seq"
 
 
 --
--- TOC entry 2060 (class 2604 OID 17911)
+-- TOC entry 2058 (class 2604 OID 16683)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -497,7 +497,7 @@ ALTER TABLE ONLY "Link" ALTER COLUMN id SET DEFAULT nextval('"Link_id_seq"'::reg
 
 
 --
--- TOC entry 2064 (class 2604 OID 17989)
+-- TOC entry 2059 (class 2604 OID 16684)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -505,7 +505,7 @@ ALTER TABLE ONLY "Outline" ALTER COLUMN id SET DEFAULT nextval('"Outline_id_seq"
 
 
 --
--- TOC entry 2065 (class 2604 OID 18005)
+-- TOC entry 2061 (class 2604 OID 16685)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -513,7 +513,7 @@ ALTER TABLE ONLY "Rule" ALTER COLUMN id SET DEFAULT nextval('"Rule_id_seq"'::reg
 
 
 --
--- TOC entry 2059 (class 2604 OID 17895)
+-- TOC entry 2062 (class 2604 OID 16686)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -521,7 +521,7 @@ ALTER TABLE ONLY "Scene" ALTER COLUMN id SET DEFAULT nextval('"Scene_id_seq"'::r
 
 
 --
--- TOC entry 2062 (class 2604 OID 17940)
+-- TOC entry 2063 (class 2604 OID 16687)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -529,7 +529,7 @@ ALTER TABLE ONLY "Trait" ALTER COLUMN id SET DEFAULT nextval('"Trait_id_seq"'::r
 
 
 --
--- TOC entry 2054 (class 2604 OID 17835)
+-- TOC entry 2065 (class 2604 OID 16688)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -537,7 +537,7 @@ ALTER TABLE ONLY "User" ALTER COLUMN id SET DEFAULT nextval('"User_id_seq"'::reg
 
 
 --
--- TOC entry 2058 (class 2604 OID 17884)
+-- TOC entry 2060 (class 2604 OID 16689)
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -545,7 +545,7 @@ ALTER TABLE ONLY "User_property" ALTER COLUMN id SET DEFAULT nextval('"Property_
 
 
 --
--- TOC entry 2071 (class 2606 OID 17873)
+-- TOC entry 2067 (class 2606 OID 16691)
 -- Name: Chapter_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -554,7 +554,7 @@ ALTER TABLE ONLY "Chapter"
 
 
 --
--- TOC entry 2079 (class 2606 OID 17929)
+-- TOC entry 2069 (class 2606 OID 16693)
 -- Name: Character_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -563,7 +563,7 @@ ALTER TABLE ONLY "Character"
 
 
 --
--- TOC entry 2069 (class 2606 OID 17851)
+-- TOC entry 2071 (class 2606 OID 16695)
 -- Name: Diagram_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -572,7 +572,7 @@ ALTER TABLE ONLY "Diagram"
 
 
 --
--- TOC entry 2085 (class 2606 OID 17978)
+-- TOC entry 2073 (class 2606 OID 16697)
 -- Name: Element_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -581,7 +581,7 @@ ALTER TABLE ONLY "Element"
 
 
 --
--- TOC entry 2077 (class 2606 OID 17913)
+-- TOC entry 2075 (class 2606 OID 16699)
 -- Name: Link_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -590,7 +590,7 @@ ALTER TABLE ONLY "Link"
 
 
 --
--- TOC entry 2087 (class 2606 OID 17994)
+-- TOC entry 2077 (class 2606 OID 16701)
 -- Name: Outline_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -599,7 +599,7 @@ ALTER TABLE ONLY "Outline"
 
 
 --
--- TOC entry 2073 (class 2606 OID 17889)
+-- TOC entry 2079 (class 2606 OID 16703)
 -- Name: Property_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -608,7 +608,7 @@ ALTER TABLE ONLY "User_property"
 
 
 --
--- TOC entry 2089 (class 2606 OID 18010)
+-- TOC entry 2081 (class 2606 OID 16705)
 -- Name: Rule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -617,7 +617,7 @@ ALTER TABLE ONLY "Rule"
 
 
 --
--- TOC entry 2075 (class 2606 OID 17900)
+-- TOC entry 2083 (class 2606 OID 16707)
 -- Name: Scene_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -626,7 +626,7 @@ ALTER TABLE ONLY "Scene"
 
 
 --
--- TOC entry 2083 (class 2606 OID 17952)
+-- TOC entry 2087 (class 2606 OID 16709)
 -- Name: TraitScene_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -635,7 +635,7 @@ ALTER TABLE ONLY "TraitScene"
 
 
 --
--- TOC entry 2081 (class 2606 OID 17942)
+-- TOC entry 2085 (class 2606 OID 16711)
 -- Name: Trait_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -644,7 +644,7 @@ ALTER TABLE ONLY "Trait"
 
 
 --
--- TOC entry 2067 (class 2606 OID 17837)
+-- TOC entry 2089 (class 2606 OID 16713)
 -- Name: User_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -653,7 +653,7 @@ ALTER TABLE ONLY "User"
 
 
 --
--- TOC entry 2091 (class 2606 OID 17874)
+-- TOC entry 2090 (class 2606 OID 16714)
 -- Name: Chapter_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -662,7 +662,7 @@ ALTER TABLE ONLY "Chapter"
 
 
 --
--- TOC entry 2094 (class 2606 OID 17930)
+-- TOC entry 2091 (class 2606 OID 16719)
 -- Name: Character_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -671,7 +671,7 @@ ALTER TABLE ONLY "Character"
 
 
 --
--- TOC entry 2090 (class 2606 OID 17852)
+-- TOC entry 2092 (class 2606 OID 16724)
 -- Name: Diagram_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -680,7 +680,7 @@ ALTER TABLE ONLY "Diagram"
 
 
 --
--- TOC entry 2099 (class 2606 OID 17979)
+-- TOC entry 2093 (class 2606 OID 16729)
 -- Name: Element_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -689,7 +689,7 @@ ALTER TABLE ONLY "Element"
 
 
 --
--- TOC entry 2093 (class 2606 OID 17914)
+-- TOC entry 2094 (class 2606 OID 16734)
 -- Name: Link_scene_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -698,7 +698,7 @@ ALTER TABLE ONLY "Link"
 
 
 --
--- TOC entry 2100 (class 2606 OID 17995)
+-- TOC entry 2095 (class 2606 OID 16739)
 -- Name: Outline_property_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -707,7 +707,7 @@ ALTER TABLE ONLY "Outline"
 
 
 --
--- TOC entry 2101 (class 2606 OID 18011)
+-- TOC entry 2096 (class 2606 OID 16744)
 -- Name: Rule_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -716,7 +716,7 @@ ALTER TABLE ONLY "Rule"
 
 
 --
--- TOC entry 2092 (class 2606 OID 17901)
+-- TOC entry 2097 (class 2606 OID 16749)
 -- Name: Scene_chapter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -725,7 +725,7 @@ ALTER TABLE ONLY "Scene"
 
 
 --
--- TOC entry 2096 (class 2606 OID 17953)
+-- TOC entry 2099 (class 2606 OID 16754)
 -- Name: TraitScene_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -734,7 +734,7 @@ ALTER TABLE ONLY "TraitScene"
 
 
 --
--- TOC entry 2097 (class 2606 OID 17958)
+-- TOC entry 2100 (class 2606 OID 16759)
 -- Name: TraitScene_scene_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -743,7 +743,7 @@ ALTER TABLE ONLY "TraitScene"
 
 
 --
--- TOC entry 2098 (class 2606 OID 17963)
+-- TOC entry 2101 (class 2606 OID 16764)
 -- Name: TraitScene_trait_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -752,15 +752,15 @@ ALTER TABLE ONLY "TraitScene"
 
 
 --
--- TOC entry 2095 (class 2606 OID 17943)
+-- TOC entry 2098 (class 2606 OID 16775)
 -- Name: Trait_character_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "Trait"
-    ADD CONSTRAINT "Trait_character_id_fkey" FOREIGN KEY (character_id) REFERENCES "Character"(id);
+    ADD CONSTRAINT "Trait_character_id_fkey" FOREIGN KEY (character_id) REFERENCES "Character"(id) ON DELETE CASCADE;
 
 
--- Completed on 2016-04-05 18:55:39
+-- Completed on 2016-04-07 15:01:56
 
 --
 -- PostgreSQL database dump complete
