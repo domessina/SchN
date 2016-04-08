@@ -51,9 +51,9 @@ public class MyVaadinUI extends UI {
 
 
 
-            Character character = characterPresenter.getCharacterService().getCharacterById(10);
-            //Character character= new Character();
-//            character.setDiagram_id(2);
+          //  Character character = characterPresenter.getCharacterService().getCharacterById(19);
+            Character character= new Character();
+            character.setDiagram_id(2);
            // character.setId(4);
             /*character.setName("Christero");
             character.setType("Principal");

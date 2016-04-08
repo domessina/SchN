@@ -1,19 +1,23 @@
 package be.beme.schn.vaadin;
 
+import com.google.gwt.thirdparty.guava.common.io.Files;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
 /**
  * Created by Dorito on 28-03-16.
  */
-public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver{
+public class ImageUploadPanel extends CustomComponent implements Upload.Receiver{
 
     private File file;
     private String path;
@@ -21,18 +25,23 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver{
     private Image image;
     private Panel imagePanel;
     private String fileName;
+    private File tmpdir;
+    private HorizontalLayout btnLayout;
 
     public ImageUploadPanel(String path, String fileName)
     {
         //super();              //même si tu ne l'écrit pas il l'appelle
         this.path = path;
         this.fileName=fileName;
+        tmpdir =Files.createTempDir();
+        VerticalLayout layout= new VerticalLayout();
         setSizeFull();
-        addComponent(buildImagePanel());
-        setExpandRatio(imagePanel,7f);
-        addComponent(buildUpload());
-        setExpandRatio(upload,3f);
-
+        layout.setSizeFull();
+        layout.addComponent(buildImagePanel());
+        layout.setExpandRatio(imagePanel,7f);
+        layout.addComponent(buildBtnLayout());
+        layout.setExpandRatio(btnLayout,3f);
+        setCompositionRoot(layout);
     }
 
 
@@ -52,7 +61,8 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver{
 
 
         try {
-            file = new File(this.path +this.fileName);
+
+            file= new File(tmpdir.getPath(),this.fileName);
             fos = new FileOutputStream(file);
         }
         catch (final Exception e)
@@ -64,6 +74,22 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver{
         return fos;
     }
 
+    private Layout buildBtnLayout()
+    {
+        btnLayout = new HorizontalLayout();
+        Button erase = new Button(FontAwesome.ERASER);
+        erase.addClickListener(event -> {
+            this.file=null;
+                image.setSource(null);
+            this.fileName=null;
+        });
+        btnLayout.addComponent(buildUpload());
+        btnLayout.addComponent(erase);
+        btnLayout.setWidth(100,Unit.PERCENTAGE);
+        btnLayout.setComponentAlignment(upload,Alignment.BOTTOM_LEFT);
+        btnLayout.setComponentAlignment(erase,Alignment.TOP_RIGHT);
+        return btnLayout;
+    }
 
     private Upload buildUpload()
     {
@@ -97,9 +123,40 @@ public class ImageUploadPanel extends VerticalLayout implements Upload.Receiver{
         return imagePanel;
     }
 
+    public void commit()
+    {
+        try {
+            Files.move(file,new File(this.path+this.fileName));
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void deleteTmpDir()
+    {
+        try {
+            FileUtils.deleteDirectory(this.tmpdir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteImage()
+    {
+        try{
+            this.file.delete();
+        }
+        catch(NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public String getFileName(){
         return this.fileName;
     }
+
 
 
 }

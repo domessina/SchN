@@ -12,6 +12,7 @@ import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -27,15 +28,13 @@ import java.util.List;
 
 //TODO un URI pour chaque Window?
 
-public class CharacterWindow extends Window implements Button.ClickListener,NarrativeView,CrudListener {
+public class CharacterWindow extends WindowView implements CrudListener, Window.CloseListener {
 
     private Panel propertiesPanel;
     private TraitTableCrud traitTableCrud;
     private List<UserProperty> userPropertyList;
     private Character character;
     private Button buttonReferences;
-    private Button buttonSave;
-    private Button buttonErase;
     private TextField name;
     private ComboBox type;
     private TextArea textArea;
@@ -52,50 +51,31 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
         super("Character Informations");
         this.character= character;
         this.traitPresenter = traitPresenter;
-        setResizable(false);
-        setModal(true);
+
         setId("CharacterWindow");
-        setHeight(99,Unit.PERCENTAGE);
+        setHeight(99, Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
-        setContent(buildContent());
+        addCloseListener(this);
+        setWrappedContent(buildContent());
 
     }
 
     private Layout buildContent()
     {
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setMargin(true);
         verticalLayout.setSizeFull();
-       //imageUploadPanel= new ImageUploadPanel( "C:\\Users\\Dorito\\TFEImages\\NarrativeScheme\\Users\\1\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\"+this.character.getId()+"\\");
-        //TODO ici changer le dir user 1
-        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
-        buttonSave = new Button("Save");
-        buttonSave.addClickListener(this);
-        buttonSave.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
-        buttonErase = new Button("Erase");
-        buttonErase.addClickListener(this);
-        buttonErase.setStyleName(ValoTheme.BUTTON_DANGER,true);
-        buttonErase.setStyleName(ValoTheme.BUTTON_TINY,true);
+        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
+
         if(this.character.getId()==0)
         {
             buttonErase.setEnabled(false);
         }
 
-        HorizontalLayout horizontalLayout= new HorizontalLayout();
-        horizontalLayout.addComponent(buttonErase);
-        horizontalLayout.setComponentAlignment(buttonErase,Alignment.MIDDLE_CENTER);
-        horizontalLayout.addComponent(buttonSave);
-        horizontalLayout.setComponentAlignment(buttonSave,Alignment.MIDDLE_RIGHT);
-        horizontalLayout.setWidth(100,Unit.PERCENTAGE);
-
         verticalLayout.addComponent(imageUploadPanel);
-       verticalLayout.setExpandRatio(imageUploadPanel,5);
+       verticalLayout.setExpandRatio(imageUploadPanel,4);
         verticalLayout.addComponent(buildPropertiesPanel());
-       verticalLayout.setExpandRatio(propertiesPanel,5);
-        verticalLayout.addComponent(horizontalLayout);
-
-
+       verticalLayout.setExpandRatio(propertiesPanel,6);
 
         return verticalLayout;
     }
@@ -196,12 +176,14 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
 
                     case "Save": {
                         this.character = this.characterWindowPresenter.save();
-                        createTraits();
-                        updateTraits();
-                        deleteTraits();
 
-                        //TODO gérer si exception durant crud
+
+                        //TODO gérer si exception durant crud Traits
                         if (this.character != null) {
+                            createTraits();
+                            updateTraits();
+                            deleteTraits();
+                            imageUploadPanel.commit();
                             close();
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
@@ -213,6 +195,7 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
                        // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
                         eraseCok = this.characterWindowPresenter.erase();
                         if (eraseCok) {
+                            imageUploadPanel.deleteImage();
                             close();
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
@@ -283,5 +266,8 @@ public class CharacterWindow extends Window implements Button.ClickListener,Narr
     }
 
 
-
+    @Override
+    public void windowClose(CloseEvent e) {
+        imageUploadPanel.deleteTmpDir();
+    }
 }
