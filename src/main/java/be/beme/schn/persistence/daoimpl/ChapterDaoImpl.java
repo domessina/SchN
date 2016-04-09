@@ -18,12 +18,12 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
 
 
     @Override
-    public int createChapter(int diagramId, String phase, String title, int previousChapterId) {
+    public int create(int diagramId, String phase, String title, int previousChapterId, String note) {
 
-        jdbcTemplate.update("insert into Chapter (diagram_id,phase,title, previous_chapter_id) values (?,?,?,?)"
-                ,diagramId, phase, title, previousChapterId);
+        jdbcTemplate.update("insert into \"Chapter\" (diagram_id,phase,title, previous_chapter_id, notes) values (?,?,?,?,?)"
+                ,diagramId, phase, title, previousChapterId,note);
 
-        return jdbcTemplate.queryForObject("select last(id) from Chapter where diagram_id=?",
+        return jdbcTemplate.queryForObject("select max(id) from \"Chapter\" where diagram_id=?",
                   new Object[] {diagramId},Integer.class);
     }
 

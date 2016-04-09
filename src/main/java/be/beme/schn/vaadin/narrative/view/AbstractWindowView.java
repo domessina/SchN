@@ -6,14 +6,14 @@ import com.vaadin.ui.themes.ValoTheme;
 /**
  * Created by Dorito on 29-03-16.
  */
-public abstract class WindowView extends Window implements NarrativeView, Button.ClickListener{
+public abstract class AbstractWindowView extends Window implements NarrativeView, Button.ClickListener{
 
 
     protected VerticalLayout rootLayout;
     protected Button buttonErase;
     protected Button buttonSave;
 
-    public WindowView(String caption)
+    public AbstractWindowView(String caption)
     {
         super(caption);
         setResizable(false);
@@ -26,7 +26,7 @@ public abstract class WindowView extends Window implements NarrativeView, Button
     }
 
 
-    public void setWrappedContent(Component component)
+    public final void setWrappedContent(Component component)        //it' final, the daughet class can't override it
     {
         Component wrapped=component;
         this.rootLayout.addComponent(component);

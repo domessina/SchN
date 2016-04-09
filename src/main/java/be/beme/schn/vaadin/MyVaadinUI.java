@@ -1,11 +1,13 @@
 package be.beme.schn.vaadin;
 
+import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Diagram;
-import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
+import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
+import be.beme.schn.vaadin.narrative.view.ChapterWindow;
 import be.beme.schn.vaadin.narrative.view.CharacterWindow;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -39,6 +41,9 @@ public class MyVaadinUI extends UI {
     @Autowired
     private TraitCrudPresenter traitPresenter;
 
+    @Autowired
+    private ChapterPresenter chapterPresenter;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
@@ -51,9 +56,9 @@ public class MyVaadinUI extends UI {
 
 
 
-          //  Character character = characterPresenter.getCharacterService().getCharacterById(19);
-            Character character= new Character();
-            character.setDiagram_id(2);
+            Character character = characterPresenter.getDaoService().getCharacterById(23);
+         //   Character character= new Character();
+          //  character.setDiagram_id(2);
            // character.setId(4);
             /*character.setName("Christero");
             character.setType("Principal");
@@ -88,6 +93,17 @@ public class MyVaadinUI extends UI {
         verticalLayout.addComponent(label);
         //Jcrop jcrop=new Jcrop();
         //this.addWindow(new DiagramChoiceWindow(listDiagram));
+
+        verticalLayout.addComponent(new Button("Chapter",event ->
+        {
+
+                ChapterWindow chapter = new ChapterWindow(new Chapter());
+                chapter.setHandler(chapterPresenter);
+                this.addWindow(chapter);}
+        )
+        );
+
+
         setContent(verticalLayout);
     }
 }

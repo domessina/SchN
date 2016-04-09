@@ -20,13 +20,14 @@ import java.util.UUID;
 public class ImageUploadPanel extends CustomComponent implements Upload.Receiver{
 
     private File file;
+    private File origImage;
     private String path;
     private Upload upload;
-    private Image image;
-    private Panel imagePanel;
+    private ImagePanel imagePanel;
     private String fileName;
     private File tmpdir;
     private HorizontalLayout btnLayout;
+    private boolean imageEmpty;
 
     public ImageUploadPanel(String path, String fileName)
     {
@@ -80,8 +81,9 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         Button erase = new Button(FontAwesome.ERASER);
         erase.addClickListener(event -> {
             this.file=null;
-                image.setSource(null);
+                imagePanel.setImageSource(null);
             this.fileName=null;
+            this.imageEmpty=true;
         });
         btnLayout.addComponent(buildUpload());
         btnLayout.addComponent(erase);
@@ -99,27 +101,24 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         upload.addSucceededListener(event -> {
 
             //changing the imageSource refresh the image in the browser
-            this.image.setSource(new FileResource(this.file));
+           this.imagePanel.setImageSource(new FileResource(this.file));
         });
         return upload;
     }
 
     private Panel buildImagePanel()
     {
-        imagePanel = new Panel();
-        imagePanel.setSizeFull();
-        imagePanel.setScrollLeft(1111110);
-        image = new Image();
+        imagePanel = new ImagePanel();
 
         if((this.fileName!=null)&&(this.path !=null))  //it's null when we instantiate a new empty character. It's says "only load the image if the fileName and path are not null"
         {
             file = new File(this.path +this.fileName);
+            origImage=file;
             Resource resource= new FileResource(file);
-            image = new Image(null,resource);
+            imagePanel.setImageSource(resource);
+            imageEmpty=false;
         }
 
-        image.setImmediate(true);
-        imagePanel.setContent(image);
         return imagePanel;
     }
 
@@ -157,6 +156,18 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         return this.fileName;
     }
 
+    public void deleteOrigImage()
+    {
+        try{
+            this.origImage.delete();
+        }
+        catch(NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-
+    public boolean isImageEmpty() {
+        return imageEmpty;
+    }
 }

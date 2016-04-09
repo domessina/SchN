@@ -40,7 +40,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
                 Types.VARCHAR,
                 Types.VARCHAR,
                 Types.VARCHAR,
-                Types.INTEGER});//si probleme avec LONGVARCHAR, use VARCHAR
+                Types.INTEGER});//si probleme avec LONGVARCHAR pour TEXT, use VARCHAR
     }
 
     @Override

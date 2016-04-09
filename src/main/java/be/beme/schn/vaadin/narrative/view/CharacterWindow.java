@@ -12,12 +12,10 @@ import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.Sizeable;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ import java.util.List;
 
 //TODO un URI pour chaque Window?
 
-public class CharacterWindow extends WindowView implements CrudListener, Window.CloseListener {
+public class CharacterWindow extends AbstractWindowView implements CrudListener, Window.CloseListener {
 
     private Panel propertiesPanel;
     private TraitTableCrud traitTableCrud;
@@ -184,6 +182,10 @@ public class CharacterWindow extends WindowView implements CrudListener, Window.
                             updateTraits();
                             deleteTraits();
                             imageUploadPanel.commit();
+                            if(imageUploadPanel.isImageEmpty())
+                            {
+                                imageUploadPanel.deleteOrigImage();
+                            }
                             close();
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);

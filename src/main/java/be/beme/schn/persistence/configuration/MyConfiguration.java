@@ -2,6 +2,7 @@ package be.beme.schn.persistence.configuration;
 
 import be.beme.schn.persistence.dao.CharacterDao;
 import be.beme.schn.persistence.dao.DiagramDao;
+import be.beme.schn.persistence.daoimpl.ChapterDaoImpl;
 import be.beme.schn.persistence.daoimpl.CharacterDaoImpl;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import com.vaadin.spring.annotation.EnableVaadin;
@@ -20,16 +21,6 @@ public  class MyConfiguration {
 
     @Autowired
     private PGSimpleDataSource dataSource;
-
-    @Bean
-    public DiagramDao diagramDaoImpl()
-    {
-        return new DiagramDaoImpl();
-    }
-
-    @Bean
-    public CharacterDao characterDaoImpl(){return new CharacterDaoImpl();}
-
 
     @Bean
     public JdbcTemplate jdbcTemplate()

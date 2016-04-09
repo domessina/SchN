@@ -89,8 +89,6 @@ public class CharacterWindowPresenter implements WindowPresenter {
         this.characterWindow=(CharacterWindow) narrativeView;
     }
 
-    public CharacterDaoImpl getCharacterService()
-    {
-        return characterService;
-    }
+    public CharacterDaoImpl getDaoService(){return this.characterService;}
+
 }

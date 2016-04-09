@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface ChapterDao {
 
-    int createChapter(int diagramId, String phase, String title, int previousChapterId);
+    int create(int diagramId, String phase, String title, int previousChapterId, String note);
 
     void setNote(int chapterId, String note);
 
