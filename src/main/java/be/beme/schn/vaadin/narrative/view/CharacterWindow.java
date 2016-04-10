@@ -67,7 +67,7 @@ public class CharacterWindow extends AbstractWindowView implements CrudListener,
 
         if(this.character.getId()==0)
         {
-            buttonErase.setEnabled(false);
+            buttonErase.setVisible(false);
         }
 
         verticalLayout.addComponent(imageUploadPanel);

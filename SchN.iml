@@ -9,6 +9,13 @@
         </fileset>
       </configuration>
     </facet>
+    <facet type="gwt" name="GWT">
+      <configuration>
+        <setting name="additionalCompilerParameters" value="-Xss1024k" />
+        <setting name="compilerMaxHeapSize" value="512" />
+        <setting name="gwtScriptOutputStyle" value="OBF" />
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
@@ -24,13 +31,13 @@
     <orderEntry type="library" name="Maven: com.vaadin:vaadin-spring-boot-starter:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin:vaadin-spring-boot:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin:vaadin-spring:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.vaadin:vaadin-server:7.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.vaadin:vaadin-server:7.6.4" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin:vaadin-sass-compiler:0.9.13" level="project" />
     <orderEntry type="library" name="Maven: org.w3c.css:sac:1.3" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin.external.flute:flute:1.3.0.gg2" level="project" />
     <orderEntry type="library" name="Maven: com.yahoo.platform.yui:yuicompressor:2.4.8" level="project" />
     <orderEntry type="library" name="Maven: rhino:js:1.7R2" level="project" />
-    <orderEntry type="library" name="Maven: com.vaadin:vaadin-shared:7.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.vaadin:vaadin-shared:7.6.4" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin.external.streamhtmlparser:streamhtmlparser-jsilver:0.0.10.vaadin1" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin.external.google:guava:16.0.1.vaadin1" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.8.3" level="project" />
@@ -56,8 +63,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-web:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.vaadin:vaadin-themes:7.6.3" level="project" />
-    <orderEntry type="library" name="Maven: com.vaadin:vaadin-client-compiled:7.6.3" level="project" />
+    <orderEntry type="library" name="Maven: com.vaadin:vaadin-client-compiled:7.6.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:1.3.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.3.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:1.3.3.RELEASE" level="project" />
@@ -88,5 +94,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:9.4-1206-jdbc42" level="project" />
     <orderEntry type="library" name="Maven: org.vaadin.addons:vaadin-jcrop:1.1.2" level="project" />
+    <orderEntry type="library" name="Maven: com.vaadin:vaadin-themes:7.6.4" level="project" />
   </component>
 </module>

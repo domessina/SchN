@@ -58,6 +58,14 @@
 			<artifactId>vaadin-jcrop</artifactId>
 			<version>1.1.2</version>
 		</dependency>
+
+		<!--Pour compiler mytheme.scss en css-->
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-themes</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
 	</dependencies>
 	
 	<dependencyManagement>
@@ -65,7 +73,7 @@
 			<dependency>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-bom</artifactId>
-				<version>7.6.3</version>
+				<version>7.6.4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -86,6 +94,38 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+				<!--Pour compiler mytheme.scss en css. the theme is compiled as part of relevant lifecycle phases, such as 'mvn package'-->
+			<plugin>
+					<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<configuration>
+					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
+					<webappDirectory>${basedir}/target/classes/VAADIN/widgetsets</webappDirectory>
+					<draftCompile>false</draftCompile>
+					<compileReport>false</compileReport>
+					<style>OBF</style>
+					<strict>true</strict>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>clean</goal>
+							<goal>resources</goal>
+							<goal>update-theme</goal>
+							<goal>update-widgetset</goal>
+							<goal>compile-theme</goal>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+
+
+
+
 		</plugins>
 	</build>
 	

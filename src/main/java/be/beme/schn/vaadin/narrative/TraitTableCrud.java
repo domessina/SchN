@@ -95,25 +95,29 @@ public class TraitTableCrud extends TableCrud<Trait> {
 
             TextField tf=(TextField)this.formLayout.getComponent(0);
 
-            if(targetId ==null)
+            if(!tf.isEmpty())
             {
-                traitCrud= new Trait(tf.getValue(),0);
-                addItem(new Object[]{traitCrud},traitCrud);
-                objCreated=true;
-                objUpdated=false;
-                objDeleted=false;
-            }
-            else
-            {
-                traitCrud.setName(tf.getValue());
-              getItem(targetId).getItemProperty("Trait").setValue(traitCrud);
-                targetId=null;
-                objCreated=false;
-                objUpdated=true;
-                objDeleted=false;
+                if(targetId ==null)
+                {
+                    traitCrud= new Trait(tf.getValue(),0);
+                    addItem(new Object[]{traitCrud},traitCrud);
+                    objCreated=true;
+                    objUpdated=false;
+                    objDeleted=false;
+                }
+                else
+                {
+                    traitCrud.setName(tf.getValue());
+                    getItem(targetId).getItemProperty("Trait").setValue(traitCrud);
+                    targetId=null;
+                    objCreated=false;
+                    objUpdated=true;
+                    objDeleted=false;
+                }
+
+                close();
             }
 
-            close();
         }
 
         @Override

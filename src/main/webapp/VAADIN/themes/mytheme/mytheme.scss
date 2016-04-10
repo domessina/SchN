@@ -36,5 +36,16 @@
 
   // Insert your own theme rules here
 
+  .redbutton
+  {
+    color:green;
+    border-color:green;
+  }
+
+  .round-corner
+  {
+    border: 2px solid;
+    border-radius: 15px;
+  }
 
 }
