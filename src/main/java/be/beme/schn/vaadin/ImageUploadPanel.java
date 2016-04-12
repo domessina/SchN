@@ -23,7 +23,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
     private File origImage;
     private String path;
     private Upload upload;
-    private ImagePanel imagePanel;
+    private Image image;
     private String fileName;
     private File tmpdir;
     private HorizontalLayout btnLayout;
@@ -39,7 +39,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         setSizeFull();
         layout.setSizeFull();
         layout.addComponent(buildImagePanel());
-        layout.setExpandRatio(imagePanel,7f);
+        layout.setExpandRatio(image,7f);
         layout.addComponent(buildBtnLayout());
         layout.setExpandRatio(btnLayout,3f);
         setCompositionRoot(layout);
@@ -81,7 +81,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         Button erase = new Button(FontAwesome.ERASER);
         erase.addClickListener(event -> {
             this.file=null;
-                imagePanel.setImageSource(null);
+                image.setSource(null);
             this.fileName=null;
             this.imageEmpty=true;
         });
@@ -97,29 +97,31 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
     {
         upload= new Upload("",this);
         upload.setImmediate(true);
-        upload.setButtonCaption("Browse...");
+        upload.setButtonCaption("Browse picture...");
         upload.addSucceededListener(event -> {
 
             //changing the imageSource refresh the image in the browser
-           this.imagePanel.setImageSource(new FileResource(this.file));
+           this.image.setSource(new FileResource(this.file));
         });
         return upload;
     }
 
-    private Panel buildImagePanel()
+    private Image buildImagePanel()
     {
-        imagePanel = new ImagePanel();
+        image = new Image();
+        image.setImmediate(true);
+        image.setWidth(100,Unit.PERCENTAGE);
 
         if((this.fileName!=null)&&(this.path !=null))  //it's null when we instantiate a new empty character. It's says "only load the image if the fileName and path are not null"
         {
             file = new File(this.path +this.fileName);
             origImage=file;
             Resource resource= new FileResource(file);
-            imagePanel.setImageSource(resource);
+            image.setSource(resource);
             imageEmpty=false;
         }
 
-        return imagePanel;
+        return image;
     }
 
     public void commit()

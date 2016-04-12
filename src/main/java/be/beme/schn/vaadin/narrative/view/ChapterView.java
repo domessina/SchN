@@ -6,6 +6,7 @@ import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.ChapterPHLayout;
+import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.MouseEvents;
@@ -18,7 +19,7 @@ import java.io.File;
 /**
  * Created by Dotista on 08-04-16.
  */
-public class ChapterView<T extends NWrapper > extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped {
+public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped {
 
     private ChapterPresenter presenter;
     private Chapter chapter;
@@ -28,41 +29,34 @@ public class ChapterView<T extends NWrapper > extends CustomComponent implements
     private TextArea notes;
     private boolean settingsMode;
     private GridLayout gLayout;
-    private Class<T> wrapperClass;
-    private T wrapper;
+    private Button buttonAddSc;
     private Button buttonErase;
     private Button buttonSave;
     private Button buttonSet;
+    private NWrapperPanel wrapper;
 
-    public ChapterView(Chapter chapter, Class<T> wrapperClass)
+    public ChapterView(Chapter chapter)
     {
         this.chapter=chapter;
-        this.wrapperClass=wrapperClass;
         setHeight(100, Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
-        buildWrapper();
-        confWrapperBtns();
-        this.wrapper.setWrappedContent(buildContent());
-        setCompositionRoot(wrapper);
+        setCompositionRoot(buildContent());
     }
 
-    private void buildWrapper()
+
+    public void wrap(NWrapper wrapper)
     {
-        try {
-//            wrapperClass= wrapper.getClass();
-//            String wrapperClassName = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
-//            wrapperClass=Class.forName(wrapperClassName);
-//           wrapperClass=NWrapperPanel.class;
-            wrapper=wrapperClass.newInstance();
-            wrapper.setCaption("Chapter");
-            wrapper.setSizeFull();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
+        this.wrapper=(NWrapperPanel)wrapper;
+        confWrapperBtns();
 
+        if(this.chapter.getId()==0)
+        {
+            toggleSettings();
+            buttonErase.setVisible(false);
+            buttonSet.setVisible(false);
+        }
+
+    }
     private void confWrapperBtns()
     {
         buttonErase=wrapper.getButtonErase();
@@ -78,24 +72,18 @@ public class ChapterView<T extends NWrapper > extends CustomComponent implements
     private Layout buildContent()
     {
         VerticalLayout verticalLayout= new VerticalLayout();
-        Button addScBTN = new Button("+",this);
+        buttonAddSc = new Button("+",this);
 
         verticalLayout.addComponent(buildScStickers());
-        verticalLayout.addComponent(addScBTN);
-        verticalLayout.setComponentAlignment(addScBTN,Alignment.MIDDLE_RIGHT);
+        verticalLayout.addComponent(buttonAddSc);
+        verticalLayout.setComponentAlignment(buttonAddSc,Alignment.MIDDLE_RIGHT);
         verticalLayout.addComponent(buildProperties());
         verticalLayout.setExpandRatio(pstickers,9);
-        verticalLayout.setExpandRatio(addScBTN,1);
+        verticalLayout.setExpandRatio(buttonAddSc,1);
         verticalLayout.setExpandRatio(propertiesPanel,10);
         verticalLayout.setSizeFull();
         verticalLayout.setSpacing(true);
 
-        if(this.chapter.getId()==0)
-        {
-            toggleSettings();
-            buttonErase.setVisible(false);
-            buttonSet.setVisible(false);
-        }
         return verticalLayout;
     }
 
@@ -204,11 +192,15 @@ public class ChapterView<T extends NWrapper > extends CustomComponent implements
         settingsMode=!settingsMode;
         try
         {
-            ((ChapterPHLayout)this.getParent()).enableAllChilds(!settingsMode);
+            ((ChapterPHLayout)this.wrapper.getParent()).enableAllChilds(!settingsMode);
         }
         catch (NullPointerException e)
         {
             System.out.println("There is no chapter for this phase yet");
+        }
+        catch ( ClassCastException e)
+        {
+            System.out.println("This wrapper is not in a ChapterPHLayout");
         }
 
 
@@ -216,8 +208,10 @@ public class ChapterView<T extends NWrapper > extends CustomComponent implements
         buttonSave.setVisible(settingsMode);
         propertiesPanel.setEnabled(settingsMode);
         pstickers.setEnabled(!settingsMode);
+        buttonAddSc.setEnabled(!settingsMode);
 
-        this.setEnabled(true);
+
+        wrapper.setEnabled(true);
     }
 
     @Override
@@ -247,5 +241,11 @@ public class ChapterView<T extends NWrapper > extends CustomComponent implements
             }
 //                UI.getCurrent().addWindow(new SceneWindow(sctarget));*/
         }
+    }
+
+
+    @Override
+    public NWrapper getWrapper() {
+        return this.wrapper;
     }
 }

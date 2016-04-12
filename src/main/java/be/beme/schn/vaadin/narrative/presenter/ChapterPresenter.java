@@ -27,7 +27,7 @@ public class ChapterPresenter implements WindowPresenter {
     public NarrativeComponent save() {
         try
         {
-            this.chapter=this.view.getChapter();
+             this.chapter=this.view.getChapter();
             int id;
             if(chapter.getId()==0)
             {

@@ -9,6 +9,8 @@ import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
 import be.beme.schn.vaadin.narrative.view.ChapterView;
+import be.beme.schn.vaadin.narrative.view.CharacterWindow;
+import be.beme.schn.narrative.component.Character;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
@@ -111,8 +113,12 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             chapter.setScenes(scenes);
             chapter.setDiagramId(2);
             chapter.setPhase("si");
-            ChapterView chapterW = new ChapterView<>(chapter,NWrapperPanel.class);
+            ChapterView chapterW = new ChapterView(chapter);
             chapterW.setHandler(chapterPresenter);
+            NWrapperPanel wrapper=new NWrapperPanel(chapterW);
+            wrapper.setSizeFull();
+            wrapper.setCaption("Chapter");
+            chapterW.wrap(wrapper);
             chapterViews.add(chapterW);
 //                verticalLayout.addComponent(chapterW);
         }
@@ -133,7 +139,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         for(ChapterView cp: chapterViews)
         {
-            chapterLayout.addComponent(cp);
+            chapterLayout.addComponent(cp.getWrapper());
         }
 
         tabPanel.setContent(chapterLayout);
@@ -146,7 +152,14 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         verticalLayout.setSizeFull();
         HorizontalLayout hl= new HorizontalLayout(new Button("new Chapter",clickEvent -> {
-            chapterLayout.addComponent(new ChapterView<>(new Chapter(),NWrapperPanel.class));
+            ChapterView chapterView= new ChapterView(new Chapter());
+            NWrapperPanel wrapper=new NWrapperPanel(chapterView);
+            chapterView.wrap(wrapper);
+            Window window=new Window("New Chapter",wrapper);
+            window.setModal(true);
+            window.setDraggable(false);
+            window.setResizable(false);
+            this.addWindow(window);
         }));
         hl.setSizeFull();
         verticalLayout.addComponent(hl);
@@ -158,6 +171,48 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         verticalLayout.setExpandRatio(hl,1);
 
 //        tabSheet.setTabIndex for Tab Key
+
+        TextField tf= new TextField("Character Id");
+        hl.addComponent(tf);
+        hl.addComponent(new Button("show character",event1 -> {
+            Character character = characterPresenter.getDaoService().getCharacterById(Integer.valueOf(tf.getValue()));
+            CharacterWindow characterWindow= new CharacterWindow(character, traitPresenter);
+            characterWindow.setHandler(characterPresenter);
+            characterPresenter.setView(characterWindow);
+            NWrapperPanel wrapper= new NWrapperPanel(characterWindow);
+            wrapper.setSizeFull();
+            characterWindow.wrap(wrapper);
+
+            Window window = new Window("New Character",wrapper);
+            window.setModal(true);
+            window.setDraggable(false);
+            window.setResizable(false);
+            window.setHeight(99,Unit.PERCENTAGE);
+
+            window.setWidth( 31,Unit.EM);
+            this.addWindow(window);
+        }));
+
+        hl.addComponent(new Button("new Character", event -> {
+            Character character= new Character();
+            character.setDiagram_id(2);
+
+            CharacterWindow characterWindow= new CharacterWindow(character, traitPresenter);
+            characterWindow.setHandler(characterPresenter);
+            characterPresenter.setView(characterWindow);
+            NWrapperPanel wrapper= new NWrapperPanel(characterWindow);
+            wrapper.setSizeFull();
+            characterWindow.wrap(wrapper);
+
+            Window window = new Window("New Character",wrapper);
+            window.setModal(true);
+            window.setDraggable(false);
+            window.setResizable(false);
+            window.setHeight(99,Unit.PERCENTAGE);
+
+            window.setWidth( 31,Unit.EM);
+            this.addWindow(window);
+        }));
 
 
         setContent(verticalLayout);

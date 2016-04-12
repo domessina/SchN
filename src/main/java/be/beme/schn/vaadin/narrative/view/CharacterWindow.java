@@ -6,6 +6,9 @@ import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.narrative.component.UserProperty;
 import be.beme.schn.vaadin.ImageUploadPanel;
 import be.beme.schn.vaadin.CrudListener;
+import be.beme.schn.vaadin.narrative.NWrapped;
+import be.beme.schn.vaadin.narrative.NWrapper;
+import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.TraitTableCrud;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
@@ -26,9 +29,9 @@ import java.util.List;
 
 //TODO un URI pour chaque Window?
 
-public class CharacterWindow extends AbstractWindowView implements CrudListener, Window.CloseListener {
+public class CharacterWindow extends CustomComponent implements NarrativeView, NWrapped,CrudListener, Window.CloseListener {
 
-    private Panel propertiesPanel;
+    private Panel rootPanel;
     private TraitTableCrud traitTableCrud;
     private List<UserProperty> userPropertyList;
     private Character character;
@@ -42,58 +45,86 @@ public class CharacterWindow extends AbstractWindowView implements CrudListener,
     private  ImageUploadPanel imageUploadPanel;
     private CharacterWindowPresenter characterWindowPresenter;
     private TraitCrudPresenter traitPresenter;
+    private VerticalLayout vLayoutProperties;
+    private NWrapperPanel wrapper;
+    private Button buttonAddSc;
+    private Button buttonErase;
+    private Button buttonSave;
+    private Button buttonSet;
+
 
 
     public CharacterWindow(Character character, TraitCrudPresenter traitPresenter)
     {
-        super("Character Informations");
         this.character= character;
         this.traitPresenter = traitPresenter;
 
         setId("CharacterWindow");
         setHeight(99, Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
-        addCloseListener(this);
-        setWrappedContent(buildContent());
+        setCompositionRoot(buildContent());
 
     }
 
-    private Layout buildContent()
+    public void wrap(NWrapper wrapper)
     {
-        VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setSizeFull();
-
-        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
-
+        this.wrapper=(NWrapperPanel)wrapper;
+        confWrapperBtns();
         if(this.character.getId()==0)
         {
             buttonErase.setVisible(false);
+            buttonSet.setVisible(false);
         }
-
-        verticalLayout.addComponent(imageUploadPanel);
-       verticalLayout.setExpandRatio(imageUploadPanel,4);
-        verticalLayout.addComponent(buildPropertiesPanel());
-       verticalLayout.setExpandRatio(propertiesPanel,6);
-
-        return verticalLayout;
     }
 
-    private Panel buildPropertiesPanel()
+    private void confWrapperBtns()
+    {
+        buttonErase=wrapper.getButtonErase();
+        buttonSave=wrapper.getButtonSave();
+        buttonSet=wrapper.getButtonSet();
+        buttonErase.addClickListener(this);
+        buttonSave.addClickListener(this);
+        buttonSet.addClickListener(this);
+        buttonSet.setVisible(false);
+    }
+
+    private Component buildContent()
     {
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setMargin(true);
-        verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>",ContentMode.HTML));
-        verticalLayout.addComponent(buildFormLayout());
+//        verticalLayout.setSizeFull();
+
+        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
+
+
+
+        verticalLayout.addComponent(imageUploadPanel);
+        verticalLayout.setExpandRatio(imageUploadPanel,4);
+        verticalLayout.addComponent(buildPropertiesPanel());
+        verticalLayout.setExpandRatio(vLayoutProperties,6);
+
+        rootPanel= new Panel();
+        rootPanel.setSizeFull();
+        rootPanel.setContent(verticalLayout);
+
+        return rootPanel;
+    }
+
+    private Layout  buildPropertiesPanel()
+    {
+        vLayoutProperties = new VerticalLayout();
+        vLayoutProperties.setSizeFull();
+        vLayoutProperties.setMargin(true);
+        vLayoutProperties.addComponent(new Label("<h3>Simple Properties</h3>",ContentMode.HTML));
+        vLayoutProperties.addComponent(buildFormLayout());
         textArea= new TextArea("Notes");
         textArea.setValue(character.getNote());
         textArea.setNullRepresentation("");
         textArea.setWidth(100,Unit.PERCENTAGE);
-        verticalLayout.addComponent(textArea);
-        verticalLayout.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
-        verticalLayout.addComponent(buildFormLayoutUserProperties());
-        propertiesPanel = new Panel(verticalLayout);
-        propertiesPanel.setSizeFull();
-        return propertiesPanel;
+        vLayoutProperties.addComponent(textArea);
+        vLayoutProperties.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
+        vLayoutProperties.addComponent(buildFormLayoutUserProperties());
+
+        return vLayoutProperties;
     }
 
     private Component buildFormLayout()
@@ -168,7 +199,7 @@ public class CharacterWindow extends AbstractWindowView implements CrudListener,
             this.character.setPicture(imageUploadPanel.getFileName());
 //            this.character.setAllTraits(traitTableCrud.getAllTraits());                          //reinit Character's list of traits
 
-             boolean eraseCok=false;
+            boolean eraseCok=false;
             try {
                 switch (event.getButton().getCaption()) {
 
@@ -186,7 +217,11 @@ public class CharacterWindow extends AbstractWindowView implements CrudListener,
                             {
                                 imageUploadPanel.deleteOrigImage();
                             }
-                            close();
+                            if(wrapper.getParent() instanceof Window)
+                            {
+                                ((Window) wrapper.getParent()).close();
+                            }
+
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
                         }
@@ -194,12 +229,17 @@ public class CharacterWindow extends AbstractWindowView implements CrudListener,
                         break;
                     }
                     case "Erase": {
-                       // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
+                        // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
                         eraseCok = this.characterWindowPresenter.erase();
-                        if (eraseCok) {
+                        if (eraseCok)
+                        {
                             imageUploadPanel.deleteImage();
-                            close();
-                        } else {
+                            if(wrapper.getParent() instanceof Window)
+                            {
+                                ((Window) wrapper.getParent()).close();
+                            }
+                        }
+                        else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
                         }
                         break;
@@ -269,7 +309,12 @@ public class CharacterWindow extends AbstractWindowView implements CrudListener,
 
 
     @Override
-    public void windowClose(CloseEvent e) {
+    public void windowClose(Window.CloseEvent e) {
         imageUploadPanel.deleteTmpDir();
+    }
+
+    @Override
+    public NWrapper getWrapper() {
+        return wrapper;
     }
 }

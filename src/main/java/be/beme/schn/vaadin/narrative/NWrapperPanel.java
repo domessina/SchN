@@ -25,11 +25,15 @@ public class NWrapperPanel extends Panel implements NWrapper {
         super(caption);
         this.rootLayout= new VerticalLayout();
         this.rootLayout.setMargin(true);
-        this.rootLayout.setSizeFull();
-        this.rootLayout.setHeight(100,Unit.PERCENTAGE);
         this.buttonSave = new Button("Save");
         this.buttonErase = new Button("Erase");
         this.buttonSet= new Button(FontAwesome.GEAR);
+    }
+
+    public NWrapperPanel(Component component)
+    {
+        this("");
+        setWrappedContent(component);
     }
 
     public void setWrappedContent(Component component)        //it' final, the daughet class can't override it
@@ -57,6 +61,21 @@ public class NWrapperPanel extends Panel implements NWrapper {
         this.rootLayout.setExpandRatio(horizontalLayout,1);
 
         super.setContent(this.rootLayout);
+    }
+
+
+
+    @Override
+    public void setSizeFull()
+    {
+        super.setSizeFull();
+        this.rootLayout.setHeight(100,Unit.PERCENTAGE);
+        this.rootLayout.setWidth(100,Unit.PERCENTAGE);
+    }
+
+    public Layout getRootLayout()
+    {
+        return this.rootLayout;
     }
 
     public Button getButtonSet() {
