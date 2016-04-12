@@ -3,7 +3,7 @@ package be.beme.schn.vaadin.narrative.presenter;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.daoimpl.ChapterDaoImpl;
-import be.beme.schn.vaadin.narrative.view.ChapterPanel;
+import be.beme.schn.vaadin.narrative.view.ChapterView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @UIScope
 public class ChapterPresenter implements WindowPresenter {
 
-    private ChapterPanel view;
+    private ChapterView view;
     private Chapter chapter;
 
     @Autowired
@@ -76,6 +76,6 @@ public class ChapterPresenter implements WindowPresenter {
 
     @Override
     public void setView(NarrativeView narrativeView) {
-        this.view=(ChapterPanel)narrativeView;
+        this.view=(ChapterView)narrativeView;
     }
 }

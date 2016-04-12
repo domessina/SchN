@@ -1,23 +1,18 @@
 package be.beme.schn.vaadin;
 
 import be.beme.schn.narrative.component.Chapter;
-import be.beme.schn.narrative.component.Character;
-import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
+import be.beme.schn.vaadin.narrative.ChapterPHLayout;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
-import be.beme.schn.vaadin.narrative.view.ChapterPanel;
-import be.beme.schn.vaadin.narrative.view.CharacterWindow;
+import be.beme.schn.vaadin.narrative.view.ChapterView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -30,7 +25,7 @@ import java.util.ArrayList;
 //@PreserveOnRefresh  Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
 @SpringUI
-public class MyVaadinUI extends UI {
+public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener{
 
     @Autowired
     DiagramDaoImpl diagramService;
@@ -50,7 +45,7 @@ public class MyVaadinUI extends UI {
 
 
         VerticalLayout verticalLayout = new VerticalLayout();
-
+/*
         Label label=new Label();
         Button button= new Button("here victory!");
         button.addClickListener(event ->{
@@ -61,7 +56,7 @@ public class MyVaadinUI extends UI {
             Character character= new Character();
             character.setDiagram_id(2);
            // character.setId(4);
-            /*character.setName("Christero");
+            *//*character.setName("Christero");
             character.setType("Principal");
             character.setNote("Des informations complémentaires");
             ArrayList<UserProperty> arrayList = new ArrayList();
@@ -69,7 +64,7 @@ public class MyVaadinUI extends UI {
             arrayList.add(new UserProperty("name","value"));
             arrayList.add(new UserProperty("name","value"));
             arrayList.add(new UserProperty("name","value"));
-            character.setUserPropertyList(arrayList);*/
+            character.setUserPropertyList(arrayList);*//*
 
             //character.setPicture("4.jpg");
             //diagramService.createDiagram(1,"depuis spring");
@@ -94,7 +89,7 @@ public class MyVaadinUI extends UI {
         verticalLayout.addComponent(label);
         //Jcrop jcrop=new Jcrop();
         //this.addWindow(new DiagramChoiceWindow(listDiagram));
-
+*/
         ArrayList<Scene> scenes= new ArrayList<Scene>();
         Scene scene;
 
@@ -105,40 +100,69 @@ public class MyVaadinUI extends UI {
             scene.setId(i);
             scenes.add(scene);
         }
-        verticalLayout.addComponent(new Button("Chapter",event ->
+
+        ArrayList<ChapterView> chapterViews = new ArrayList<>();
+
+        for(int i=1;i<=2;i++)
         {
-                Chapter chapter= new Chapter();
-                chapter.setId(2);
-                chapter.setScenes(scenes);
-                chapter.setDiagramId(2);
-                ChapterPanel chapterW = new ChapterPanel(chapter);
-                chapterW.setHandler(chapterPresenter);
-                verticalLayout.addComponent(chapterW);}
-        )
-        );
-
-        verticalLayout.addComponent(new Button("Acts",clickEvent -> {
-
             Chapter chapter= new Chapter();
-            ArrayList<Chapter> chapters= new ArrayList<>();
-
-            for(int i=0;i<15;i++)
-            {
-                chapter= new Chapter();
-                chapter.setScenes(scenes);
-                chapter.setId(i);
-                chapter.setPreviousChapterId(i-1);
-                chapters.add(chapter);
-            }
-
-
-
-
+            chapter.setId(i);
+            chapter.setScenes(scenes);
+            chapter.setDiagramId(2);
+            chapter.setPhase("si");
+            ChapterView chapterW = new ChapterView(chapter);
+            chapterW.setHandler(chapterPresenter);
+            chapterViews.add(chapterW);
+//                verticalLayout.addComponent(chapterW);
         }
 
 
-        ));
+
+
+
+
+        TabSheet tabSheet= new TabSheet();
+        ChapterPHLayout chapterLayout= new ChapterPHLayout();
+        Panel tabPanel= new Panel();
+
+        chapterLayout.setHeight(100,Unit.PERCENTAGE);
+//        chapterLayout.setMargin(true);
+        chapterLayout.setSpacing(true);
+
+        for(ChapterView cp: chapterViews)
+        {
+            chapterLayout.addComponent(cp);
+        }
+
+        tabPanel.setContent(chapterLayout);
+        tabPanel.setSizeFull();
+
+        tabSheet.setSizeFull();
+        tabSheet.setImmediate(true);
+        tabSheet.addSelectedTabChangeListener(this);
+        tabSheet.addTab(tabPanel,"Initial Situation");
+
+        verticalLayout.setSizeFull();
+        HorizontalLayout hl= new HorizontalLayout(new Button("new Chapter",clickEvent -> {
+            chapterLayout.addComponent(new ChapterView(new Chapter()));
+        }));
+        hl.setSizeFull();
+        verticalLayout.addComponent(hl);
+
+        verticalLayout.addComponent(tabSheet);
+
+        verticalLayout.setMargin(true);
+        verticalLayout.setExpandRatio(tabSheet,9);
+        verticalLayout.setExpandRatio(hl,1);
+
+//        tabSheet.setTabIndex for Tab Key
+
 
         setContent(verticalLayout);
+    }
+
+    @Override
+    public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
+
     }
 }

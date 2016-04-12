@@ -6,13 +6,14 @@ import com.vaadin.ui.themes.ValoTheme;
 /**
  * Created by Dorito on 29-03-16.
  */
-public abstract class AbstractWindowView extends Window implements NarrativeView, Button.ClickListener{
+public abstract class AbstractWindowView extends Window implements  NarrativeView, Button.ClickListener{
 
 
     protected VerticalLayout rootLayout;
     protected Button buttonErase;
     protected Button buttonSave;
 
+                                                                                                                         //TODO  rajouter le button Gear comme PanelView?
     public AbstractWindowView(String caption)
     {
         super(caption);
