@@ -3,8 +3,9 @@ package be.beme.schn.vaadin.narrative.view;
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Scene;
+import be.beme.schn.vaadin.narrative.NWrapped;
+import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.ChapterPHLayout;
-import be.beme.schn.vaadin.Wrapper;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.MouseEvents;
@@ -17,7 +18,7 @@ import java.io.File;
 /**
  * Created by Dotista on 08-04-16.
  */
-public class ChapterView<T extends Wrapper> extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, Button.ClickListener {
+public class ChapterView<T extends NWrapper > extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped {
 
     private ChapterPresenter presenter;
     private Chapter chapter;
@@ -27,24 +28,43 @@ public class ChapterView<T extends Wrapper> extends CustomComponent implements N
     private TextArea notes;
     private boolean settingsMode;
     private GridLayout gLayout;
-    private Class<Wrapper<T>> wrapper;
+    private Class<T> wrapperClass;
+    private T wrapper;
     private Button buttonErase;
     private Button buttonSave;
     private Button buttonSet;
 
-    public ChapterView(Chapter chapter)
+    public ChapterView(Chapter chapter, Class<T> wrapperClass)
     {
         this.chapter=chapter;
+        this.wrapperClass=wrapperClass;
         setHeight(100, Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
-        getWrapperBtns();
-        setCompositionRoot(buildContent());
-        wrapper.setWrappedContent(this);
+        buildWrapper();
+        confWrapperBtns();
+        this.wrapper.setWrappedContent(buildContent());
+        setCompositionRoot(wrapper);
     }
 
-    private void getWrapperBtns()
+    private void buildWrapper()
     {
-        wrapper= wrapper.newInstance();
+        try {
+//            wrapperClass= wrapper.getClass();
+//            String wrapperClassName = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
+//            wrapperClass=Class.forName(wrapperClassName);
+//           wrapperClass=NWrapperPanel.class;
+            wrapper=wrapperClass.newInstance();
+            wrapper.setCaption("Chapter");
+            wrapper.setSizeFull();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void confWrapperBtns()
+    {
         buttonErase=wrapper.getButtonErase();
         buttonSave=wrapper.getButtonSave();
         buttonSet=wrapper.getButtonSet();
@@ -76,7 +96,6 @@ public class ChapterView<T extends Wrapper> extends CustomComponent implements N
             buttonErase.setVisible(false);
             buttonSet.setVisible(false);
         }
-
         return verticalLayout;
     }
 

@@ -4,6 +4,7 @@ import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import be.beme.schn.vaadin.narrative.ChapterPHLayout;
+import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
@@ -110,7 +111,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             chapter.setScenes(scenes);
             chapter.setDiagramId(2);
             chapter.setPhase("si");
-            ChapterView chapterW = new ChapterView(chapter);
+            ChapterView chapterW = new ChapterView<>(chapter,NWrapperPanel.class);
             chapterW.setHandler(chapterPresenter);
             chapterViews.add(chapterW);
 //                verticalLayout.addComponent(chapterW);
@@ -128,6 +129,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         chapterLayout.setHeight(100,Unit.PERCENTAGE);
 //        chapterLayout.setMargin(true);
         chapterLayout.setSpacing(true);
+        chapterLayout.setHeight(100,Unit.PERCENTAGE);
 
         for(ChapterView cp: chapterViews)
         {
@@ -135,7 +137,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         }
 
         tabPanel.setContent(chapterLayout);
-        tabPanel.setSizeFull();
+        tabPanel.setHeight(100,Unit.PERCENTAGE);
 
         tabSheet.setSizeFull();
         tabSheet.setImmediate(true);
@@ -144,7 +146,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         verticalLayout.setSizeFull();
         HorizontalLayout hl= new HorizontalLayout(new Button("new Chapter",clickEvent -> {
-            chapterLayout.addComponent(new ChapterView(new Chapter()));
+            chapterLayout.addComponent(new ChapterView<>(new Chapter(),NWrapperPanel.class));
         }));
         hl.setSizeFull();
         verticalLayout.addComponent(hl);

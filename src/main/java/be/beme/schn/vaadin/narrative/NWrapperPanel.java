@@ -1,7 +1,6 @@
 package be.beme.schn.vaadin.narrative;
 
 
-import be.beme.schn.vaadin.Wrapper;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -9,39 +8,40 @@ import com.vaadin.ui.themes.ValoTheme;
 /**
  * Created by Dotista on 10-04-16.
  */
-public class WrapperPanel extends Panel implements Wrapper<NWrapperPanel> {
+public class NWrapperPanel extends Panel implements NWrapper {
 
     protected VerticalLayout rootLayout;
     protected Button buttonErase;
     protected Button buttonSave;
     protected Button buttonSet;
 
+    public NWrapperPanel()
+    {
+        this("");
+    }
 
-    public WrapperPanel(String caption)
+    public NWrapperPanel(String caption)
     {
         super(caption);
         this.rootLayout= new VerticalLayout();
         this.rootLayout.setMargin(true);
         this.rootLayout.setSizeFull();
+        this.rootLayout.setHeight(100,Unit.PERCENTAGE);
         this.buttonSave = new Button("Save");
         this.buttonErase = new Button("Erase");
         this.buttonSet= new Button(FontAwesome.GEAR);
-
     }
 
-    public final void setWrappedContent(Component component)        //it' final, the daughet class can't override it
+    public void setWrappedContent(Component component)        //it' final, the daughet class can't override it
     {
         Component wrapped=component;
         this.rootLayout.addComponent(component);
 
-//        this.buttonSave.addClickListener(this);
         this.buttonSave.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
-//        this.buttonErase.addClickListener(this);
         this.buttonErase.setStyleName(ValoTheme.BUTTON_DANGER,true);
         this.buttonErase.setStyleName(ValoTheme.BUTTON_TINY,true);
 
-//        this.buttonSet.addClickListener(this);
 
         HorizontalLayout horizontalLayout= new HorizontalLayout();
         horizontalLayout.addComponent(this.buttonErase);
