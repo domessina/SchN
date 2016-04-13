@@ -11,6 +11,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class NWrapperPanel extends Panel implements NWrapper {
 
     protected VerticalLayout rootLayout;
+    protected HorizontalLayout horizontalLayout;
     protected Button buttonErase;
     protected Button buttonSave;
     protected Button buttonSet;
@@ -24,6 +25,7 @@ public class NWrapperPanel extends Panel implements NWrapper {
     {
         super(caption);
         this.rootLayout= new VerticalLayout();
+        this.horizontalLayout=new HorizontalLayout();
         this.rootLayout.setMargin(true);
         this.buttonSave = new Button("Save");
         this.buttonErase = new Button("Erase");
@@ -47,7 +49,7 @@ public class NWrapperPanel extends Panel implements NWrapper {
         this.buttonErase.setStyleName(ValoTheme.BUTTON_TINY,true);
 
 
-        HorizontalLayout horizontalLayout= new HorizontalLayout();
+        horizontalLayout= new HorizontalLayout();
         horizontalLayout.addComponent(this.buttonErase);
         horizontalLayout.setComponentAlignment(this.buttonErase, Alignment.MIDDLE_LEFT);
         horizontalLayout.addComponent(this.buttonSet);
@@ -90,6 +92,10 @@ public class NWrapperPanel extends Panel implements NWrapper {
     public Layout getRootLayout()
     {
         return this.rootLayout;
+    }
+
+    public HorizontalLayout getHorizontalLayout() {
+        return horizontalLayout;
     }
 
     public Button getButtonSet() {

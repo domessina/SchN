@@ -45,16 +45,22 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     private ChapterPresenter chapterPresenter;
 
     List<Chapter> chapterList;
-    ChapterPHLayout chapterLayout;
+    public static int diagramId=3;
+    public static short phaseSelected;
+    Panel[] panelArray;
+    ChapterPHLayout[] chapterLArray;
+    private TabSheet tabSheet;
+    ArrayList<Scene> scenes;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
 
         VerticalLayout verticalLayout = new VerticalLayout();
-        chapterLayout= new ChapterPHLayout();
+        panelArray = new Panel[6];
+        chapterLArray= new ChapterPHLayout[6];
 
-        ArrayList<Scene> scenes= new ArrayList<Scene>();
+        scenes= new ArrayList<Scene>();
         Scene scene;
 
         for(int i=0;i<15;i++)
@@ -67,54 +73,46 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
 
 
-        chapterList= chapterPresenter.getDaoService().getAllChaptersByDiagram(2);
-        if(!chapterList.isEmpty())
+
+
+
+
+        for(int i=0;i<6;i++)
         {
-            for(Chapter chapter:chapterList)
-            {
-
-                chapter.setScenes(scenes);
-                addChapterView(chapter);
-            }
-        }
-        else{
-            System.out.println("No chapter fot this phase");
-        }
-
-
-
-
-        TabSheet tabSheet= new TabSheet();
-
-        chapterLayout.setImmediate(true);
-        Panel tabPanel= new Panel();
-
-        chapterLayout.setHeight(100,Unit.PERCENTAGE);
+            chapterLArray[i]=new ChapterPHLayout();
+            chapterLArray[i].setImmediate(true);
+            chapterLArray[i].setHeight(100,Unit.PERCENTAGE);
 //        chapterLayout.setMargin(true);
-        chapterLayout.setSpacing(true);
-        chapterLayout.setHeight(100,Unit.PERCENTAGE);
+            chapterLArray[i].setSpacing(true);
+            chapterLArray[i].setHeight(100,Unit.PERCENTAGE);
+        }
+
+
+        for(int i=0;i<6;i++)
+        {
+            panelArray[i]=new Panel();
+            panelArray[i].setContent(chapterLArray[i]);
+            panelArray[i].setHeight(100,Unit.PERCENTAGE);
+            panelArray[i].setId(String.valueOf(i));
+        }
+
+        this.tabSheet=buildTabSheet();
 
 
 
-        tabPanel.setContent(chapterLayout);
-        tabPanel.setHeight(100,Unit.PERCENTAGE);
-
-        tabSheet.setSizeFull();
-        tabSheet.setImmediate(true);
-        tabSheet.addSelectedTabChangeListener(this);
-        tabSheet.addTab(tabPanel,"Initial Situation");
 
         verticalLayout.setSizeFull();
         HorizontalLayout hl= new HorizontalLayout(new Button("new Chapter",clickEvent -> {
 
             Chapter chapter =new Chapter();
-            chapter.setPhase("si");
-            chapter.setDiagramId(2);
+            chapter.setPhase(phaseSelected);
+            chapter.setDiagramId(diagramId);
+            chapter.setPosition((short)chapterLArray[phaseSelected].getComponentCount());
 
             ChapterView chapterView= new ChapterView(chapter);
             chapterView.setHandler(chapterPresenter);
             chapterView.addCrudListener(this);
-            chapterPresenter.setView(chapterView);
+//            chapterPresenter.setView(chapterView);
             NWrapperPanel wrapper=new NWrapperPanel(chapterView);
             chapterView.wrap(wrapper);
 
@@ -162,7 +160,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         hl.addComponent(new Button("new Character", event -> {
             Character character= new Character();
-            character.setDiagram_id(2);
+            character.setDiagram_id(diagramId);
 
             CharacterView characterView = new CharacterView(character, traitPresenter);
             characterView.setHandler(characterPresenter);
@@ -186,20 +184,59 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         setContent(verticalLayout);
     }
 
+
+    private TabSheet buildTabSheet()
+    {
+        TabSheet tabSheet= new TabSheet();
+        tabSheet.setSizeFull();
+        tabSheet.setImmediate(true);
+        tabSheet.addSelectedTabChangeListener(this);
+        tabSheet.addTab(panelArray[0],"Exposition");
+        tabSheet.addTab(panelArray[1],"Conflict");
+        tabSheet.addTab(panelArray[2],"Rising Action");
+        tabSheet.addTab(panelArray[3],"Climax");
+        tabSheet.addTab(panelArray[4],"Falling Action");
+        tabSheet.addTab(panelArray[5],"Resolution");
+        tabSheet.setSelectedTab(0);
+        return tabSheet;
+    }
+
+    private void loadChapters()
+    {
+        chapterList= chapterPresenter.getDaoService().getAllChaptersByPhase(phaseSelected,diagramId);
+        chapterLArray[phaseSelected].removeAllComponents();
+
+        if(!chapterList.isEmpty())
+        {
+            for(Chapter chapter:chapterList)
+            {
+
+                chapter.setScenes(scenes);
+                addChapterView(chapter);
+            }
+        }
+        else{
+            System.out.println("No chapter fot this phase");
+        }
+    }
+
     private void addChapterView(Chapter chapter){
         ChapterView chapterW = new ChapterView(chapter);
         chapterW.setHandler(chapterPresenter);
         chapterW.addCrudListener(this);
         NWrapperPanel wrapper=new NWrapperPanel(chapterW);
         wrapper.setSizeFull();
-        wrapper.setCaption("Chapter "+chapter.getId());
+        wrapper.setId(String.valueOf(chapter.getId()));
         chapterW.wrap(wrapper);
-        chapterLayout.addComponent(wrapper);
+        chapterLArray[phaseSelected].addComponent(wrapper);
+        wrapper.setCaption("Chapter "+chapterLArray[phaseSelected].getComponentCount());
+
     }
 
     @Override
     public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
-
+        phaseSelected=Short.valueOf(selectedTabChangeEvent.getTabSheet().getSelectedTab().getId());
+        loadChapters();
     }
 
     @Override
@@ -218,12 +255,13 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     @Override
     public void updated(Chapter o) {
 
+        chapterLArray[phaseSelected].replaceComponent(chapterLArray[phaseSelected].getComponent(o.getPosition()),chapterLArray[phaseSelected].getComponent(o.getPosition()+1));
     }
 
     @Override
     public void deleted(Chapter o) {
 
-      chapterLayout.removeChapter(o);
+     chapterLArray[(int)phaseSelected].removeChapter(o);
 
     }
 }

@@ -9,9 +9,9 @@ public class Chapter implements NarrativeComponent {
 
 
     private int id;
-    private String phase;
+    private short phase;
     private String title;
-    private int previousChapterId;
+    private short position;
     private int diagramId;
     private String note;
     private List<Scene> scenes;
@@ -33,11 +33,11 @@ public class Chapter implements NarrativeComponent {
         this.id = id;
     }
 
-    public String getPhase() {
+    public short getPhase() {
         return phase;
     }
 
-    public void setPhase(String phase) {
+    public void setPhase(short phase) {
         this.phase = phase;
     }
 
@@ -49,12 +49,12 @@ public class Chapter implements NarrativeComponent {
         this.title = title;
     }
 
-    public int getPreviousChapterId() {
-        return previousChapterId;
+    public short getPosition() {
+        return position;
     }
 
-    public void setPreviousChapterId(int previousChapterId) {
-        this.previousChapterId = previousChapterId;
+    public void setPosition(short previousChapterId) {
+        this.position = previousChapterId;
     }
 
     public int getDiagramId() {

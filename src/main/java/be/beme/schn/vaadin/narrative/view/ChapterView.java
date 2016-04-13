@@ -53,7 +53,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     public void wrap(NWrapper wrapper)
     {
         this.wrapper=(NWrapperPanel)wrapper;
-        this.wrapper.setId(String.valueOf(this.chapter.getId()));
         confWrapperBtns();
 
         if(this.chapter.getId()==0)
@@ -79,7 +78,12 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private Layout buildContent()
     {
         VerticalLayout verticalLayout= new VerticalLayout();
-        buttonAddSc = new Button("+",this);
+        buttonAddSc = new Button("+",event -> {
+            presenter.setView(this);
+            this.chapter.setPosition((short)(chapter.getPosition()-1));
+            presenter.save();
+            notifyUpdated(chapter);
+        });
 
         verticalLayout.addComponent(buildScStickers());
         verticalLayout.addComponent(buttonAddSc);
@@ -181,6 +185,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
 
         this.chapter.setTitle(titleTF.getValue());
         this.chapter.setNote(notes.getValue());
+        this.presenter.setView(this);
 
         if(event.getButton().equals(this.buttonSave))
         {
@@ -223,8 +228,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         else if(event.getButton().equals(this.buttonSet))
         {
            toggleSettings();
-           this.presenter.setView(this);
-
         }
     }
 

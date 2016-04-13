@@ -19,10 +19,10 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
 
 
     @Override
-    public int create(int diagramId, short phase, String title, int position, String note) {
+    public int create(int diagramId, short phase, String title, short place, String note) {
 
         jdbcTemplate.update("insert into \"Chapter\" (diagram_id,phase,title, place, notes) values (?,?,?,?,?)"
-                ,diagramId, phase, title, position,note);
+                ,diagramId, phase, title, place,note);
 
         return jdbcTemplate.queryForObject("select max(id) from \"Chapter\" where diagram_id=?",
                   new Object[] {diagramId},Integer.class);
@@ -59,9 +59,10 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
                 new Object[]{diagramId},new ChapterMapper());
     }
 
+    @Override
     public List<Chapter> getAllChaptersByPhase(short phase, int diagramId)
     {
-        return jdbcTemplate.query("select * from \"Chapter\" where phase=? and diagram_id=? order by position asc",
+        return jdbcTemplate.query("select * from \"Chapter\" where phase=? and diagram_id=? order by place asc",
                 new Object[]{phase,diagramId},new ChapterMapper());
     }
 
@@ -79,7 +80,7 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
             chapter.setPhase(rs.getShort("phase"));
             chapter.setTitle(rs.getString("title"));
             chapter.setNote(rs.getString("notes"));
-            chapter.setPreviousChapterId(rs.getInt("previous_chapter_id"));
+            chapter.setPosition(rs.getShort("place"));
             chapter.setDiagramId(rs.getInt("diagram_id"));
             return chapter;
         }

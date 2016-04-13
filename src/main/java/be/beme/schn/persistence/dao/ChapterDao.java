@@ -9,13 +9,16 @@ import java.util.List;
  */
 public interface ChapterDao {
 
-    int create(int diagramId, String phase, String title, int previousChapterId, String note);
+    int create(int diagramId, short phase, String title, short place, String note);
 
     void setNote(int chapterId, String note);
 
     void update(Object[] args);
 
     Chapter getChapterById(int chapterId);
+
+
+    List<Chapter> getAllChaptersByPhase(short phase, int diagramId);
 
     List<Chapter> getAllChaptersByDiagram(int diagramId);
 

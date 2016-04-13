@@ -35,7 +35,7 @@ public class ChapterPresenter implements WindowPresenter {
                         chapter.getDiagramId(),
                         chapter.getPhase(),
                         chapter.getTitle(),
-                        chapter.getPreviousChapterId(),
+                        chapter.getPosition(),
                         chapter.getNote());
                 this.chapter.setId(id);
             }
@@ -43,7 +43,7 @@ public class ChapterPresenter implements WindowPresenter {
                 this.chapterService.update(new Object[]{
                         chapter.getPhase(),
                         chapter.getTitle(),
-                        chapter.getPreviousChapterId(),
+                        chapter.getPosition(),
                         chapter.getNote(),
                         chapter.getId()});
             }
