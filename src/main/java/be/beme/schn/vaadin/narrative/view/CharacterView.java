@@ -29,7 +29,7 @@ import java.util.List;
 
 //TODO un URI pour chaque Window?
 
-public class CharacterWindow extends CustomComponent implements NarrativeView, NWrapped,CrudListener, Window.CloseListener {
+public class CharacterView extends CustomComponent implements NarrativeView, NWrapped,CrudListener<Trait>, Window.CloseListener {
 
     private Panel rootPanel;
     private TraitTableCrud traitTableCrud;
@@ -54,12 +54,12 @@ public class CharacterWindow extends CustomComponent implements NarrativeView, N
 
 
 
-    public CharacterWindow(Character character, TraitCrudPresenter traitPresenter)
+    public CharacterView(Character character, TraitCrudPresenter traitPresenter)
     {
         this.character= character;
         this.traitPresenter = traitPresenter;
 
-        setId("CharacterWindow");
+        setId("CharacterView");
         setHeight(99, Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
         setCompositionRoot(buildContent());
@@ -217,10 +217,7 @@ public class CharacterWindow extends CustomComponent implements NarrativeView, N
                             {
                                 imageUploadPanel.deleteOrigImage();
                             }
-                            if(wrapper.getParent() instanceof Window)
-                            {
-                                ((Window) wrapper.getParent()).close();
-                            }
+                           wrapper.close();
 
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
@@ -234,10 +231,7 @@ public class CharacterWindow extends CustomComponent implements NarrativeView, N
                         if (eraseCok)
                         {
                             imageUploadPanel.deleteImage();
-                            if(wrapper.getParent() instanceof Window)
-                            {
-                                ((Window) wrapper.getParent()).close();
-                            }
+                            wrapper.close();
                         }
                         else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
@@ -266,9 +260,9 @@ public class CharacterWindow extends CustomComponent implements NarrativeView, N
     }
 
     @Override
-    public void created(Object o) {
+    public void created(Trait o) {
 
-        createTraits.add((Trait)o);
+        createTraits.add(o);
 
     }
 
@@ -282,8 +276,8 @@ public class CharacterWindow extends CustomComponent implements NarrativeView, N
     }
 
     @Override
-    public void updated(Object o) {
-        updateTraits.add((Trait)o);
+    public void updated(Trait o) {
+        updateTraits.add(o);
     }
 
     private void updateTraits()
@@ -295,8 +289,8 @@ public class CharacterWindow extends CustomComponent implements NarrativeView, N
     }
 
     @Override
-    public void deleted(Object o) {
-        deleteTraits.add((Trait)o);
+    public void deleted(Trait o) {
+        deleteTraits.add(o);
     }
 
     private void deleteTraits()
@@ -306,6 +300,7 @@ public class CharacterWindow extends CustomComponent implements NarrativeView, N
             traitPresenter.delete(t);
         }
     }
+
 
 
     @Override

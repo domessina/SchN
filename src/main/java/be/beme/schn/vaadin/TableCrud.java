@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Dotista on 06-04-16.
  */
-public abstract class TableCrud<T> extends Table implements Action.Handler, Window.CloseListener{
+public abstract class TableCrud<T> extends Table implements Action.Handler, Window.CloseListener, CrudNotifier{
 
     protected ArrayList<CrudListener> listeners;
     protected WindowCrud window;
@@ -58,8 +58,8 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
         }
     }
 
-
-    protected void notifyCreated(Object target)
+    @Override
+    public void notifyCreated(Object target)
     {
         for(CrudListener listener:listeners)
         {
@@ -67,7 +67,8 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
         }
     }
 
-    protected void notifyUpdated(Object target)
+    @Override
+    public void notifyUpdated(Object target)
     {
         for(CrudListener listener:listeners)
         {
@@ -75,7 +76,8 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
         }
     }
 
-    protected void notifyDeleted(Object target)
+    @Override
+    public void notifyDeleted(Object target)
     {
         for(CrudListener listener:listeners)
         {
@@ -100,7 +102,7 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
         }
     }
 
-
+    @Override
     public void addCrudListener(CrudListener listener)
     {
         this.listeners.add(listener);

@@ -3,6 +3,8 @@ package be.beme.schn.vaadin.narrative.view;
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Scene;
+import be.beme.schn.vaadin.CrudListener;
+import be.beme.schn.vaadin.CrudNotifier;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.ChapterPHLayout;
@@ -11,15 +13,17 @@ import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Dotista on 08-04-16.
  */
-public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped {
+public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped , CrudNotifier{
 
     private ChapterPresenter presenter;
     private Chapter chapter;
@@ -34,10 +38,12 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private Button buttonSave;
     private Button buttonSet;
     private NWrapperPanel wrapper;
+    private ArrayList<CrudListener> listeners;
 
     public ChapterView(Chapter chapter)
     {
         this.chapter=chapter;
+        listeners= new ArrayList<>();
         setHeight(100, Unit.PERCENTAGE);
         setWidth(30, Unit.EM);
         setCompositionRoot(buildContent());
@@ -47,6 +53,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     public void wrap(NWrapper wrapper)
     {
         this.wrapper=(NWrapperPanel)wrapper;
+        this.wrapper.setId(String.valueOf(this.chapter.getId()));
         confWrapperBtns();
 
         if(this.chapter.getId()==0)
@@ -172,18 +179,52 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     @Override
     public void buttonClick(Button.ClickEvent event) {
 
+        this.chapter.setTitle(titleTF.getValue());
+        this.chapter.setNote(notes.getValue());
 
         if(event.getButton().equals(this.buttonSave))
         {
-//            presenter.save();
+            if(verifyFields())
+            {
+                this.chapter=presenter.save();
+                if(this.chapter!=null)
+                {
+                    if(buttonErase.isVisible())
+                    {
+                        notifyUpdated(this.chapter);
+                        toggleSettings();
+                    }
+                    else
+                    {
+                        notifyCreated(this.chapter);
+                    }
+                }
+                else
+                {
+                    Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                }
+            }
+
         }
         else if(event.getButton().equals(this.buttonErase))
         {
-//            presenter.erase();
+            boolean eraseOk;
+            eraseOk=presenter.erase();
+
+            if (eraseOk)
+            {
+                toggleSettings();
+                notifyDeleted(this.chapter);
+            }
+            else {
+                Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            }
         }
         else if(event.getButton().equals(this.buttonSet))
         {
            toggleSettings();
+           this.presenter.setView(this);
+
         }
     }
 
@@ -192,7 +233,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         settingsMode=!settingsMode;
         try
         {
-            ((ChapterPHLayout)this.wrapper.getParent()).enableAllChilds(!settingsMode);
+            ((ChapterPHLayout)this.wrapper.getParent()).enableAllChildren(!settingsMode);
         }
         catch (NullPointerException e)
         {
@@ -212,6 +253,19 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
 
 
         wrapper.setEnabled(true);
+    }
+
+
+    private boolean verifyFields()
+    {
+        titleTF.setComponentError(null);
+        if(titleTF.isEmpty())
+        {
+            titleTF.setComponentError(new UserError("Requied field not filled"));
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -247,5 +301,37 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     @Override
     public NWrapper getWrapper() {
         return this.wrapper;
+    }
+
+    @Override
+    public void addCrudListener(CrudListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void notifyCreated(Object target)
+    {
+        for(CrudListener listener:listeners)
+        {
+            listener.created(target);
+        }
+    }
+
+    @Override
+    public void notifyUpdated(Object target)
+    {
+        for(CrudListener listener:listeners)
+        {
+            listener.updated(target);
+        }
+    }
+
+    @Override
+    public void notifyDeleted(Object target)
+    {
+        for(CrudListener listener:listeners)
+        {
+            listener.deleted(target);
+        }
     }
 }

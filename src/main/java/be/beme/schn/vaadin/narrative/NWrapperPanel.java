@@ -73,6 +73,20 @@ public class NWrapperPanel extends Panel implements NWrapper {
         this.rootLayout.setWidth(100,Unit.PERCENTAGE);
     }
 
+    public void close()
+    {
+        if(this.getParent() instanceof Window)
+        {
+            ((Window) getParent()).close();
+        }
+        else if(this.getParent() instanceof Layout)
+        {
+            ((Layout) getParent()).removeComponent(this);
+        }
+    }
+
+
+
     public Layout getRootLayout()
     {
         return this.rootLayout;

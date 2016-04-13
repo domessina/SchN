@@ -13,6 +13,8 @@ public interface ChapterDao {
 
     void setNote(int chapterId, String note);
 
+    void update(Object[] args);
+
     Chapter getChapterById(int chapterId);
 
     List<Chapter> getAllChaptersByDiagram(int diagramId);

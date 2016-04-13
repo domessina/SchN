@@ -3,10 +3,10 @@ package be.beme.schn.vaadin;
 /**
  * Created by Dotista on 06-04-16.
  */
-public interface CrudListener {
+public interface CrudListener<T> {
 
-    void created(Object o);
-    void updated(Object o);
-    void deleted(Object o);
+    void created(T o);
+    void updated(T o);
+    void deleted(T o);
 
 }

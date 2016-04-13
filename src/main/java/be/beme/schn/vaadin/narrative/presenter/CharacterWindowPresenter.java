@@ -3,7 +3,7 @@ package be.beme.schn.vaadin.narrative.presenter;
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.persistence.daoimpl.CharacterDaoImpl;
-import be.beme.schn.vaadin.narrative.view.CharacterWindow;
+import be.beme.schn.vaadin.narrative.view.CharacterView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class CharacterWindowPresenter implements WindowPresenter {
 
     //TODO y a til des variables ou une méthode ou l'autre qui se répètent entre les windowPresenter? Si ou ialors transformer cet interface en classe Abstraite, du coup certaines variables seront protected
 
-    private CharacterWindow characterWindow;
+    private CharacterView characterView;
     private Character character;
 
     @Autowired
@@ -33,7 +33,7 @@ public class CharacterWindowPresenter implements WindowPresenter {
 
         try
         {
-            this.character=this.characterWindow.getCharacter();
+            this.character=this.characterView.getCharacter();
             int id;
             if(character.getId()==0)
             {
@@ -69,7 +69,7 @@ public class CharacterWindowPresenter implements WindowPresenter {
         try
         {
 
-            this.character=this.characterWindow.getCharacter();
+            this.character=this.characterView.getCharacter();
             this.characterService.delete(this.character.getId());
             if(character.getPicture()!=null)
             {
@@ -86,7 +86,7 @@ public class CharacterWindowPresenter implements WindowPresenter {
 
     @Override
     public void setView(NarrativeView narrativeView) {
-        this.characterWindow=(CharacterWindow) narrativeView;
+        this.characterView =(CharacterView) narrativeView;
     }
 
     public CharacterDaoImpl getDaoService(){return this.characterService;}

@@ -1,5 +1,6 @@
 package be.beme.schn.vaadin.narrative;
 
+import be.beme.schn.narrative.component.Chapter;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -8,11 +9,23 @@ import com.vaadin.ui.HorizontalLayout;
  */
 public class ChapterPHLayout extends HorizontalLayout {
 
-    public void enableAllChilds(boolean enabled)
+    public void enableAllChildren(boolean enabled)
     {
         for(Component c: components)
         {
             c.setEnabled(enabled);
+        }
+    }
+
+    public void removeChapter(Chapter chapter)
+    {
+        for(int i=0;i<getComponentCount();i++)
+        {
+            if(getComponent(i).getId().equals(String.valueOf(chapter.getId())))
+            {
+                removeComponent(getComponent(i));
+            }
+
         }
     }
 }

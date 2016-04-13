@@ -24,7 +24,7 @@ public class ChapterPresenter implements WindowPresenter {
     ChapterDaoImpl chapterService;
 
     @Override
-    public NarrativeComponent save() {
+    public Chapter save() {
         try
         {
              this.chapter=this.view.getChapter();
@@ -40,13 +40,12 @@ public class ChapterPresenter implements WindowPresenter {
                 this.chapter.setId(id);
             }
             else{
-/*
                 this.chapterService.update(new Object[]{
-                        chapter.getName(),
-                        chapter.getType(),
+                        chapter.getPhase(),
+                        chapter.getTitle(),
+                        chapter.getPreviousChapterId(),
                         chapter.getNote(),
-                        chapter.getPicture(),
-                        chapter.getId()});*/
+                        chapter.getId()});
             }
         }
         catch (Exception e)
@@ -67,12 +66,15 @@ public class ChapterPresenter implements WindowPresenter {
         }
         catch(Exception e)
         {
-
+            e.printStackTrace();
+            return false;
         }
 
 
-        return false;
+        return true;
     }
+
+    public ChapterDaoImpl getDaoService(){return this.chapterService;}
 
     @Override
     public void setView(NarrativeView narrativeView) {

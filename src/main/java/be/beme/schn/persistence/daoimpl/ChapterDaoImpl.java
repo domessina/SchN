@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 /**
@@ -27,6 +28,15 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
                   new Object[] {diagramId},Integer.class);
     }
 
+    @Override
+    public void update(Object[] args) {
+        jdbcTemplate.update("UPDATE public.\"Chapter\" SET phase=?,title=?,previous_chapter_id=?,notes=? WHERE id=?",args,new int[]{
+                Types.VARCHAR,
+                Types.VARCHAR,
+                Types.INTEGER,
+                Types.VARCHAR,
+                Types.INTEGER});
+    }
 
     @Override
     public void setNote(int chapterId, String note) {
@@ -37,21 +47,21 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     }
 
     @Override
-    public Chapter getChapterById(int diagramId)
+    public Chapter getChapterById(int Id)
     {
-        return jdbcTemplate.queryForObject("select * from Chapter where id=?",
-                new Object[]{diagramId},new ChapterMapper());
+        return jdbcTemplate.queryForObject("select * from \"Chapter\" where id=?",
+                new Object[]{Id},new ChapterMapper());
     }
 
     @Override
     public List<Chapter> getAllChaptersByDiagram(int diagramId) {
-        return jdbcTemplate.query("select * from Chapter where diagram_id=?",
+        return jdbcTemplate.query("select * from \"Chapter\" where diagram_id=?",
                 new Object[]{diagramId},new ChapterMapper());
     }
 
     @Override
     public void delete(int chapterId) {
-        jdbcTemplate.update("delete from Chapter where id=? ",chapterId);
+        jdbcTemplate.update("delete from \"Chapter\" where id=? ",chapterId);
     }
 
 

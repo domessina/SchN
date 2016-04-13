@@ -9,7 +9,7 @@ import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
 import be.beme.schn.vaadin.narrative.view.ChapterView;
-import be.beme.schn.vaadin.narrative.view.CharacterWindow;
+import be.beme.schn.vaadin.narrative.view.CharacterView;
 import be.beme.schn.narrative.component.Character;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -19,6 +19,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Dorito on 17-03-16.
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 //@PreserveOnRefresh  Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
 @SpringUI
-public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener{
+public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Chapter>{
 
     @Autowired
     DiagramDaoImpl diagramService;
@@ -43,56 +44,16 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     @Autowired
     private ChapterPresenter chapterPresenter;
 
+    List<Chapter> chapterList;
+    ChapterPHLayout chapterLayout;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
 
         VerticalLayout verticalLayout = new VerticalLayout();
-/*
-        Label label=new Label();
-        Button button= new Button("here victory!");
-        button.addClickListener(event ->{
+        chapterLayout= new ChapterPHLayout();
 
-
-
-            //Character character = characterPresenter.getDaoService().getCharacterById(23);
-            Character character= new Character();
-            character.setDiagram_id(2);
-           // character.setId(4);
-            *//*character.setName("Christero");
-            character.setType("Principal");
-            character.setNote("Des informations complémentaires");
-            ArrayList<UserProperty> arrayList = new ArrayList();
-            arrayList.add(new UserProperty("name","value"));
-            arrayList.add(new UserProperty("name","value"));
-            arrayList.add(new UserProperty("name","value"));
-            arrayList.add(new UserProperty("name","value"));
-            character.setUserPropertyList(arrayList);*//*
-
-            //character.setPicture("4.jpg");
-            //diagramService.createDiagram(1,"depuis spring");
-            CharacterWindow characterWindow= new CharacterWindow(character, traitPresenter);
-            characterWindow.setHandler(characterPresenter);
-            characterPresenter.setView(characterWindow);
-                    this.addWindow(characterWindow);
-        }
-
-                //label.setValue(String.valueOf(diagramService.createDiagram(1,"un Livre")))
-        );
-
-        ArrayList<Diagram> listDiagram = new ArrayList<>();
-        Diagram diagram= new Diagram();
-        diagram.setTitle("un Titre");
-        for(int i=0;i<16;i++)
-        {
-            listDiagram.add(diagram);
-        }
-
-        verticalLayout.addComponent(button);
-        verticalLayout.addComponent(label);
-        //Jcrop jcrop=new Jcrop();
-        //this.addWindow(new DiagramChoiceWindow(listDiagram));
-*/
         ArrayList<Scene> scenes= new ArrayList<Scene>();
         Scene scene;
 
@@ -104,32 +65,28 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             scenes.add(scene);
         }
 
-        ArrayList<ChapterView> chapterViews = new ArrayList<>();
 
-        for(int i=1;i<=2;i++)
+
+        chapterList= chapterPresenter.getDaoService().getAllChaptersByDiagram(2);
+        if(!chapterList.isEmpty())
         {
-            Chapter chapter= new Chapter();
-            chapter.setId(i);
-            chapter.setScenes(scenes);
-            chapter.setDiagramId(2);
-            chapter.setPhase("si");
-            ChapterView chapterW = new ChapterView(chapter);
-            chapterW.setHandler(chapterPresenter);
-            NWrapperPanel wrapper=new NWrapperPanel(chapterW);
-            wrapper.setSizeFull();
-            wrapper.setCaption("Chapter");
-            chapterW.wrap(wrapper);
-            chapterViews.add(chapterW);
-//                verticalLayout.addComponent(chapterW);
+            for(Chapter chapter:chapterList)
+            {
+
+                chapter.setScenes(scenes);
+                addChapterView(chapter);
+            }
+        }
+        else{
+            System.out.println("No chapter fot this phase");
         }
 
 
 
 
-
-
         TabSheet tabSheet= new TabSheet();
-        ChapterPHLayout chapterLayout= new ChapterPHLayout();
+
+        chapterLayout.setImmediate(true);
         Panel tabPanel= new Panel();
 
         chapterLayout.setHeight(100,Unit.PERCENTAGE);
@@ -137,10 +94,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         chapterLayout.setSpacing(true);
         chapterLayout.setHeight(100,Unit.PERCENTAGE);
 
-        for(ChapterView cp: chapterViews)
-        {
-            chapterLayout.addComponent(cp.getWrapper());
-        }
+
 
         tabPanel.setContent(chapterLayout);
         tabPanel.setHeight(100,Unit.PERCENTAGE);
@@ -152,16 +106,29 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         verticalLayout.setSizeFull();
         HorizontalLayout hl= new HorizontalLayout(new Button("new Chapter",clickEvent -> {
-            ChapterView chapterView= new ChapterView(new Chapter());
+
+            Chapter chapter =new Chapter();
+            chapter.setPhase("si");
+            chapter.setDiagramId(2);
+
+            ChapterView chapterView= new ChapterView(chapter);
+            chapterView.setHandler(chapterPresenter);
+            chapterView.addCrudListener(this);
+            chapterPresenter.setView(chapterView);
             NWrapperPanel wrapper=new NWrapperPanel(chapterView);
             chapterView.wrap(wrapper);
+
             Window window=new Window("New Chapter",wrapper);
             window.setModal(true);
             window.setDraggable(false);
             window.setResizable(false);
+
             this.addWindow(window);
         }));
         hl.setSizeFull();
+
+
+
         verticalLayout.addComponent(hl);
 
         verticalLayout.addComponent(tabSheet);
@@ -176,12 +143,12 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         hl.addComponent(tf);
         hl.addComponent(new Button("show character",event1 -> {
             Character character = characterPresenter.getDaoService().getCharacterById(Integer.valueOf(tf.getValue()));
-            CharacterWindow characterWindow= new CharacterWindow(character, traitPresenter);
-            characterWindow.setHandler(characterPresenter);
-            characterPresenter.setView(characterWindow);
-            NWrapperPanel wrapper= new NWrapperPanel(characterWindow);
+            CharacterView characterView = new CharacterView(character, traitPresenter);
+            characterView.setHandler(characterPresenter);
+            characterPresenter.setView(characterView);
+            NWrapperPanel wrapper= new NWrapperPanel(characterView);
             wrapper.setSizeFull();
-            characterWindow.wrap(wrapper);
+            characterView.wrap(wrapper);
 
             Window window = new Window("New Character",wrapper);
             window.setModal(true);
@@ -197,18 +164,19 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             Character character= new Character();
             character.setDiagram_id(2);
 
-            CharacterWindow characterWindow= new CharacterWindow(character, traitPresenter);
-            characterWindow.setHandler(characterPresenter);
-            characterPresenter.setView(characterWindow);
-            NWrapperPanel wrapper= new NWrapperPanel(characterWindow);
+            CharacterView characterView = new CharacterView(character, traitPresenter);
+            characterView.setHandler(characterPresenter);
+            characterPresenter.setView(characterView);
+            NWrapperPanel wrapper= new NWrapperPanel(characterView);
             wrapper.setSizeFull();
-            characterWindow.wrap(wrapper);
+            characterView.wrap(wrapper);
 
             Window window = new Window("New Character",wrapper);
             window.setModal(true);
             window.setDraggable(false);
             window.setResizable(false);
             window.setHeight(99,Unit.PERCENTAGE);
+            window.addCloseListener(characterView);
 
             window.setWidth( 31,Unit.EM);
             this.addWindow(window);
@@ -218,8 +186,44 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         setContent(verticalLayout);
     }
 
+    private void addChapterView(Chapter chapter){
+        ChapterView chapterW = new ChapterView(chapter);
+        chapterW.setHandler(chapterPresenter);
+        chapterW.addCrudListener(this);
+        NWrapperPanel wrapper=new NWrapperPanel(chapterW);
+        wrapper.setSizeFull();
+        wrapper.setCaption("Chapter "+chapter.getId());
+        chapterW.wrap(wrapper);
+        chapterLayout.addComponent(wrapper);
+    }
+
     @Override
     public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
+
+    }
+
+    @Override
+    public void created(Chapter o) {
+             addChapterView(o);
+            for(Window w: this.getWindows())
+            {
+                if(w.getCaption().equals("New Chapter"))
+                {
+                    w.close();
+                }
+            }
+
+    }
+
+    @Override
+    public void updated(Chapter o) {
+
+    }
+
+    @Override
+    public void deleted(Chapter o) {
+
+      chapterLayout.removeChapter(o);
 
     }
 }

@@ -150,7 +150,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         }
         catch(NullPointerException e)
         {
-            e.printStackTrace();
+            System.out.println("There is no file image to delete");
         }
     }
 
