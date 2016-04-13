@@ -60,10 +60,10 @@ SET default_with_oids = false;
 
 CREATE TABLE "Chapter" (
     id integer NOT NULL,
-    phase character(2) NOT NULL,
+    phase smallint NOT NULL,
     notes text,
     title character varying(30),
-    previous_chapter_id integer NOT NULL,
+    place smallint NOT NULL,
     diagram_id integer NOT NULL
 );
 
