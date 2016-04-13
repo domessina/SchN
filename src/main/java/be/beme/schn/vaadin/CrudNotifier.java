@@ -3,15 +3,15 @@ package be.beme.schn.vaadin;
 /**
  * Created by Dotista on 13-04-16.
  */
-public interface CrudNotifier {
+public interface CrudNotifier<T> {
 
 
    void addCrudListener(CrudListener listener);
 
-    void notifyCreated(Object target);
+    void notifyCreated(T target);
 
-   void notifyUpdated(Object target);
+   void notifyUpdated(T target);
 
-    void notifyDeleted(Object target);
+    void notifyDeleted(T target);
 
 }

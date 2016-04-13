@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by Dotista on 08-04-16.
  */
-public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped , CrudNotifier{
+public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped , CrudNotifier<Chapter>{
 
     private ChapterPresenter presenter;
     private Chapter chapter;
@@ -309,7 +309,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     }
 
     @Override
-    public void notifyCreated(Object target)
+    public void notifyCreated(Chapter target)
     {
         for(CrudListener listener:listeners)
         {
@@ -318,7 +318,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     }
 
     @Override
-    public void notifyUpdated(Object target)
+    public void notifyUpdated(Chapter target)
     {
         for(CrudListener listener:listeners)
         {
@@ -327,7 +327,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     }
 
     @Override
-    public void notifyDeleted(Object target)
+    public void notifyDeleted(Chapter target)
     {
         for(CrudListener listener:listeners)
         {

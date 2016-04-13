@@ -1,6 +1,7 @@
 package be.beme.schn.vaadin;
 
 import be.beme.schn.Constants;
+import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.vaadin.narrative.TraitTableCrud;
 import com.vaadin.event.Action;
 import com.vaadin.ui.*;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by Dotista on 06-04-16.
  */
-public abstract class TableCrud<T> extends Table implements Action.Handler, Window.CloseListener, CrudNotifier{
+public abstract class TableCrud<T> extends Table implements Action.Handler, Window.CloseListener, CrudNotifier<Trait>{
 
     protected ArrayList<CrudListener> listeners;
     protected WindowCrud window;
@@ -59,7 +60,7 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     }
 
     @Override
-    public void notifyCreated(Object target)
+    public void notifyCreated(Trait target)
     {
         for(CrudListener listener:listeners)
         {
@@ -68,7 +69,7 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     }
 
     @Override
-    public void notifyUpdated(Object target)
+    public void notifyUpdated(Trait target)
     {
         for(CrudListener listener:listeners)
         {
@@ -77,7 +78,7 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     }
 
     @Override
-    public void notifyDeleted(Object target)
+    public void notifyDeleted(Trait target)
     {
         for(CrudListener listener:listeners)
         {
@@ -90,15 +91,15 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     public void windowClose(Window.CloseEvent e) {
         if(this.window.isObjCreated())
         {
-            notifyCreated(this.window.getCrudObj());
+            notifyCreated((Trait)this.window.getCrudObj());
         }
         else if(this.window.isObjUpdated())
         {
-            notifyUpdated(this.window.getCrudObj());
+            notifyUpdated((Trait)this.window.getCrudObj());
         }
         else if(this.window.isObjDeleted())
         {
-            notifyDeleted(this.window.getCrudObj());
+            notifyDeleted((Trait)this.window.getCrudObj());
         }
     }
 

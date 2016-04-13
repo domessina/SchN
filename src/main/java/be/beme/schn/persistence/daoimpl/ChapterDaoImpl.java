@@ -19,10 +19,10 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
 
 
     @Override
-    public int create(int diagramId, String phase, String title, int previousChapterId, String note) {
+    public int create(int diagramId, short phase, String title, int position, String note) {
 
-        jdbcTemplate.update("insert into \"Chapter\" (diagram_id,phase,title, previous_chapter_id, notes) values (?,?,?,?,?)"
-                ,diagramId, phase, title, previousChapterId,note);
+        jdbcTemplate.update("insert into \"Chapter\" (diagram_id,phase,title, place, notes) values (?,?,?,?,?)"
+                ,diagramId, phase, title, position,note);
 
         return jdbcTemplate.queryForObject("select max(id) from \"Chapter\" where diagram_id=?",
                   new Object[] {diagramId},Integer.class);
@@ -30,10 +30,10 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
 
     @Override
     public void update(Object[] args) {
-        jdbcTemplate.update("UPDATE public.\"Chapter\" SET phase=?,title=?,previous_chapter_id=?,notes=? WHERE id=?",args,new int[]{
+        jdbcTemplate.update("UPDATE public.\"Chapter\" SET phase=?,title=?,place=?,notes=? WHERE id=?",args,new int[]{
+                Types.SMALLINT,
                 Types.VARCHAR,
-                Types.VARCHAR,
-                Types.INTEGER,
+                Types.SMALLINT,
                 Types.VARCHAR,
                 Types.INTEGER});
     }
@@ -59,6 +59,12 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
                 new Object[]{diagramId},new ChapterMapper());
     }
 
+    public List<Chapter> getAllChaptersByPhase(short phase, int diagramId)
+    {
+        return jdbcTemplate.query("select * from \"Chapter\" where phase=? and diagram_id=? order by position asc",
+                new Object[]{phase,diagramId},new ChapterMapper());
+    }
+
     @Override
     public void delete(int chapterId) {
         jdbcTemplate.update("delete from \"Chapter\" where id=? ",chapterId);
@@ -70,7 +76,7 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
         public Chapter mapRow(ResultSet rs, int rowNum) throws SQLException {
             Chapter chapter = new Chapter();
             chapter.setId(rs.getInt("id"));
-            chapter.setPhase(rs.getString("phase"));
+            chapter.setPhase(rs.getShort("phase"));
             chapter.setTitle(rs.getString("title"));
             chapter.setNote(rs.getString("notes"));
             chapter.setPreviousChapterId(rs.getInt("previous_chapter_id"));
