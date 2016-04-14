@@ -17,15 +17,24 @@ public class ChapterPHLayout extends HorizontalLayout {
         }
     }
 
-    public void removeChapter(Chapter chapter)
+    public void removeChapter(int chapterId)
+    {
+        removeComponent(getComponentByChapter(chapterId));
+    }
+
+
+
+
+
+    public Component getComponentByChapter(int chapterId)
     {
         for(int i=0;i<getComponentCount();i++)
         {
-            if(getComponent(i).getId().equals(String.valueOf(chapter.getId())))
+            if(getComponent(i).getId().equals(String.valueOf(chapterId)))
             {
-                removeComponent(getComponent(i));
+                return getComponent(i);
             }
-
         }
+        return null;
     }
 }

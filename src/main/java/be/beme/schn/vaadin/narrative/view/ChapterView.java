@@ -5,6 +5,7 @@ import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.CrudNotifier;
+import be.beme.schn.vaadin.MyVaadinUI;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.ChapterPHLayout;
@@ -13,6 +14,7 @@ import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
@@ -37,6 +39,9 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private Button buttonErase;
     private Button buttonSave;
     private Button buttonSet;
+    private Button buttonLeft;
+    private Button buttonRight;
+    private HorizontalLayout buttonHLayout;
     private NWrapperPanel wrapper;
     private ArrayList<CrudListener> listeners;
 
@@ -78,19 +83,13 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private Layout buildContent()
     {
         VerticalLayout verticalLayout= new VerticalLayout();
-        buttonAddSc = new Button("+",event -> {
-            presenter.setView(this);
-            this.chapter.setPosition((short)(chapter.getPosition()-1));
-            presenter.save();
-            notifyUpdated(chapter);
-        });
+
 
         verticalLayout.addComponent(buildScStickers());
-        verticalLayout.addComponent(buttonAddSc);
-        verticalLayout.setComponentAlignment(buttonAddSc,Alignment.MIDDLE_RIGHT);
+        verticalLayout.addComponent(buildMiddleButtons());
         verticalLayout.addComponent(buildProperties());
         verticalLayout.setExpandRatio(pstickers,9);
-        verticalLayout.setExpandRatio(buttonAddSc,1);
+        verticalLayout.setExpandRatio(buttonHLayout,1);
         verticalLayout.setExpandRatio(propertiesPanel,10);
         verticalLayout.setSizeFull();
         verticalLayout.setSpacing(true);
@@ -114,6 +113,32 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
 
        return pstickers;
     }
+
+    private Layout buildMiddleButtons()
+    {
+        buttonHLayout= new HorizontalLayout();
+
+        buttonLeft = new Button(FontAwesome.ARROW_LEFT);
+        buttonLeft.addClickListener(event1 -> changePosition(-1));
+
+        buttonRight = new Button(FontAwesome.ARROW_RIGHT);
+        buttonRight.addClickListener(event1 -> changePosition(1));
+
+        buttonAddSc = new Button("+",event -> {
+
+        });
+
+        buttonHLayout.addComponent(buttonLeft);
+        buttonHLayout.addComponent(buttonAddSc);
+        buttonHLayout.addComponent(buttonRight);
+        buttonHLayout.setComponentAlignment(buttonLeft,Alignment.MIDDLE_LEFT);
+        buttonHLayout.setComponentAlignment(buttonAddSc,Alignment.MIDDLE_CENTER);
+        buttonHLayout.setComponentAlignment(buttonRight,Alignment.MIDDLE_RIGHT);
+        buttonHLayout.setSizeFull();
+
+        return buttonHLayout;
+    }
+
 
 
     private Panel buildProperties()
@@ -149,6 +174,19 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         return new Button("Yolo");
     }
 
+    private void changePosition(int offset)
+    {
+
+        short position=(short)(chapter.getPosition()+offset);
+        if((position!=-1)&&(position!=(Constants.CHAPTER_COUNT_FOR_PHASE)))
+        {
+            this.chapter.setPosition(position);
+            presenter.setView(this);
+            presenter.save();
+            notifyUpdated(chapter);
+        }
+
+    }
 
     public void addScene(Scene scene)
     {
@@ -298,6 +336,15 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
             }
 //                UI.getCurrent().addWindow(new SceneWindow(sctarget));*/
         }
+    }
+
+    public void setChapterPlace(short newPlace)
+    {
+        this.chapter.setPosition(newPlace);
+        presenter.setView(this);
+        presenter.save();
+//        notifyUpdated(chapter);                                               it creates an endless loop
+
     }
 
 

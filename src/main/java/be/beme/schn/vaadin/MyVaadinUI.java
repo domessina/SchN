@@ -1,5 +1,6 @@
 package be.beme.schn.vaadin;
 
+import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
@@ -45,8 +46,8 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     private ChapterPresenter chapterPresenter;
 
     List<Chapter> chapterList;
-    public static int diagramId=3;
-    public static short phaseSelected;
+    public int diagramId=3;
+    public short phaseSelected;
     Panel[] panelArray;
     ChapterPHLayout[] chapterLArray;
     private TabSheet tabSheet;
@@ -107,7 +108,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             Chapter chapter =new Chapter();
             chapter.setPhase(phaseSelected);
             chapter.setDiagramId(diagramId);
-            chapter.setPosition((short)chapterLArray[phaseSelected].getComponentCount());
+            chapter.setPosition((short)Constants.CHAPTER_COUNT_FOR_PHASE);
 
             ChapterView chapterView= new ChapterView(chapter);
             chapterView.setHandler(chapterPresenter);
@@ -221,6 +222,9 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     }
 
     private void addChapterView(Chapter chapter){
+
+//        chapter.setPosition((short)(chapterLArray[phaseSelected].getComponentCount()+1));
+
         ChapterView chapterW = new ChapterView(chapter);
         chapterW.setHandler(chapterPresenter);
         chapterW.addCrudListener(this);
@@ -229,7 +233,8 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         wrapper.setId(String.valueOf(chapter.getId()));
         chapterW.wrap(wrapper);
         chapterLArray[phaseSelected].addComponent(wrapper);
-        wrapper.setCaption("Chapter "+chapterLArray[phaseSelected].getComponentCount());
+        Constants.CHAPTER_COUNT_FOR_PHASE=chapterLArray[phaseSelected].getComponentCount();
+        wrapper.setCaption("Chapter "+Constants.CHAPTER_COUNT_FOR_PHASE);
 
     }
 
@@ -255,13 +260,21 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     @Override
     public void updated(Chapter o) {
 
-        chapterLArray[phaseSelected].replaceComponent(chapterLArray[phaseSelected].getComponent(o.getPosition()),chapterLArray[phaseSelected].getComponent(o.getPosition()+1));
+        NWrapperPanel wrapperReplaced=(NWrapperPanel)chapterLArray[phaseSelected].getComponent(o.getPosition());
+        Component wrapperChanged=chapterLArray[phaseSelected].getComponentByChapter(o.getId());
+        short oldPlace=(short)chapterLArray[phaseSelected].getComponentIndex(wrapperChanged);
+        ((ChapterView)wrapperReplaced.getWrappedComponent()).setChapterPlace(oldPlace);
+//        chapterLArray[phaseSelected].replaceComponent(chapterLArray[phaseSelected].getComponent(o.getPosition()),chapterLArray[phaseSelected].getComponentByChapter(o.getId()));            //because WrapperPanels have as id the id of the their chapter
+        chapterLArray[phaseSelected].replaceComponent(wrapperReplaced,wrapperChanged);            //because WrapperPanels have as id the id of the their chapter
+
+
     }
 
     @Override
     public void deleted(Chapter o) {
 
-     chapterLArray[(int)phaseSelected].removeChapter(o);
+     chapterLArray[(int)phaseSelected].removeChapter(o.getId());
 
     }
+
 }

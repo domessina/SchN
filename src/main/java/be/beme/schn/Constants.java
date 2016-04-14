@@ -20,4 +20,6 @@ public final class Constants {
     public static final Action ACTION_DELETE=new Action("Delete");
     public static final Action ACTION_MODIFY=new Action("Modify");
 
+    public static int CHAPTER_COUNT_FOR_PHASE;
+
 }

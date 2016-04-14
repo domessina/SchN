@@ -15,6 +15,7 @@ public class NWrapperPanel extends Panel implements NWrapper {
     protected Button buttonErase;
     protected Button buttonSave;
     protected Button buttonSet;
+    protected Component wrapped;
 
     public NWrapperPanel()
     {
@@ -40,7 +41,7 @@ public class NWrapperPanel extends Panel implements NWrapper {
 
     public void setWrappedContent(Component component)        //it' final, the daughet class can't override it
     {
-        Component wrapped=component;
+        this.wrapped=component;
         this.rootLayout.addComponent(component);
 
         this.buttonSave.setStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -88,6 +89,7 @@ public class NWrapperPanel extends Panel implements NWrapper {
     }
 
 
+    public Component getWrappedComponent(){return this.wrapped;}
 
     public Layout getRootLayout()
     {

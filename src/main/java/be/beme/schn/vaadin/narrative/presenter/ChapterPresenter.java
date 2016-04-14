@@ -74,7 +74,7 @@ public class ChapterPresenter implements WindowPresenter {
         return true;
     }
 
-    public ChapterDaoImpl getDaoService(){return this.chapterService;}
+    public  ChapterDaoImpl getDaoService(){return this.chapterService;}
 
     @Override
     public void setView(NarrativeView narrativeView) {
