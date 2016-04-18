@@ -6,9 +6,9 @@ import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.CrudNotifier;
 import be.beme.schn.vaadin.MyVaadinUI;
+import be.beme.schn.vaadin.narrative.ChapterPHLayout;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
-import be.beme.schn.vaadin.narrative.ChapterPHLayout;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
@@ -177,14 +177,17 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private void changePosition(int offset)
     {
 
-        short position=(short)(chapter.getPosition()+offset);
-        if((position!=-1)&&(position!=(Constants.CHAPTER_COUNT_FOR_PHASE)))
+
+            short position=(short)(chapter.getPosition()+offset);
+        int chapter_count=((MyVaadinUI) getUI()).getUserVariables().CHAPTER_COUNT_FOR_PHASE;
+        if((position!=-1)&&(position!=chapter_count))
         {
             this.chapter.setPosition(position);
             presenter.setView(this);
             presenter.save();
             notifyUpdated(chapter);
         }
+
 
     }
 
@@ -334,7 +337,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
                     Notification.show("ingo",scId, Notification.Type.TRAY_NOTIFICATION);
                 }
             }
-//                UI.getCurrent().addWindow(new SceneWindow(sctarget));*/
+         //   (MyVaadinUI)UI.getCurrent().addWindow(new SceneWindow(sctarget));*/
         }
     }
 
