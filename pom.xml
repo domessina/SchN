@@ -53,12 +53,6 @@
 			<version>9.4-1206-jdbc42</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>vaadin-jcrop</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-
 		<!--Pour compiler mytheme.scss en css-->
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -79,13 +73,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<repositories>
-		<repository>
-			<id>vaadin-addons</id>
-			<url>http://maven.vaadin.com/vaadin-addons</url>
-		</repository>
-	</repositories>
 
 
 	<build>
