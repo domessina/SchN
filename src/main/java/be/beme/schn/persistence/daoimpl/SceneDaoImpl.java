@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
 
     @Override
-    public int createScene(int chapterId, int previousSceneId) {
+    public int create(int chapterId, int previousSceneId) {
         jdbcTemplate.update("insert into Scene (chapter_id,previous_scene_id) values (?,?)"
                 ,chapterId,previousSceneId);
 
@@ -27,17 +28,20 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     }
 
     @Override
-    public void setPicture(int sceneId, String pictureURL) {
-
-
+    public void update(Object[] args) {
+        jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, note=? WHERE id=?",args,new int[]{
+                Types.VARCHAR,
+                Types.INTEGER,
+                Types.VARCHAR,
+                Types.VARCHAR,
+                Types.INTEGER});//si probleme avec LONGVARCHAR pour TEXT, use VARCHAR
     }
 
-    @Override
-    public void setNote(int sceneId, String note) {
-
-        jdbcTemplate.update("update Scene SET notes=? where id=?",
-                note, sceneId);
+    public void delete(int SceneId)
+    {
+        jdbcTemplate.update("delete from Scene where id=? ",SceneId);
     }
+
 
     @Override
     public List<Scene> getAllScenesByChapter(int chapterId) {
@@ -45,11 +49,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
                 new Object[]{chapterId},new SceneMapper());
     }
 
-    @Override
-    public void delete(int SceneId)
-    {
-        jdbcTemplate.update("delete from Scene where id=? ",SceneId);
-    }
+
 
     private static final class SceneMapper implements RowMapper<Scene> {
 

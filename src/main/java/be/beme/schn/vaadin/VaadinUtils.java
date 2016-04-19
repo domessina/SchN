@@ -5,6 +5,7 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.*;
 
+import javax.servlet.http.Cookie;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -62,5 +63,19 @@ public final class VaadinUtils {
 
         return null;
 
+    }
+
+    public static Cookie getCookieByName(String name) {
+        // Fetch all cookies from the request
+        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+
+        // Iterate to find cookie by its name
+        for (Cookie cookie : cookies) {
+            if (name.equals(cookie.getName())) {
+                return cookie;
+            }
+        }
+
+        return null;
     }
 }

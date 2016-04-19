@@ -348,9 +348,10 @@ ALTER SEQUENCE "Rule_id_seq" OWNED BY "Rule".id;
 CREATE TABLE "Scene" (
     id integer NOT NULL,
     chapter_id integer NOT NULL,
-    previous_scene_id integer NOT NULL,
+    place integer NOT NULL,
     notes text,
-    picture_url character varying
+    picture character varying,
+    tag character varying(35) NOT NULL
 );
 
 

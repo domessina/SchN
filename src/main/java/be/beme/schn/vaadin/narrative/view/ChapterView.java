@@ -16,6 +16,7 @@ import com.vaadin.event.MouseEvents;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 
@@ -179,7 +180,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
 
 
             short position=(short)(chapter.getPosition()+offset);
-        int chapter_count=((MyVaadinUI) getUI()).getUserVariables().CHAPTER_COUNT_FOR_PHASE;
+        int chapter_count=(int)VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase");
         if((position!=-1)&&(position!=chapter_count))
         {
             this.chapter.setPosition(position);
@@ -326,18 +327,18 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     public void click(MouseEvents.ClickEvent event) {
         if(event.isDoubleClick())
         {
-
             Image image=(Image)event.getSource();
             String scId=image.getId().substring(2);
             for(Scene sc : chapter.getScenes())
             {
                 if(sc.getId()==Integer.valueOf(scId))
                 {
-                    // sctarget=sc;
                     Notification.show("ingo",scId, Notification.Type.TRAY_NOTIFICATION);
+                    ((MyVaadinUI)UI.getCurrent()).openScene(sc);
+                    break;
                 }
             }
-         //   (MyVaadinUI)UI.getCurrent().addWindow(new SceneWindow(sctarget));*/
+
         }
     }
 

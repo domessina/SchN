@@ -9,8 +9,9 @@ public class Scene implements NarrativeComponent {
     private int id;
     private int chapterId;
     private String picture ;
-    private int previous_scene_id;
+    private int place;
     private String note;
+    private String tag;
 
     public int getId() {
         return id;
@@ -38,11 +39,11 @@ public class Scene implements NarrativeComponent {
 
 
     public int getPrevious_scene_id() {
-        return previous_scene_id;
+        return place;
     }
 
     public void setPrevious_scene_id(int previous_scene_id) {
-        this.previous_scene_id = previous_scene_id;
+        this.place = previous_scene_id;
     }
 
     public String getNote() {
@@ -53,5 +54,11 @@ public class Scene implements NarrativeComponent {
         this.note = note;
     }
 
+    public String getTag() {
+        return tag;
+    }
 
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }

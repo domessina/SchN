@@ -9,16 +9,13 @@ import java.util.List;
  */
 public interface SceneDao {
 
-    int createScene(int chapterId, int previousSceneId);
+    int create(int chapterId, int previousSceneId);
 
-    void setPicture(int sceneId, String pictureURL);
-
-    void setNote(int sceneId, String note);
-
-    List<Scene> getAllScenesByChapter(int chapterId);
+    void update(Object[] args) ;
 
     void delete(int sceneId);
 
+    List<Scene> getAllScenesByChapter(int chapterId);
 
 
 }

@@ -1,6 +1,5 @@
 package be.beme.schn.vaadin;
 
-import be.beme.schn.UserVariables;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
@@ -12,9 +11,11 @@ import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
 import be.beme.schn.vaadin.narrative.view.ChapterView;
 import be.beme.schn.vaadin.narrative.view.CharacterView;
+import be.beme.schn.vaadin.narrative.view.SceneView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +46,14 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     @Autowired
     private ChapterPresenter chapterPresenter;
 
-
-    public int diagramId=3;
     public short phaseSelected;
+    public short diagramId;
 
     private TabSheet tabSheet;
-    ArrayList<Scene> scenes;
+    private ArrayList<Scene> scenes;
     private ChapterUI chapterUI;
     private CharacterUI characterUI;
-    private UserVariables userVariables;
+
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -63,9 +63,15 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         chapterUI= new ChapterUI();
         characterUI= new CharacterUI();
-        userVariables = new UserVariables();
+        tabSheet= new TabSheet();
 
         scenes= new ArrayList<Scene>();
+
+        diagramId=3;
+        VaadinSession.getCurrent().setAttribute("diagramId",3);
+        System.out.println(VaadinSession.getCurrent().getCsrfToken());
+
+
         Scene scene;
 
         for(int i=0;i<15;i++)
@@ -78,7 +84,12 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
 
         chapterUI.init();
-        tabSheet=chapterUI.buildTabSheet();
+        tabSheet.setSizeFull();
+        tabSheet.setImmediate(true);
+        tabSheet.addSelectedTabChangeListener(this);
+
+        chapterUI.fillTabSheet();
+        tabSheet.setSelectedTab(0);
 
 
         verticalLayout.setSizeFull();
@@ -110,19 +121,36 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
     @Override
     public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
-        phaseSelected=Short.valueOf(selectedTabChangeEvent.getTabSheet().getSelectedTab().getId());
-        chapterUI.loadChapters();
+
+
+        try{
+            phaseSelected=Short.valueOf(selectedTabChangeEvent.getTabSheet().getSelectedTab().getId());             //auycun id de compoentn dans un tab ne peuve têtre qu'un chiffre , autrement mauvais assignation dephase
+            chapterUI.loadChapters();
+        }
+        catch(NumberFormatException e)
+        {
+            System.out.println("This tab is not a phase");
+        }
+
+
+
     }
 
-    public UserVariables getUserVariables()
+
+
+
+    //------------------------SCENE UI MANAGING---------------------------
+
+    public void openScene(Scene scene)
     {
-        return this.userVariables;
+       tabSheet.addTab(new SceneView(scene),"New Scene");
+       tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
     }
 
 
     //----------------------CHARACTER UI MANAGING--------------------------
 
-    private final class CharacterUI
+    private final class CharacterUI                 //TODO tu n'as même pas de variables de classe pour ces classes internes, lesr etirer non?
     {
         private void newCharacter()
         {
@@ -205,7 +233,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
                 panelArray[i]=new Panel();
                 panelArray[i].setContent(chapterLArray[i]);
                 panelArray[i].setHeight(100,Unit.PERCENTAGE);
-                panelArray[i].setId(String.valueOf(i));
+                panelArray[i].setId(String.valueOf(i));             //Every Panel has the number of it's phase
             }
 
         }
@@ -216,7 +244,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             Chapter chapter =new Chapter();
             chapter.setPhase(phaseSelected);
             chapter.setDiagramId(diagramId);
-            chapter.setPosition((short) userVariables.CHAPTER_COUNT_FOR_PHASE);
+            chapter.setPosition((short) VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase"));
 
             ChapterView chapterView= new ChapterView(chapter);
             chapterView.setHandler(chapterPresenter);
@@ -252,20 +280,14 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             }
         }
 
-        private TabSheet buildTabSheet()
+        private void fillTabSheet()
         {
-            TabSheet tabSheet= new TabSheet();
-            tabSheet.setSizeFull();
-            tabSheet.setImmediate(true);
-            tabSheet.addSelectedTabChangeListener(MyVaadinUI.this);
             tabSheet.addTab(panelArray[0],"Exposition");
             tabSheet.addTab(panelArray[1],"Conflict");
             tabSheet.addTab(panelArray[2],"Rising Action");
             tabSheet.addTab(panelArray[3],"Climax");
             tabSheet.addTab(panelArray[4],"Falling Action");
             tabSheet.addTab(panelArray[5],"Resolution");
-            tabSheet.setSelectedTab(0);
-            return tabSheet;
         }
 
         private void addChapterView(Chapter chapter){
@@ -280,8 +302,8 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             wrapper.setId(String.valueOf(chapter.getId()));
             chapterW.wrap(wrapper);
             chapterLArray[phaseSelected].addComponent(wrapper);
-            userVariables.CHAPTER_COUNT_FOR_PHASE=chapterLArray[phaseSelected].getComponentCount();
-            wrapper.setCaption("Chapter "+ userVariables.CHAPTER_COUNT_FOR_PHASE);
+            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
+            wrapper.setCaption("Chapter "+ chapterLArray[phaseSelected].getComponentCount());
 
         }
 
