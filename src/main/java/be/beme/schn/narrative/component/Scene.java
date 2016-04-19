@@ -38,11 +38,11 @@ public class Scene implements NarrativeComponent {
     }
 
 
-    public int getPrevious_scene_id() {
+    public int getPlace() {
         return place;
     }
 
-    public void setPrevious_scene_id(int previous_scene_id) {
+    public void setPlace(int previous_scene_id) {
         this.place = previous_scene_id;
     }
 

@@ -57,8 +57,8 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
             Scene scene = new Scene();
             scene.setId(rs.getInt("id"));
             scene.setChapterId(rs.getInt("chapter_id"));
-            scene.setPicture(rs.getString("picture_url"));
-            scene.setPrevious_scene_id(rs.getInt("previous_scene_id"));
+            scene.setPicture(rs.getString("picture"));
+            scene.setPlace(rs.getInt("place"));
             scene.setNote(rs.getString("notes"));
             return scene;
         }

@@ -1,5 +1,7 @@
 package be.beme.schn.vaadin;
 
+import be.beme.schn.Constants;
+import be.beme.schn.ImageUtil;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
@@ -14,19 +16,25 @@ import be.beme.schn.vaadin.narrative.view.CharacterView;
 import be.beme.schn.vaadin.narrative.view.SceneView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.*;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.jcrop.Jcrop;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Dorito on 17-03-16.
  */
-@Theme("valo")
+@Theme("mytheme")
 @Title("Narrative Diagram")
 //@PreserveOnRefresh  Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
@@ -38,7 +46,6 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
     @Autowired
     CharacterWindowPresenter characterPresenter;
-
 
     @Autowired
     private TraitCrudPresenter traitPresenter;
@@ -113,6 +120,27 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         hl.addComponent(new Button("new Character", event -> characterUI.newCharacter()));
 
+        BufferedImage img = null;
+        BufferedImage img2=null;
+        try {
+            img = ImageIO.read(new File("D:\\Téléchargements\\TFEFiles\\NarrativeScheme\\Users\\1\\Diagrams\\3\\Characters\\f494ac51-d1d6-4bbe-8d4b-66ea12c40f14.jpg"));
+
+           if(img.getWidth()<=img.getHeight())
+           {
+               img2=ImageUtil.crop(img,img.getWidth(),img.getWidth());
+           }
+            else
+           {
+               img2=ImageUtil.crop(img,img.getHeight(),img.getHeight());
+           }
+            img2=ImageUtil.scale(img2,100,100);
+
+            File outputfile = new File("D:\\Téléchargements\\TFEFiles\\NarrativeScheme\\Users\\1\\Diagrams\\3\\Characters\\Cropped\\f494ac51-d1d6-4bbe-8d4b-66ea12c40f14.jpg");
+            ImageIO.write(img2, "png", outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         setContent(verticalLayout);
     }
@@ -144,7 +172,8 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     public void openScene(Scene scene)
     {
        tabSheet.addTab(new SceneView(scene),"New Scene");
-       tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
+        tabSheet.getTab(tabSheet.getComponentCount()-1).setClosable(true);
+        tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
     }
 
 

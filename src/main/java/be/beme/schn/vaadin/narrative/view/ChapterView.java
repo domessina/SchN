@@ -209,7 +209,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
             {
                 Image image= new Image(null,new FileResource(new File(Constants.BASE_DIR+"Users\\1\\Diagrams\\"+this.chapter.getDiagramId()+"\\Scenes\\"+s.getPicture())));
                 image.setWidth(100,Unit.PERCENTAGE);
-//            image.setStyleName("round-corner");
+            image.setStyleName("round-corner");
                 image.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
                 image.addListener(this);
                 gLayout.addComponent(image);
