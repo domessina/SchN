@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact name="SchN:GWT">
+    <output-path>$PROJECT_DIR$/SchN/target/classes/VAADIN/widgetsets</output-path>
+    <root id="root">
+      <element id="gwt-compiler-output" facet="SchN/gwt/GWT" />
+    </root>
+  </artifact>
+</component>
