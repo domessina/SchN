@@ -5,7 +5,7 @@ import be.beme.schn.narrative.component.NarrativeComponent;
 /**
  * Created by Dorito on 29-03-16.
  */
-public interface WindowPresenter extends NarrativePresenter {
+public interface WrapperPanelPresenter extends NarrativePresenter {
 
     /**
      *

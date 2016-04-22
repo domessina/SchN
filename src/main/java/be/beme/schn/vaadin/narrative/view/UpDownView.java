@@ -12,21 +12,20 @@ import com.vaadin.ui.themes.ValoTheme;
 /**
  * Created by Dotista on 19-04-16.
  */
-public class LinkView extends HorizontalLayout implements NarrativeView, Button.ClickListener {
+public class UpDownView extends HorizontalLayout implements NarrativeView, Button.ClickListener {
 
-    private Link link;
+    private boolean up;
     private Button good;
     private Button bad;
     private LinkPresenter presenter;
 
 
                                                     //c'est Relation et pas link qu'il aura fallu l'appeler.
-    public LinkView(Link link)
+    public UpDownView(String name)
     {
-        this.link=link;
-        initContent();
+       initContent();
         setSizeFull();
-        addComponents(new Label(this.link.getName()),good, bad);
+        addComponents(new Label(name),good, bad);
     }
 
     private void initContent()
@@ -50,7 +49,7 @@ public class LinkView extends HorizontalLayout implements NarrativeView, Button.
 
     public boolean applyUIRel()
     {
-        if(link.isRel())
+        if(up)
         {
             good.setStyleName("green-shadow",true);
             bad.setStyleName("red-shadow",false);
@@ -61,7 +60,7 @@ public class LinkView extends HorizontalLayout implements NarrativeView, Button.
             good.setStyleName("green-shadow",false);
         }
 
-        return link.isRel();
+        return up;
     }
 
     @Override
@@ -71,12 +70,9 @@ public class LinkView extends HorizontalLayout implements NarrativeView, Button.
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
-        link.setRel(!link.isRel());
+        up=!up;
         applyUIRel();
     }
 
-    public Link getLink()
-    {
-        return this.link;
-    }
+    public boolean isUp(){return this.up; }
 }

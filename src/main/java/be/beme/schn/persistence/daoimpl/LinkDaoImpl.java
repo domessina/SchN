@@ -41,9 +41,9 @@ public class LinkDaoImpl extends AbstractPersistenceService implements LinkDao {
     }
 
     @Override
-    public List<Link> getAllLinksByScene(int sceneId) {
-        return jdbcTemplate.query("select * from Diagram where user_id=?",
-                new Object[]{sceneId},new LinkMapper());
+    public List<Link> getLinksBy(int fromCharacterId, int sceneId) {
+        return jdbcTemplate.query("select * from \"Link\" where from_character_id=? and scene_id=?",
+                new Object[]{fromCharacterId,sceneId},new LinkMapper());
     }
 
     @Override
@@ -58,8 +58,8 @@ public class LinkDaoImpl extends AbstractPersistenceService implements LinkDao {
             Link link = new Link();
             link.setId(rs.getInt("id"));
             link.setName(rs.getString("name"));
-            link.setElementId_1(rs.getInt("element_id_1"));
-            link.setElementId_2(rs.getInt("element_id_2"));
+            link.setFromCharacterId(rs.getInt("from_character_id"));
+            link.setToCharacterId(rs.getInt("to_character_id"));
             link.setRel(rs.getBoolean("rel"));
             link.setScene_Id(rs.getInt("scene_id"));
             return link;

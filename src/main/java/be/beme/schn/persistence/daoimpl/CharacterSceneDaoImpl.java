@@ -2,7 +2,9 @@ package be.beme.schn.persistence.daoimpl;
 
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.persistence.AbstractPersistenceService;
+import be.beme.schn.persistence.dao.CharacterSceneDao;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,10 +13,12 @@ import java.util.List;
 /**
  * Created by Dotista on 19-04-16.
  */
-public class CharacterSceneDaoImpl extends AbstractPersistenceService {
+@Repository
+public class CharacterSceneDaoImpl extends AbstractPersistenceService implements CharacterSceneDao{
 
 
-    List<Character> getAllCharactersByScene(int sceneId)
+    @Override
+    public List<Character> getAllCharactersByScene(int sceneId)
     {
         return jdbcTemplate.query("select * from \"Character\" inner join \"CharacterScene\" on \"Character\".id=\"CharacterScene\".character_id where \"CharacterScene\".scene_id=?",
                 new Object[]{sceneId},new CharacterMapper());

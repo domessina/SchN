@@ -1,60 +1,72 @@
 package be.beme.schn.vaadin.narrative.view;
 
 import be.beme.schn.Constants;
-import be.beme.schn.narrative.component.*;
-import be.beme.schn.narrative.component.Link;
+import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.CrudNotifier;
 import be.beme.schn.vaadin.ImageUploadPanel;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
+import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
+import be.beme.schn.vaadin.narrative.presenter.ScenePresenter;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 
 import java.util.ArrayList;
 
-/**
- * Created by Dotista on 18-04-16.
- */
-public class SceneView extends CustomComponent implements NarrativeView, NWrapped, CrudNotifier<Scene> {
+public final class SceneView extends CustomComponent implements NWrapped, NarrativeView, CrudNotifier<Scene>
+{
 
-    private Scene scene;
-    private ArrayList<CrudListener> listeners;
     private ImageUploadPanel imageUploadPanel;
     private TextField tagField;
+    private TextField placeField;
     private TextArea notes;
-    private FormLayout formLayout;
     private Panel propertiesPanel;
+    private NWrapperPanel wrapper;
+    private Scene scene;
+    private ArrayList<CrudListener<Scene>> listeners;
+    private Button buttonErase;
+    private Button buttonSave;
+    private Button buttonSet;
+    private ScenePresenter presenter;
 
     public SceneView(Scene scene)
     {
         this.scene=scene;
-        listeners= new ArrayList<>();
-        setSizeFull();
-        setCompositionRoot(buildContent());
+        this.listeners=new ArrayList<>();
     }
 
+    @Override
+    public void wrap(NWrapper wrapper) {
+
+        this.wrapper=(NWrapperPanel)wrapper;
+        setSizeFull();
+        this.setCompositionRoot(this.buildContent());
+        confWrapperBtns();
+    }
+    private void confWrapperBtns()
+    {
+        buttonErase=wrapper.getButtonErase();
+        buttonSave=wrapper.getButtonSave();
+        buttonSet=wrapper.getButtonSet();
+        buttonErase.addClickListener(this);
+        buttonSave.addClickListener(this);
+        buttonSet.addClickListener(this);
+        if(this.scene.getId()==0)
+        {
+            buttonErase.setVisible(false);
+            buttonSet.setVisible(false);
+        }
+    }
 
     private Component buildContent()
     {
-              HorizontalSplitPanel horizontalSplitPanel= new HorizontalSplitPanel(buildCmpntLeft(),buildCmpntRight());
-        horizontalSplitPanel.setMaxSplitPosition(35,Unit.PERCENTAGE);
-        horizontalSplitPanel.setMinSplitPosition(15,Unit.PERCENTAGE);
-        horizontalSplitPanel.setSizeFull();
-
-
-
-
-        return horizontalSplitPanel;
-    }
-
-    private Panel buildCmpntLeft()
-    {
         VerticalLayout verticalLayout= new VerticalLayout();
 
-        notes = new TextArea("Notes",scene.getNote());
+        notes = new TextArea("Notes",this.scene.getNote());
         notes.setNullRepresentation("");
         notes.setWidth(100,Unit.PERCENTAGE);
 
@@ -63,7 +75,7 @@ public class SceneView extends CustomComponent implements NarrativeView, NWrappe
 
 
         verticalLayout.addComponent(imageUploadPanel);
-        verticalLayout.addComponent(buildProperties());
+        verticalLayout.addComponent(this.buildProperties());
         verticalLayout.setExpandRatio(imageUploadPanel,4);
         verticalLayout.setExpandRatio(propertiesPanel,6);
 
@@ -72,10 +84,7 @@ public class SceneView extends CustomComponent implements NarrativeView, NWrappe
         rootLeft.setContent(verticalLayout);
 
         return rootLeft;
-
     }
-
-
 
     private Panel buildProperties()
     {
@@ -85,13 +94,16 @@ public class SceneView extends CustomComponent implements NarrativeView, NWrappe
         VerticalLayout verticalLayout= new VerticalLayout();
         verticalLayout.setMargin(true);
         tagField= new TextField("Tag",this.scene.getTag());
+        placeField= new TextField("Place",Integer.toString(this.scene.getPlace()));
         notes= new TextArea("Notes",this.scene.getNote());
 
         fLayout.setSpacing(true);
         tagField.setNullRepresentation("");
+        placeField.setNullRepresentation("");
         notes.setNullRepresentation("");
         notes.setWidth(100,Unit.PERCENTAGE);
         fLayout.addComponent(tagField);
+        fLayout.addComponent(placeField);
         fLayout.setComponentAlignment(tagField,Alignment.MIDDLE_CENTER);
 
         verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>", ContentMode.HTML));
@@ -103,35 +115,69 @@ public class SceneView extends CustomComponent implements NarrativeView, NWrappe
         propertiesPanel.setSizeFull();
         return propertiesPanel;
     }
-    private Component buildCmpntRight()
-    {
-        VerticalLayout charLayout = new VerticalLayout();
-        charLayout.setSizeFull();
 
-        Link link= new Link();
-        link.setName("Avec quelq'un");
-        charLayout.addComponent(new CharacterScene());
-        charLayout.setMargin(true);
-
-
-        Panel rootRight= new Panel();
-        rootRight.setSizeFull();
-        rootRight.setContent(charLayout);
-        return rootRight;
+    private Component buildUserProperties(){
+        return new Button("Yolo");
     }
-
-    private Layout buildCharList()
-    {
+    @Override
+    public NWrapper getWrapper() {
         return null;
     }
 
-    private Component buildUserProperties(){
-       return new Button("Yolo");
+    @Override
+    public void buttonClick(Button.ClickEvent event) {
+        if(event.getButton().equals(this.buttonSave))
+        {
+         if(verifyFields())
+         {
+             saveUpdate();
+         }
+        }
+    }
+
+    private void saveUpdate()
+    {
+        this.scene.setTag(tagField.getValue());
+        this.scene.setPlace(Integer.valueOf(placeField.getValue()));
+        this.scene.setPicture(imageUploadPanel.getFileName());
+        this.scene.setNote(notes.getValue());
+        presenter.setView(this);
+        this.scene=presenter.save();
+        notifyCreated(this.scene);
+        wrapper.close();
+    }
+    private boolean verifyFields()
+    {
+      tagField.setComponentError(null);
+        if(tagField.isEmpty())
+        {
+            tagField.setComponentError(new UserError("Required field not filled"));     //TODO créer constante pour requiered field not filled
+            return false;
+        }
+        else if(placeField.isEmpty())
+        {
+            placeField.setComponentError(new UserError("Required field not filled"));
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void setHandler(NarrativePresenter narrativePresenter) {
+        this.presenter=(ScenePresenter)narrativePresenter;
+    }
+
+    @Override
+    public void addCrudListener(CrudListener listener) {
+        listeners.add(listener);
     }
 
     @Override
     public void notifyCreated(Scene target) {
-
+        for(CrudListener listener:listeners)
+        {
+            listener.created(target);
+        }
     }
 
     @Override
@@ -144,23 +190,8 @@ public class SceneView extends CustomComponent implements NarrativeView, NWrappe
 
     }
 
-    @Override
-    public void addCrudListener(CrudListener listener) {
-
-    }
-
-    @Override
-    public void setHandler(NarrativePresenter narrativePresenter) {
-
-    }
-
-    @Override
-    public NWrapper getWrapper() {
-        return null;
-    }
-
-    @Override
-    public void buttonClick(Button.ClickEvent event) {
-
+    public Scene getScene()
+    {
+        return this.scene;
     }
 }

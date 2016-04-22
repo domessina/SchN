@@ -1,13 +1,14 @@
 package be.beme.schn.persistence.dao;
 
 import be.beme.schn.narrative.component.Chapter;
+import be.beme.schn.persistence.Dao;
 
 import java.util.List;
 
 /**
  * Created by Dorito on 21-03-16.
  */
-public interface ChapterDao {
+public interface ChapterDao extends Dao {
 
     int create(int diagramId, short phase, String title, short place, String note);
 

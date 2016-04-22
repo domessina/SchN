@@ -107,7 +107,7 @@ CREATE TABLE "Character" (
 
 --
 -- TOC entry 205 (class 1259 OID 24988)
--- Name: CharacterScene; Type: TABLE; Schema: public; Owner: -
+-- Name: CharacterSceneView; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE "CharacterScene" (

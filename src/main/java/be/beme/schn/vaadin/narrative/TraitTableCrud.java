@@ -53,7 +53,7 @@ public class TraitTableCrud extends TableCrud<Trait> {
 
 //-----------------------------------------------------------------------
 
-    private class TraitWindow extends WindowCrud implements FieldEvents.FocusListener, Window.CloseListener {
+    private class TraitWindow extends WindowCrud<Trait> implements FieldEvents.FocusListener, Window.CloseListener {
 
         private Trait traitCrud;
         private Object targetId;
@@ -145,7 +145,7 @@ public class TraitTableCrud extends TableCrud<Trait> {
         }
 
         @Override
-        public Object getCrudObj() {
+        public Trait getCrudObj() {
             return traitCrud;
         }
 

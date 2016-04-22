@@ -10,7 +10,8 @@ import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.TraitTableCrud;
-import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
+import be.beme.schn.vaadin.narrative.presenter.CharacterPresenter;
+import be.beme.schn.vaadin.narrative.presenter.WrapperPanelPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
 import com.vaadin.server.AbstractErrorMessage;
@@ -28,8 +29,9 @@ import java.util.List;
  */
 
 //TODO un URI pour chaque Window?
+    //TODO mettre tous les view et presenter en final rien ue parce que dans ton esprit elles n'ont pas été concues pour etre héritées, de plus que c'est un projet interne, pas un projet ver sl'exteiruer comme un framework.
 
-public class CharacterView extends CustomComponent implements NarrativeView, NWrapped,CrudListener<Trait>, Window.CloseListener {
+public final class CharacterView extends CustomComponent implements NarrativeView, NWrapped,CrudListener<Trait>, Window.CloseListener {
 
     private Panel rootPanel;
     private TraitTableCrud traitTableCrud;
@@ -43,7 +45,7 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
     private ArrayList<Trait> updateTraits;
     private ArrayList<Trait> deleteTraits;
     private  ImageUploadPanel imageUploadPanel;
-    private CharacterWindowPresenter characterWindowPresenter;
+    private CharacterPresenter characterPresenter;
     private TraitCrudPresenter traitPresenter;
     private VerticalLayout vLayoutProperties;
     private NWrapperPanel wrapper;
@@ -66,6 +68,7 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
 
     }
 
+    @Override
     public void wrap(NWrapper wrapper)
     {
         this.wrapper=(NWrapperPanel)wrapper;
@@ -171,7 +174,7 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
     {
         traitTableCrud = new TraitTableCrud("List of traits");
         traitTableCrud.addCrudListener(this);
-        traitTableCrud.fillTable(traitPresenter.getTraitService().getAllTraitsByCharacter(this.character.getId()));
+        traitTableCrud.fillTable(traitPresenter.getTraitService().getTraitsByCharacter(this.character.getId()));
         createTraits=new ArrayList<>();
         updateTraits=new ArrayList<>();
         deleteTraits=new ArrayList<>();
@@ -191,6 +194,10 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
             name.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
             type.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
         }
+        else if(characterPresenter.checkExist()&&(this.character.getId()==0))
+        {
+            name.setComponentError(new UserError("This name character already exists", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
+        }
         else {
 
             this.character.setName(name.getValue());
@@ -204,7 +211,8 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
                 switch (event.getButton().getCaption()) {
 
                     case "Save": {
-                        this.character = this.characterWindowPresenter.save();
+
+                        this.character = this.characterPresenter.save();
 
 
                         //TODO gérer si exception durant crud Traits
@@ -227,7 +235,7 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
                     }
                     case "Erase": {
                         // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
-                        eraseCok = this.characterWindowPresenter.erase();
+                        eraseCok = this.characterPresenter.erase();
                         if (eraseCok)
                         {
                             imageUploadPanel.deleteImage();
@@ -256,7 +264,7 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
 
     @Override
     public void setHandler(NarrativePresenter narrativePresenter) {
-        this.characterWindowPresenter=(CharacterWindowPresenter)narrativePresenter;
+        this.characterPresenter =(CharacterPresenter)narrativePresenter;
     }
 
     @Override
@@ -307,6 +315,7 @@ public class CharacterView extends CustomComponent implements NarrativeView, NWr
     public void windowClose(Window.CloseEvent e) {
         imageUploadPanel.deleteTmpDir();
     }
+
 
     @Override
     public NWrapper getWrapper() {

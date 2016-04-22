@@ -1,9 +1,11 @@
 package be.beme.schn.persistence.daoimpl;
 
 import be.beme.schn.narrative.TraitScene;
+import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.TraitSceneDao;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,23 +14,25 @@ import java.util.List;
 /**
  * Created by Dorito on 24-03-16.
  */
+
+@Repository
 public class TraitSceneDaoImpl extends AbstractPersistenceService implements TraitSceneDao {
 
     @Override
-    public void createTraitScene(int traitId, int sceneId, int diagramId) {
-        jdbcTemplate.update("insert into TraitScene (trait_id,scene_id,diagram_id) values (?,?,?)",traitId,sceneId,diagramId);
+    public void create(int traitId, int sceneId) {
+        jdbcTemplate.update("insert into TraitScene (trait_id,scene_id) values (?,?)",traitId,sceneId);
 
     }
 
     @Override
-    public void deleteTraitScene(int traitId, int sceneId, int diagramId) {
-        jdbcTemplate.update("delete from TraitScene where trait_id=? AND scene_id=? AND diagram_id=?",traitId,sceneId,diagramId);
+    public void delete(int traitId, int sceneId) {
+        jdbcTemplate.update("delete from TraitScene where trait_id=? AND scene_id=? AND diagram_id=?",traitId,sceneId);
     }
 
     @Override
-    public List<TraitScene> getAllTraitSceneByDiagram(int diagramId) {
-        return jdbcTemplate.query("select * from TraitScene where diagram_id=?",
-                new Object[]{diagramId},new TraitSceneMapper());
+    public List<Trait> getTraitByScene(int sceneId) {
+        return jdbcTemplate.query("select * from \"Trait\" inner join \"TraitScene\" on \"Trait\".id=\"TraitScene\".trait_id where \"TraitScene\".scene_id=?",
+                new Object[]{sceneId},new TraitMapper());
     }
 
 
@@ -41,6 +45,16 @@ public class TraitSceneDaoImpl extends AbstractPersistenceService implements Tra
             traitScene.setDiagramId(rs.getInt("diagram_id"));
 
             return traitScene;
+        }
+    }
+    private static final class TraitMapper implements RowMapper<Trait> {
+
+        public Trait mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Trait trait = new Trait();
+            trait.setId(rs.getInt("id"));
+            trait.setName(rs.getString("name"));
+            trait.setCharacterId(rs.getInt("character_id"));
+            return trait;
         }
     }
 }

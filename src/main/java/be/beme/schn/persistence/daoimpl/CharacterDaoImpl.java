@@ -50,6 +50,16 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
                 note, characterId);
     }
 
+    public boolean exist(String characterName, int diagramId)            //unique constraint on this columns
+    {
+        if(jdbcTemplate.query("select * from \"Character\" where diagram_id=? and name=?", new Object[]{diagramId,characterName},new CharacterMapper())==null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
     @Override
     public Character getCharacterById(int id)
     {
@@ -74,6 +84,13 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
     }
 
 
+
+    @Override
+    public List<Character> getAllCharactersByScene(int sceneId)
+    {
+        return jdbcTemplate.query("select * from \"Character\" inner join \"CharacterScene\" on \"Character\".id=\"CharacterScene\".character_id where \"CharacterScene\".scene_id=?",
+                new Object[]{sceneId},new CharacterMapper());
+    }
 
     private static final class CharacterMapper implements RowMapper<Character> {
 

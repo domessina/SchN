@@ -3,12 +3,14 @@ package be.beme.schn.narrative.component;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Link implements NarrativeComponent  {
+
+/**This creates a relationship form characterA to characterB. But also a trait challenged*/
+public class Link implements NarrativeComponent  {                  //TODO renommer Link , lire pq dans la javadoc juste au dessus. Apopelle ça relation. Mais relation ET traitchallenged utilisent linkView
 
     private int id;
     private String name;
-    private int elementId_1;
-    private int elementId_2;
+    private int fromCharacterId;
+    private int toCharacterId;
     private boolean rel;
     private int scene_Id;
 
@@ -24,24 +26,25 @@ public class Link implements NarrativeComponent  {
         return name;
     }
 
+    /**The name of element2 */
     public void setName(String name) {
         this.name = name;
     }
 
-    public int getElementId_1() {
-        return elementId_1;
+    public int getFromCharacterId() {
+        return fromCharacterId;
     }
 
-    public void setElementId_1(int elementId_1) {
-        this.elementId_1 = elementId_1;
+    public void setFromCharacterId(int fromCharacterId) {
+        this.fromCharacterId = fromCharacterId;
     }
 
-    public int getElementId_2() {
-        return elementId_2;
+    public int getToCharacterId() {
+        return toCharacterId;
     }
 
-    public void setElementId_2(int elementId_2) {
-        this.elementId_2 = elementId_2;
+    public void setToCharacterId(int toCharacterId) {
+        this.toCharacterId = toCharacterId;
     }
 
     public boolean isRel() {

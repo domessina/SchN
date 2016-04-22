@@ -60,7 +60,12 @@
 			<version>LATEST</version>
 		</dependency>
 
+
+
+
 	</dependencies>
+
+
 	
 	<dependencyManagement>
 		<dependencies>

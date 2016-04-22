@@ -5,12 +5,13 @@ import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.CrudNotifier;
-import be.beme.schn.vaadin.MyVaadinUI;
+import be.beme.schn.vaadin.MainUI;
 import be.beme.schn.vaadin.narrative.ChapterPHLayout;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
+import be.beme.schn.vaadin.narrative.presenter.WrapperPanelPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.FileResource;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by Dotista on 08-04-16.
  */
-public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped , CrudNotifier<Chapter>{
+public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped , CrudNotifier<Chapter>, Window.CloseListener{
 
     private ChapterPresenter presenter;
     private Chapter chapter;
@@ -55,7 +56,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         setCompositionRoot(buildContent());
     }
 
-
+    @Override
     public void wrap(NWrapper wrapper)
     {
         this.wrapper=(NWrapperPanel)wrapper;
@@ -64,8 +65,8 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         if(this.chapter.getId()==0)
         {
             toggleSettings();
-            buttonErase.setVisible(false);
-            buttonSet.setVisible(false);
+//            buttonErase.setVisible(false);
+//            buttonSet.setVisible(false);
         }
 
     }
@@ -103,6 +104,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private Panel buildScStickers()
     {
         pstickers = new Panel();
+        pstickers.setStyleName("background-grey");
         gLayout= new GridLayout();
         updateGridLayout();
 //        gLayout.setSizeFull(); //on ne fait pas setSpacign sinon on perd de la place pour les images. les bords arondit seront suffidants
@@ -126,6 +128,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         buttonRight.addClickListener(event1 -> changePosition(1));
 
         buttonAddSc = new Button("+",event -> {
+            ((MainUI)getUI()).newScene(this.chapter.getId());
 
         });
 
@@ -202,17 +205,36 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     {
         try {
             int row_column = (int) Math.ceil(Math.sqrt(this.chapter.getScenes().size()));
-            gLayout.setRows(row_column);
-            gLayout.setColumns(row_column);
+            gLayout.removeAllComponents();
+            if(row_column!=0)
+            {
+                gLayout.setRows(row_column);
+                gLayout.setColumns(row_column);
+            }
+            else {
+                gLayout.setRows(1);
+                gLayout.setColumns(1);
+            }
+
 
             for(Scene s : this.chapter.getScenes())
             {
-                Image image= new Image(null,new FileResource(new File(Constants.BASE_DIR+"Users\\1\\Diagrams\\"+this.chapter.getDiagramId()+"\\Scenes\\"+s.getPicture())));
-                image.setWidth(100,Unit.PERCENTAGE);
-            image.setStyleName("round-corner");
-                image.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
-                image.addListener(this);
-                gLayout.addComponent(image);
+                Component sticker;
+                if(s.getPicture()!=null)
+                {
+                    sticker= new Image(null,new FileResource(new File(Constants.BASE_DIR+"Users\\1\\Diagrams\\"+this.chapter.getDiagramId()+"\\Scenes\\"+s.getPicture())));
+                    ((Image)sticker).addListener(this);
+                }
+                else {
+                    sticker=new Panel(s.getTag());
+                    ((Panel) sticker).addListener(this);
+                }
+
+                sticker.setWidth(100,Unit.PERCENTAGE);
+                sticker.setStyleName("scene-sticker");
+                sticker.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
+                gLayout.addComponent(sticker);
+
             }
 
         }
@@ -306,7 +328,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         titleTF.setComponentError(null);
         if(titleTF.isEmpty())
         {
-            titleTF.setComponentError(new UserError("Requied field not filled"));
+            titleTF.setComponentError(new UserError("Required field not filled"));
             return false;
         }
 
@@ -327,14 +349,14 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     public void click(MouseEvents.ClickEvent event) {
         if(event.isDoubleClick())
         {
-            Image image=(Image)event.getSource();
-            String scId=image.getId().substring(2);
+            Component sticker=(Component)event.getSource();
+            String scId=sticker.getId().substring(2);
             for(Scene sc : chapter.getScenes())
             {
                 if(sc.getId()==Integer.valueOf(scId))
                 {
                     Notification.show("ingo",scId, Notification.Type.TRAY_NOTIFICATION);
-                    ((MyVaadinUI)UI.getCurrent()).openScene(sc);
+                    ((MainUI)UI.getCurrent()).openScene(sc);
                     break;
                 }
             }
@@ -387,5 +409,10 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         {
             listener.deleted(target);
         }
+    }
+
+    @Override
+    public void windowClose(Window.CloseEvent e) {
+      //  updateGridLayout();
     }
 }

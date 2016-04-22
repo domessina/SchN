@@ -18,12 +18,36 @@ package be.beme.schn;
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * @author Copyright (C) 2010 Sidney Leal (manish.com.br)
+ * */
+
 public final class ImageUtil {
+
+
+    public static BufferedImage squareCropAndScale(BufferedImage src, int scaleWidth, int scaleHeight) throws IOException {
+
+        BufferedImage dest;
+
+        if (src.getWidth() <= src.getHeight())
+        {
+            dest = ImageUtil.crop(src, src.getWidth(), src.getWidth());
+        }
+        else
+        {
+            dest = ImageUtil.crop(src, src.getHeight(), src.getHeight());
+        }
+
+        dest = ImageUtil.scale(dest, scaleWidth, scaleHeight);
+
+        return dest;
+    }
 
     public static BufferedImage crop(BufferedImage src, int width, int height) throws IOException {
         int x = src.getWidth()/2 - width/2;

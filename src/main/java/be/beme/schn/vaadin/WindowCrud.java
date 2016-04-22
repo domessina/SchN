@@ -6,18 +6,12 @@ import com.vaadin.ui.*;
 /**
  * Created by Dotista on 06-04-16.
  */
-public abstract class WindowCrud extends Window implements Button.ClickListener{
+public abstract class WindowCrud<T> extends Window implements Button.ClickListener{
 
     protected FormLayout formLayout;
     protected Button OKBtn;
 
-    public abstract boolean isObjCreated();
-    public abstract boolean isObjUpdated();
-    public abstract boolean isObjDeleted();
-    public abstract Object getCrudObj();
-    @Override
-    public abstract void buttonClick(Button.ClickEvent event);
-    protected abstract void setItem(Object itemId, boolean delete);
+
 
 
     public WindowCrud(String caption, FormLayout formLayout)
@@ -50,5 +44,12 @@ public abstract class WindowCrud extends Window implements Button.ClickListener{
         return formLayout;
     }
 
+    public abstract boolean isObjCreated();
+    public abstract boolean isObjUpdated();
+    public abstract boolean isObjDeleted();
+    public abstract T getCrudObj();
+    @Override
+    public abstract void buttonClick(Button.ClickEvent event);
+    protected abstract void setItem(Object itemId, boolean delete);
 
 }

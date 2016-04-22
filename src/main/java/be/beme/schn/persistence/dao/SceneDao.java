@@ -1,15 +1,16 @@
 package be.beme.schn.persistence.dao;
 
 import be.beme.schn.narrative.component.Scene;
+import be.beme.schn.persistence.Dao;
 
 import java.util.List;
 
 /**
  * Created by Dorito on 21-03-16.
  */
-public interface SceneDao {
+public interface SceneDao extends Dao {
 
-    int create(int chapterId, int previousSceneId);
+    int create(int chapterId, String tag, int place, String picture, String note);
 
     void update(Object[] args) ;
 

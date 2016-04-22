@@ -12,10 +12,10 @@ import java.util.List;
 /**
  * Created by Dotista on 06-04-16.
  */
-public abstract class TableCrud<T> extends Table implements Action.Handler, Window.CloseListener, CrudNotifier<Trait>{
+public abstract class TableCrud<T> extends Table implements Action.Handler, Window.CloseListener, CrudNotifier<T>{
 
     protected ArrayList<CrudListener> listeners;
-    protected WindowCrud window;
+    protected WindowCrud<T> window;
 
     public TableCrud(String caption)
     {
@@ -60,7 +60,7 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     }
 
     @Override
-    public void notifyCreated(Trait target)
+    public void notifyCreated(T target)
     {
         for(CrudListener listener:listeners)
         {
@@ -69,7 +69,7 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     }
 
     @Override
-    public void notifyUpdated(Trait target)
+    public void notifyUpdated(T target)
     {
         for(CrudListener listener:listeners)
         {
@@ -78,7 +78,7 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     }
 
     @Override
-    public void notifyDeleted(Trait target)
+    public void notifyDeleted(T target)
     {
         for(CrudListener listener:listeners)
         {
@@ -91,15 +91,15 @@ public abstract class TableCrud<T> extends Table implements Action.Handler, Wind
     public void windowClose(Window.CloseEvent e) {
         if(this.window.isObjCreated())
         {
-            notifyCreated((Trait)this.window.getCrudObj());
+            notifyCreated(this.window.getCrudObj());
         }
         else if(this.window.isObjUpdated())
         {
-            notifyUpdated((Trait)this.window.getCrudObj());
+            notifyUpdated(this.window.getCrudObj());
         }
         else if(this.window.isObjDeleted())
         {
-            notifyDeleted((Trait)this.window.getCrudObj());
+            notifyDeleted(this.window.getCrudObj());
         }
     }
 

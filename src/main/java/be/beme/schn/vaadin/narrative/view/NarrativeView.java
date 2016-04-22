@@ -6,7 +6,7 @@ import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
  * Created by Dorito on 29-03-16.
  *  <p></p>
  *  <b><p>I NarrativePresenter=>NarrativeView</p>
- *  <p>I WindowPresenter=>AbstractWindowView</p>
+ *  <p>I WrapperPanelPresenter=>AbstractWindowView</p>
  *  <p>C CharacterWindowPresenter=>CharacterView</p></b>
  *
  * */

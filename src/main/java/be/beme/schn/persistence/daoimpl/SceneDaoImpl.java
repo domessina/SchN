@@ -19,11 +19,11 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
 
     @Override
-    public int create(int chapterId, int previousSceneId) {
-        jdbcTemplate.update("insert into Scene (chapter_id,previous_scene_id) values (?,?)"
-                ,chapterId,previousSceneId);
+    public int create(int chapterId, String tag, int place, String picture, String note) {
+        jdbcTemplate.update("insert into \"Scene\" (chapter_id,tag,place,picture,notes) values (?,?,?,?,?)"
+                ,chapterId,tag,place,picture,note);
 
-        return jdbcTemplate.queryForObject("select last(id) from Scene where chapter_id=?",
+        return jdbcTemplate.queryForObject("select max(id) from \"Scene\" where chapter_id=?",
                 new Object[] {chapterId},Integer.class);
     }
 
@@ -39,13 +39,13 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
     public void delete(int SceneId)
     {
-        jdbcTemplate.update("delete from Scene where id=? ",SceneId);
+        jdbcTemplate.update("delete from \"Scene\" where id=? ",SceneId);
     }
 
 
     @Override
     public List<Scene> getAllScenesByChapter(int chapterId) {
-        return jdbcTemplate.query("select * from Scene where chapter_id=?",
+        return jdbcTemplate.query("select * from \"Scene\" where chapter_id=? order by place asc",
                 new Object[]{chapterId},new SceneMapper());
     }
 
@@ -59,6 +59,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
             scene.setChapterId(rs.getInt("chapter_id"));
             scene.setPicture(rs.getString("picture"));
             scene.setPlace(rs.getInt("place"));
+            scene.setTag(rs.getString("tag"));
             scene.setNote(rs.getString("notes"));
             return scene;
         }

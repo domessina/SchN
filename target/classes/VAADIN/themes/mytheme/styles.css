@@ -999,7 +999,7 @@
  */
 
 .v-vaadin-version:after {
-	content: "7.6.4";
+	content: "7.6.5";
 }
 
 .v-widget {
@@ -12939,11 +12939,16 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .round-corner {
-	border: 2px solid;
+	border: 1px solid;
 	border-radius: 15px;
 }
 
-.mytheme .round-corner:hover {
+.mytheme .scene-sticker {
+	border: 1px solid;
+	border-radius: 15px;
+}
+
+.mytheme .scene-sticker:hover {
 	box-shadow: inset 0 0 18px dodgerblue;
 	border-color: dodgerblue;
 }
@@ -12957,8 +12962,17 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .circular {
+	margin: 2px 2px 2px 2px;
 	border-radius: 50%;
 	box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.mytheme .background-white {
+	background-color: white;
+}
+
+.mytheme .background-grey {
+	background-color: lightgrey;
 }

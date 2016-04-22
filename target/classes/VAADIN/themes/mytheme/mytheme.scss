@@ -44,12 +44,18 @@
 
   .round-corner
   {
-    border: 2px solid;
+    border: 1px solid;
     border-radius: 15px;
 
   }
 
-  .round-corner:hover
+  .scene-sticker        //utliser mixins pour éviter épétition de code avec round corner
+  {
+    border: 1px solid;
+    border-radius: 15px;
+  }
+
+  .scene-sticker:hover
   {
     box-shadow: inset 0 0 18px dodgerblue;
     border-color: dodgerblue;
@@ -66,6 +72,7 @@
   }
 
   .circular {
+    margin: 2px 2px 2px 2px;
     border-radius: 50%;
     box-shadow: 0 0 8px rgba(0, 0, 0, .8);
     -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
@@ -73,4 +80,14 @@
     //overflow: hidden;
     //margin-left: -50%;
   }
+
+  .background-white{
+    background-color: white;
+  }
+
+  .background-grey
+  {
+    background-color: lightgrey;
+  }
+
 }

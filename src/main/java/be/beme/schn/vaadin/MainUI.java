@@ -1,34 +1,21 @@
 package be.beme.schn.vaadin;
 
 import be.beme.schn.Constants;
-import be.beme.schn.ImageUtil;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import be.beme.schn.vaadin.narrative.ChapterPHLayout;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
-import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
-import be.beme.schn.vaadin.narrative.presenter.CharacterWindowPresenter;
-import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
-import be.beme.schn.vaadin.narrative.view.ChapterView;
-import be.beme.schn.vaadin.narrative.view.CharacterView;
-import be.beme.schn.vaadin.narrative.view.SceneView;
+import be.beme.schn.vaadin.narrative.presenter.*;
+import be.beme.schn.vaadin.narrative.view.*;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.*;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.jcrop.Jcrop;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,13 +26,13 @@ import java.util.List;
 //@PreserveOnRefresh  Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
 @SpringUI                                                                                                               //TODO rajouter une grande scrollbar verticale pour quand on rapetissie la page
-public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener{
+public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Scene>{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
 
     @Autowired
     DiagramDaoImpl diagramService;
 
     @Autowired
-    CharacterWindowPresenter characterPresenter;
+    CharacterPresenter characterPresenter;
 
     @Autowired
     private TraitCrudPresenter traitPresenter;
@@ -53,13 +40,20 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
     @Autowired
     private ChapterPresenter chapterPresenter;
 
+    @Autowired
+    private ScenePresenter scenePresenter;
+
+    @Autowired
+    private CharacterScenePresenter characterScenePresenter;
+
     public short phaseSelected;
     public short diagramId;
 
     private TabSheet tabSheet;
-    private ArrayList<Scene> scenes;
+//    private ArrayList<Scene> scenes;
     private ChapterUI chapterUI;
     private CharacterUI characterUI;
+
 
 
     @Override
@@ -72,22 +66,24 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         characterUI= new CharacterUI();
         tabSheet= new TabSheet();
 
-        scenes= new ArrayList<Scene>();
+//        scenes= new ArrayList<Scene>();
 
         diagramId=3;
         VaadinSession.getCurrent().setAttribute("diagramId",3);
+        VaadinSession.getCurrent().setAttribute("userId",1);
+        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\"+ VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+VaadinSession.getCurrent().getAttribute("diagramId")+"\\Characters\\");
         System.out.println(VaadinSession.getCurrent().getCsrfToken());
 
 
         Scene scene;
 
-        for(int i=0;i<15;i++)
+      /*  for(int i=0;i<15;i++)
         {
             scene= new Scene();
             scene.setPicture("12.jpg");
-            scene.setId(i);
+            scene.setId(3);
             scenes.add(scene);
-        }
+        }*/
 
 
         chapterUI.init();
@@ -120,26 +116,6 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
         hl.addComponent(new Button("new Character", event -> characterUI.newCharacter()));
 
-        BufferedImage img = null;
-        BufferedImage img2=null;
-        try {
-            img = ImageIO.read(new File("D:\\Téléchargements\\TFEFiles\\NarrativeScheme\\Users\\1\\Diagrams\\3\\Characters\\f494ac51-d1d6-4bbe-8d4b-66ea12c40f14.jpg"));
-
-           if(img.getWidth()<=img.getHeight())
-           {
-               img2=ImageUtil.crop(img,img.getWidth(),img.getWidth());
-           }
-            else
-           {
-               img2=ImageUtil.crop(img,img.getHeight(),img.getHeight());
-           }
-            img2=ImageUtil.scale(img2,100,100);
-
-            File outputfile = new File("D:\\Téléchargements\\TFEFiles\\NarrativeScheme\\Users\\1\\Diagrams\\3\\Characters\\Cropped\\f494ac51-d1d6-4bbe-8d4b-66ea12c40f14.jpg");
-            ImageIO.write(img2, "png", outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
         setContent(verticalLayout);
@@ -158,6 +134,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         catch(NumberFormatException e)
         {
             System.out.println("This tab is not a phase");
+
         }
 
 
@@ -171,9 +148,59 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
     public void openScene(Scene scene)
     {
-       tabSheet.addTab(new SceneView(scene),"New Scene");
+        SceneViewExtended scv= new SceneViewExtended(scene);
+        Character character= characterPresenter.getDaoService().getCharacterById(30);
+  /*     character.setPicture("dd.jpg");
+        character.setName("Jean Pierre");*/
+        CharacterSceneView chScV = new CharacterSceneView(character,scene.getId());
+        chScV.setHandler(characterScenePresenter);
+        chScV.loadTraits();
+
+        scv.addCharacterSceneView(chScV);
+
+       tabSheet.addTab(scv,"New Scene");
         tabSheet.getTab(tabSheet.getComponentCount()-1).setClosable(true);
         tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
+    }
+
+    public void newScene(int chapterId)
+    {
+        Scene scene = new Scene();
+        scene.setChapterId(chapterId);
+        scene.setPlace(2);
+        scene.setPicture("ze.jpg");
+        SceneView scV= new SceneView(scene);
+        NWrapperPanel wrapper= new NWrapperPanel(scV);
+        wrapper.setSizeFull();
+        scV.wrap(wrapper);
+        scV.addCrudListener(this);
+        scV.setHandler(scenePresenter);
+
+        Window window = new Window("New Scene",wrapper);
+        window.setModal(true);
+        window.setResizable(false);
+        window.setHeight(99,Unit.PERCENTAGE);
+
+        window.setWidth( 31,Unit.EM);
+        this.addWindow(window);
+    }
+
+    @Override
+    public void created(Scene o) {
+        SceneViewExtended scv= new SceneViewExtended(o);
+        tabSheet.addTab(scv,o.getTag());
+        tabSheet.getTab(tabSheet.getComponentCount()-1).setClosable(true);
+        tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
+    }
+
+    @Override
+    public void updated(Scene o) {
+
+    }
+
+    @Override
+    public void deleted(Scene o) {
+
     }
 
 
@@ -195,13 +222,12 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
 
             Window window = new Window("New Character",wrapper);
             window.setModal(true);
-            window.setDraggable(false);
             window.setResizable(false);
             window.setHeight(99,Unit.PERCENTAGE);
             window.addCloseListener(characterView);
 
             window.setWidth( 31,Unit.EM);
-            MyVaadinUI.this.addWindow(window);
+            MainUI.this.addWindow(window);
         }
 
         private void showCharacter(int id)
@@ -221,7 +247,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             window.setHeight(99,Unit.PERCENTAGE);
 
             window.setWidth( 31,Unit.EM);
-            MyVaadinUI.this.addWindow(window);
+            MainUI.this.addWindow(window);
         }
 
     }
@@ -287,7 +313,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
             window.setDraggable(false);
             window.setResizable(false);
 
-            MyVaadinUI.this.addWindow(window);
+            MainUI.this.addWindow(window);
         }
 
         private void loadChapters()
@@ -300,7 +326,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
                 for(Chapter chapter:chapterList)
                 {
 
-                    chapter.setScenes(scenes);
+                    chapter.setScenes(scenePresenter.getDaoService().getAllScenesByChapter(chapter.getId()));
                     addChapterView(chapter);
                 }
             }
@@ -342,7 +368,7 @@ public class MyVaadinUI extends UI implements TabSheet.SelectedTabChangeListener
         @Override
         public void created(Chapter o) {
             chapterUI.addChapterView(o);
-            for(Window w: MyVaadinUI.this.getWindows())
+            for(Window w: MainUI.this.getWindows())
             {
                 if(w.getCaption().equals("New Chapter"))
                 {

@@ -1,17 +1,19 @@
 package be.beme.schn.persistence.dao;
 
 import be.beme.schn.narrative.TraitScene;
+import be.beme.schn.narrative.component.Trait;
+import be.beme.schn.persistence.Dao;
 
 import java.util.List;
 
 /**
  * Created by Dorito on 24-03-16.
  */
-public interface TraitSceneDao {
+public interface TraitSceneDao  extends Dao {
 
-    void createTraitScene(int traitId, int sceneId, int diagramId);
+    void create(int traitId, int sceneId);
 
-    void deleteTraitScene(int traitId, int sceneId, int diagramId);
+    void delete(int traitId, int sceneId);
 
-    List<TraitScene> getAllTraitSceneByDiagram(int diagramId);
+    List<Trait> getTraitByScene(int sceneId);
 }

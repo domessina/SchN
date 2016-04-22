@@ -45,7 +45,7 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
 
 
     @Override
-    public List<Trait> getAllTraitsByCharacter(int characterId) {
+    public List<Trait> getTraitsByCharacter(int characterId) {
         return jdbcTemplate.query("select * from \"Trait\" where character_id=?",
                 new Object[]{characterId},new TraitMapper());
     }

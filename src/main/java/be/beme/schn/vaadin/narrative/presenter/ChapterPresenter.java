@@ -1,8 +1,7 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
 import be.beme.schn.narrative.component.Chapter;
-import be.beme.schn.narrative.component.NarrativeComponent;
-import be.beme.schn.persistence.daoimpl.ChapterDaoImpl;
+import be.beme.schn.persistence.dao.ChapterDao;
 import be.beme.schn.vaadin.narrative.view.ChapterView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import com.vaadin.spring.annotation.UIScope;
@@ -15,13 +14,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @UIScope
-public class ChapterPresenter implements WindowPresenter {
+public class ChapterPresenter implements WrapperPanelPresenter {
 
     private ChapterView view;
     private Chapter chapter;
 
     @Autowired
-    ChapterDaoImpl chapterService;
+    ChapterDao chapterService;
 
     @Override
     public Chapter save() {
@@ -74,10 +73,14 @@ public class ChapterPresenter implements WindowPresenter {
         return true;
     }
 
-    public  ChapterDaoImpl getDaoService(){return this.chapterService;}
 
     @Override
     public void setView(NarrativeView narrativeView) {
         this.view=(ChapterView)narrativeView;
+    }
+
+    @Override
+    public ChapterDao getDaoService() {
+        return this.chapterService;
     }
 }
