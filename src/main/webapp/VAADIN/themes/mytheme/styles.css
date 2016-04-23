@@ -12948,9 +12948,8 @@ div.v-layout.v-horizontal.v-widget {
 	color: white;
 }
 
-.mytheme .scene-sticker:hover {
-	box-shadow: 0 0 18px dodgerblue;
-	border-color: dodgerblue;
+.mytheme .blue-hover:hover .v-panel-caption {
+	background-color: dodgerblue;
 }
 
 .mytheme .red-shadow {

@@ -49,21 +49,19 @@
 
   }
 
-  .scene-sticker        //utliser mixins pour éviter épétition de code avec round corner
-  {
-   /* border: 1px solid;
-    border-radius: 15px;*/
-  }
+
 
   .v-panel-caption {
     background: #404040;
     color:white;
   }
 
-  .scene-sticker:hover
+
+  .blue-hover:hover .v-panel-caption
   {
-    box-shadow:  0 0 18px dodgerblue;
-    border-color: dodgerblue;
+    /*box-shadow:  0 0 18px dodgerblue;
+    border-color: dodgerblue;*/
+    background-color: dodgerblue;
   }
 
   .red-shadow

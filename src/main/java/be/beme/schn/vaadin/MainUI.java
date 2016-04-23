@@ -200,6 +200,9 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             int rows = (int) Math.ceil(chapter.getScenes().size()/3);
             gLayout.layout.removeAllComponents();
 
+            if(rows==0)
+                rows=1;
+            
             gLayout.layout.setRows(rows);
             gLayout.layout.setColumns(3);
 
@@ -224,7 +227,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
                 sticker.setWidth(100,Unit.PERCENTAGE);
                 sticker.setHeight(20,Unit.EM);
-                sticker.setStyleName("scene-sticker");
+                sticker.setStyleName("blue-hover",true);
                 sticker.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
                 gLayout.addComponent(sticker);
 
@@ -425,12 +428,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             NWrapperPanel wrapper=new NWrapperPanel(chapterW);
             wrapper.setSizeFull();
             wrapper.setId(String.valueOf(chapter.getId()));
-            wrapper.addClickListener(event -> {
-                if(event.isDoubleClick())
-                {
-                    panelSplitArray[phaseSelected].setSecondComponent(loadSceneStickers(chapter));
-                }
-            });
+            wrapper.setStyleName("blue-hover",true);
+            wrapper.addClickListener(event -> panelSplitArray[phaseSelected].setSecondComponent(loadSceneStickers(chapter)));
             chapterW.wrap(wrapper);
             chapterLArray[phaseSelected].addComponent(wrapper);
             VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
