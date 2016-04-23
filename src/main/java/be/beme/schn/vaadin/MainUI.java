@@ -5,6 +5,7 @@ import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
+import be.beme.schn.vaadin.dd.DDGridLayout;
 import be.beme.schn.vaadin.narrative.ChapterPVLayout;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.*;
@@ -190,17 +191,17 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     {
         Panel pstickers = new Panel();
         pstickers.setStyleName("background-grey");
-        GridLayout gLayout= new GridLayout();
-        gLayout.setSpacing(true);
+        DDGridLayout gLayout= new DDGridLayout();
+        gLayout.layout.setSpacing(true);
+        gLayout.addStyleName("no-vertical-drag-hints");
+        gLayout.addStyleName("no-horizontal-drag-hints");
 
         try {
             int rows = (int) Math.ceil(chapter.getScenes().size()/3);
-            gLayout.removeAllComponents();
+            gLayout.layout.removeAllComponents();
 
-            gLayout.setRows(rows);
-            gLayout.setColumns(3);
-
-
+            gLayout.layout.setRows(rows);
+            gLayout.layout.setColumns(3);
 
             for(Scene s : chapter.getScenes())
             {
@@ -213,13 +214,17 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                     ver.setSizeFull();
                     ver.setComponentAlignment(image,Alignment.MIDDLE_CENTER);
                     sticker.setContent(ver);
-//                    ((Image)sticker).addListener(this);
+                    sticker.addClickListener(event -> {
+                        if(event.isDoubleClick())
+                        {
+                            this.openScene(s);
+                        }
+                    });
                 }
 
                 sticker.setWidth(100,Unit.PERCENTAGE);
                 sticker.setHeight(20,Unit.EM);
                 sticker.setStyleName("scene-sticker");
-//                sticker.;
                 sticker.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
                 gLayout.addComponent(sticker);
 
@@ -231,11 +236,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             System.out.println("This chapter has no scenes");
         }
 
-
-//        gLayout.setSizeFull(); //on ne fait pas setSpacign sinon on perd de la place pour les images. les bords arondit seront suffidants
-        gLayout.setWidth(100,Unit.PERCENTAGE);
-
-
+        gLayout.layout.setWidth(100,Unit.PERCENTAGE);
         pstickers.setSizeFull();
         pstickers.setContent(gLayout);
 

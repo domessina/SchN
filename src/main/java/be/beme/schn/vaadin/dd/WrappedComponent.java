@@ -1,4 +1,4 @@
-package be.beme.schn.vaadin.Drop;
+package be.beme.schn.vaadin.dd;
 
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.ui.Component;

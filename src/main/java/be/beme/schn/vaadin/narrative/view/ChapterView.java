@@ -48,8 +48,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     {
         this.chapter=chapter;
         listeners= new ArrayList<>();
-//        setHeight(100, Unit.PERCENTAGE);
-//        setWidth(15, Unit.PERCENTAGE);
         setSizeFull();
         setCompositionRoot(buildContent());
     }
@@ -98,23 +96,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     }
 
 
-
-    private Panel buildScStickers()
-    {
-       /* pstickers = new Panel();
-        pstickers.setStyleName("background-grey");
-        gLayout= new GridLayout();
-        updateGridLayout();
-//        gLayout.setSizeFull(); //on ne fait pas setSpacign sinon on perd de la place pour les images. les bords arondit seront suffidants
-        gLayout.setWidth(100,Unit.PERCENTAGE);
-
-
-        pstickers.setSizeFull();
-        pstickers.setContent(gLayout);
-
-       return pstickers;*/
-        return null;
-    }
 
     private Layout buildMiddleButtons()
     {
@@ -199,48 +180,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         this.chapter.getScenes().add(scene);
 //        updateGridLayout();
 
-    }
-    private void updateGridLayout()
-    {
-      /*  try {
-            int row_column = (int) Math.ceil(Math.sqrt(this.chapter.getScenes().size()));
-            gLayout.removeAllComponents();
-            if(row_column!=0)
-            {
-                gLayout.setRows(row_column);
-                gLayout.setColumns(row_column);
-            }
-            else {
-                gLayout.setRows(1);
-                gLayout.setColumns(1);
-            }
-
-
-            for(Scene s : this.chapter.getScenes())
-            {
-                Component sticker;
-                if(s.getPicture()!=null)
-                {
-                    sticker= new Image(null,new FileResource(new File(Constants.BASE_DIR+"Users\\1\\Diagrams\\"+this.chapter.getDiagramId()+"\\Scenes\\"+s.getPicture())));
-                    ((Image)sticker).addListener(this);
-                }
-                else {
-                    sticker=new Panel(s.getTag());
-                    ((Panel) sticker).addListener(this);
-                }
-
-                sticker.setWidth(100,Unit.PERCENTAGE);
-                sticker.setStyleName("scene-sticker");
-                sticker.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
-                gLayout.addComponent(sticker);
-
-            }
-
-        }
-        catch (NullPointerException e)
-        {
-            System.out.println("This chapter has no scenes");
-        }*/
     }
 
     @Override
@@ -345,21 +284,8 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
 
     @Override
     public void click(MouseEvents.ClickEvent event) {
-        if(event.isDoubleClick())
-        {
-            Component sticker=(Component)event.getSource();
-            String scId=sticker.getId().substring(2);
-            for(Scene sc : chapter.getScenes())
-            {
-                if(sc.getId()==Integer.valueOf(scId))
-                {
-                    Notification.show("ingo",scId, Notification.Type.TRAY_NOTIFICATION);
-                    ((MainUI)UI.getCurrent()).openScene(sc);
-                    break;
-                }
-            }
+        System.err.println("si cette méthod est encore utilisée alor il ya un problemem");
 
-        }
     }
 
     public void setChapterPlace(short newPlace)
@@ -367,8 +293,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         this.chapter.setPosition(newPlace);
         presenter.setView(this);
         presenter.save();
-//        notifyUpdated(chapter);                                               it creates an endless loop
-
     }
 
 
