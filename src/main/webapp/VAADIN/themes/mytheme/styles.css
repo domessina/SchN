@@ -12943,13 +12943,13 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 15px;
 }
 
-.mytheme .scene-sticker {
-	border: 1px solid;
-	border-radius: 15px;
+.mytheme .v-panel-caption {
+	background: #404040;
+	color: white;
 }
 
 .mytheme .scene-sticker:hover {
-	box-shadow: inset 0 0 18px dodgerblue;
+	box-shadow: 0 0 18px dodgerblue;
 	border-color: dodgerblue;
 }
 

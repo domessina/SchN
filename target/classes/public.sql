@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.2
 -- Dumped by pg_dump version 9.5.2
 
--- Started on 2016-04-19 21:58:45
+-- Started on 2016-04-22 23:14:56
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -24,7 +24,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2229 (class 0 OID 0)
+-- TOC entry 2233 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
@@ -41,7 +41,7 @@ CREATE EXTENSION IF NOT EXISTS adminpack WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2230 (class 0 OID 0)
+-- TOC entry 2234 (class 0 OID 0)
 -- Dependencies: 1
 -- Name: EXTENSION adminpack; Type: COMMENT; Schema: -; Owner: -
 --
@@ -82,7 +82,7 @@ CREATE SEQUENCE "Chapter_id_seq"
 
 
 --
--- TOC entry 2231 (class 0 OID 0)
+-- TOC entry 2235 (class 0 OID 0)
 -- Dependencies: 183
 -- Name: Chapter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -107,7 +107,7 @@ CREATE TABLE "Character" (
 
 --
 -- TOC entry 205 (class 1259 OID 24988)
--- Name: CharacterSceneView; Type: TABLE; Schema: public; Owner: -
+-- Name: CharacterScene; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE "CharacterScene" (
@@ -130,7 +130,7 @@ CREATE SEQUENCE "Character_id_seq"
 
 
 --
--- TOC entry 2232 (class 0 OID 0)
+-- TOC entry 2236 (class 0 OID 0)
 -- Dependencies: 185
 -- Name: Character_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -164,7 +164,7 @@ CREATE SEQUENCE "Diagram_id_seq"
 
 
 --
--- TOC entry 2233 (class 0 OID 0)
+-- TOC entry 2237 (class 0 OID 0)
 -- Dependencies: 187
 -- Name: Diagram_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -199,7 +199,7 @@ CREATE SEQUENCE "Element_id_seq"
 
 
 --
--- TOC entry 2234 (class 0 OID 0)
+-- TOC entry 2238 (class 0 OID 0)
 -- Dependencies: 189
 -- Name: Element_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -215,8 +215,8 @@ ALTER SEQUENCE "Element_id_seq" OWNED BY "Element".id;
 CREATE TABLE "Link" (
     id integer NOT NULL,
     name character varying(25),
-    element_id_1 integer NOT NULL,
-    element_id_2 integer NOT NULL,
+    from_character_id integer NOT NULL,
+    to_character_id integer NOT NULL,
     rel boolean,
     scene_id integer NOT NULL
 );
@@ -236,7 +236,7 @@ CREATE SEQUENCE "Link_id_seq"
 
 
 --
--- TOC entry 2235 (class 0 OID 0)
+-- TOC entry 2239 (class 0 OID 0)
 -- Dependencies: 191
 -- Name: Link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -272,7 +272,7 @@ CREATE SEQUENCE "Outline_id_seq"
 
 
 --
--- TOC entry 2236 (class 0 OID 0)
+-- TOC entry 2240 (class 0 OID 0)
 -- Dependencies: 193
 -- Name: Outline_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -308,7 +308,7 @@ CREATE SEQUENCE "Property_id_seq"
 
 
 --
--- TOC entry 2237 (class 0 OID 0)
+-- TOC entry 2241 (class 0 OID 0)
 -- Dependencies: 195
 -- Name: Property_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -343,7 +343,7 @@ CREATE SEQUENCE "Rule_id_seq"
 
 
 --
--- TOC entry 2238 (class 0 OID 0)
+-- TOC entry 2242 (class 0 OID 0)
 -- Dependencies: 197
 -- Name: Rule_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -380,7 +380,7 @@ CREATE SEQUENCE "Scene_id_seq"
 
 
 --
--- TOC entry 2239 (class 0 OID 0)
+-- TOC entry 2243 (class 0 OID 0)
 -- Dependencies: 199
 -- Name: Scene_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -425,7 +425,7 @@ CREATE SEQUENCE "Trait_id_seq"
 
 
 --
--- TOC entry 2240 (class 0 OID 0)
+-- TOC entry 2244 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: Trait_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -459,7 +459,7 @@ CREATE SEQUENCE "User_id_seq"
 
 
 --
--- TOC entry 2241 (class 0 OID 0)
+-- TOC entry 2245 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: User_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -565,7 +565,7 @@ ALTER TABLE ONLY "Chapter"
 
 
 --
--- TOC entry 2095 (class 2606 OID 24992)
+-- TOC entry 2097 (class 2606 OID 24992)
 -- Name: CharacterScene_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -574,7 +574,16 @@ ALTER TABLE ONLY "CharacterScene"
 
 
 --
--- TOC entry 2073 (class 2606 OID 16693)
+-- TOC entry 2073 (class 2606 OID 25004)
+-- Name: Character_name_diagram_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Character"
+    ADD CONSTRAINT "Character_name_diagram_id_key" UNIQUE (name, diagram_id);
+
+
+--
+-- TOC entry 2075 (class 2606 OID 16693)
 -- Name: Character_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -583,7 +592,7 @@ ALTER TABLE ONLY "Character"
 
 
 --
--- TOC entry 2075 (class 2606 OID 16695)
+-- TOC entry 2077 (class 2606 OID 16695)
 -- Name: Diagram_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -592,7 +601,7 @@ ALTER TABLE ONLY "Diagram"
 
 
 --
--- TOC entry 2077 (class 2606 OID 16697)
+-- TOC entry 2079 (class 2606 OID 16697)
 -- Name: Element_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -601,7 +610,7 @@ ALTER TABLE ONLY "Element"
 
 
 --
--- TOC entry 2079 (class 2606 OID 16699)
+-- TOC entry 2081 (class 2606 OID 16699)
 -- Name: Link_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -610,7 +619,7 @@ ALTER TABLE ONLY "Link"
 
 
 --
--- TOC entry 2081 (class 2606 OID 16701)
+-- TOC entry 2083 (class 2606 OID 16701)
 -- Name: Outline_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -619,7 +628,7 @@ ALTER TABLE ONLY "Outline"
 
 
 --
--- TOC entry 2083 (class 2606 OID 16703)
+-- TOC entry 2085 (class 2606 OID 16703)
 -- Name: Property_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -628,7 +637,7 @@ ALTER TABLE ONLY "User_property"
 
 
 --
--- TOC entry 2085 (class 2606 OID 16705)
+-- TOC entry 2087 (class 2606 OID 16705)
 -- Name: Rule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -637,7 +646,7 @@ ALTER TABLE ONLY "Rule"
 
 
 --
--- TOC entry 2087 (class 2606 OID 16707)
+-- TOC entry 2089 (class 2606 OID 16707)
 -- Name: Scene_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -646,7 +655,7 @@ ALTER TABLE ONLY "Scene"
 
 
 --
--- TOC entry 2091 (class 2606 OID 16709)
+-- TOC entry 2093 (class 2606 OID 16709)
 -- Name: TraitScene_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -655,7 +664,7 @@ ALTER TABLE ONLY "TraitScene"
 
 
 --
--- TOC entry 2089 (class 2606 OID 16711)
+-- TOC entry 2091 (class 2606 OID 16711)
 -- Name: Trait_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -664,7 +673,7 @@ ALTER TABLE ONLY "Trait"
 
 
 --
--- TOC entry 2093 (class 2606 OID 16713)
+-- TOC entry 2095 (class 2606 OID 16713)
 -- Name: User_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -673,7 +682,7 @@ ALTER TABLE ONLY "User"
 
 
 --
--- TOC entry 2096 (class 2606 OID 16714)
+-- TOC entry 2098 (class 2606 OID 16714)
 -- Name: Chapter_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -682,7 +691,7 @@ ALTER TABLE ONLY "Chapter"
 
 
 --
--- TOC entry 2108 (class 2606 OID 24998)
+-- TOC entry 2112 (class 2606 OID 24998)
 -- Name: CharacterScene_character_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -691,7 +700,7 @@ ALTER TABLE ONLY "CharacterScene"
 
 
 --
--- TOC entry 2107 (class 2606 OID 24993)
+-- TOC entry 2111 (class 2606 OID 24993)
 -- Name: CharacterScene_scene_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -700,7 +709,7 @@ ALTER TABLE ONLY "CharacterScene"
 
 
 --
--- TOC entry 2097 (class 2606 OID 16719)
+-- TOC entry 2099 (class 2606 OID 16719)
 -- Name: Character_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -709,7 +718,7 @@ ALTER TABLE ONLY "Character"
 
 
 --
--- TOC entry 2098 (class 2606 OID 16724)
+-- TOC entry 2100 (class 2606 OID 16724)
 -- Name: Diagram_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -718,7 +727,7 @@ ALTER TABLE ONLY "Diagram"
 
 
 --
--- TOC entry 2099 (class 2606 OID 16729)
+-- TOC entry 2101 (class 2606 OID 16729)
 -- Name: Element_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -727,7 +736,16 @@ ALTER TABLE ONLY "Element"
 
 
 --
--- TOC entry 2100 (class 2606 OID 16734)
+-- TOC entry 2103 (class 2606 OID 25005)
+-- Name: Link_from_character_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Link"
+    ADD CONSTRAINT "Link_from_character_id_fkey" FOREIGN KEY (from_character_id) REFERENCES "Character"(id);
+
+
+--
+-- TOC entry 2102 (class 2606 OID 16734)
 -- Name: Link_scene_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -736,7 +754,16 @@ ALTER TABLE ONLY "Link"
 
 
 --
--- TOC entry 2101 (class 2606 OID 16739)
+-- TOC entry 2104 (class 2606 OID 25010)
+-- Name: Link_to_character_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "Link"
+    ADD CONSTRAINT "Link_to_character_id_fkey" FOREIGN KEY (to_character_id) REFERENCES "Character"(id);
+
+
+--
+-- TOC entry 2105 (class 2606 OID 16739)
 -- Name: Outline_property_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -745,7 +772,7 @@ ALTER TABLE ONLY "Outline"
 
 
 --
--- TOC entry 2102 (class 2606 OID 16744)
+-- TOC entry 2106 (class 2606 OID 16744)
 -- Name: Rule_diagram_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -754,7 +781,7 @@ ALTER TABLE ONLY "Rule"
 
 
 --
--- TOC entry 2103 (class 2606 OID 16749)
+-- TOC entry 2107 (class 2606 OID 16749)
 -- Name: Scene_chapter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -763,7 +790,7 @@ ALTER TABLE ONLY "Scene"
 
 
 --
--- TOC entry 2105 (class 2606 OID 16759)
+-- TOC entry 2109 (class 2606 OID 16759)
 -- Name: TraitScene_scene_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -772,7 +799,7 @@ ALTER TABLE ONLY "TraitScene"
 
 
 --
--- TOC entry 2106 (class 2606 OID 16764)
+-- TOC entry 2110 (class 2606 OID 16764)
 -- Name: TraitScene_trait_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -781,7 +808,7 @@ ALTER TABLE ONLY "TraitScene"
 
 
 --
--- TOC entry 2104 (class 2606 OID 16775)
+-- TOC entry 2108 (class 2606 OID 16775)
 -- Name: Trait_character_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -789,7 +816,7 @@ ALTER TABLE ONLY "Trait"
     ADD CONSTRAINT "Trait_character_id_fkey" FOREIGN KEY (character_id) REFERENCES "Character"(id) ON DELETE CASCADE;
 
 
--- Completed on 2016-04-19 21:58:46
+-- Completed on 2016-04-22 23:14:58
 
 --
 -- PostgreSQL database dump complete

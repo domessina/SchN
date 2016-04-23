@@ -6,12 +6,11 @@ import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.CrudNotifier;
 import be.beme.schn.vaadin.MainUI;
-import be.beme.schn.vaadin.narrative.ChapterPHLayout;
+import be.beme.schn.vaadin.narrative.ChapterPVLayout;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
-import be.beme.schn.vaadin.narrative.presenter.WrapperPanelPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.FileResource;
@@ -32,11 +31,9 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private ChapterPresenter presenter;
     private Chapter chapter;
     private TextField titleTF;
-    private Panel pstickers;
     private Panel propertiesPanel;
     private TextArea notes;
     private boolean settingsMode;
-    private GridLayout gLayout;
     private Button buttonAddSc;
     private Button buttonErase;
     private Button buttonSave;
@@ -51,8 +48,9 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     {
         this.chapter=chapter;
         listeners= new ArrayList<>();
-        setHeight(100, Unit.PERCENTAGE);
-        setWidth(30, Unit.EM);
+//        setHeight(100, Unit.PERCENTAGE);
+//        setWidth(15, Unit.PERCENTAGE);
+        setSizeFull();
         setCompositionRoot(buildContent());
     }
 
@@ -87,10 +85,10 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         VerticalLayout verticalLayout= new VerticalLayout();
 
 
-        verticalLayout.addComponent(buildScStickers());
+//        verticalLayout.addComponent(buildScStickers());
         verticalLayout.addComponent(buildMiddleButtons());
         verticalLayout.addComponent(buildProperties());
-        verticalLayout.setExpandRatio(pstickers,9);
+//        verticalLayout.setExpandRatio(pstickers,9);
         verticalLayout.setExpandRatio(buttonHLayout,1);
         verticalLayout.setExpandRatio(propertiesPanel,10);
         verticalLayout.setSizeFull();
@@ -103,7 +101,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
 
     private Panel buildScStickers()
     {
-        pstickers = new Panel();
+       /* pstickers = new Panel();
         pstickers.setStyleName("background-grey");
         gLayout= new GridLayout();
         updateGridLayout();
@@ -114,17 +112,18 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         pstickers.setSizeFull();
         pstickers.setContent(gLayout);
 
-       return pstickers;
+       return pstickers;*/
+        return null;
     }
 
     private Layout buildMiddleButtons()
     {
         buttonHLayout= new HorizontalLayout();
 
-        buttonLeft = new Button(FontAwesome.ARROW_LEFT);
+        buttonLeft = new Button(FontAwesome.ARROW_UP);
         buttonLeft.addClickListener(event1 -> changePosition(-1));
 
-        buttonRight = new Button(FontAwesome.ARROW_RIGHT);
+        buttonRight = new Button(FontAwesome.ARROW_DOWN);
         buttonRight.addClickListener(event1 -> changePosition(1));
 
         buttonAddSc = new Button("+",event -> {
@@ -198,12 +197,12 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     public void addScene(Scene scene)
     {
         this.chapter.getScenes().add(scene);
-        updateGridLayout();
+//        updateGridLayout();
 
     }
     private void updateGridLayout()
     {
-        try {
+      /*  try {
             int row_column = (int) Math.ceil(Math.sqrt(this.chapter.getScenes().size()));
             gLayout.removeAllComponents();
             if(row_column!=0)
@@ -241,7 +240,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         catch (NullPointerException e)
         {
             System.out.println("This chapter has no scenes");
-        }
+        }*/
     }
 
     @Override
@@ -300,7 +299,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         settingsMode=!settingsMode;
         try
         {
-            ((ChapterPHLayout)this.wrapper.getParent()).enableAllChildren(!settingsMode);
+            ((ChapterPVLayout)this.wrapper.getParent()).enableAllChildren(!settingsMode);
         }
         catch (NullPointerException e)
         {
@@ -308,14 +307,13 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         }
         catch ( ClassCastException e)
         {
-            System.out.println("This wrapper is not in a ChapterPHLayout");
+            System.out.println("This wrapper is not in a ChapterPVLayout");
         }
 
 
         buttonErase.setVisible(settingsMode);
         buttonSave.setVisible(settingsMode);
         propertiesPanel.setEnabled(settingsMode);
-        pstickers.setEnabled(!settingsMode);
         buttonAddSc.setEnabled(!settingsMode);
 
 

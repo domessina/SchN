@@ -51,13 +51,18 @@
 
   .scene-sticker        //utliser mixins pour éviter épétition de code avec round corner
   {
-    border: 1px solid;
-    border-radius: 15px;
+   /* border: 1px solid;
+    border-radius: 15px;*/
+  }
+
+  .v-panel-caption {
+    background: #404040;
+    color:white;
   }
 
   .scene-sticker:hover
   {
-    box-shadow: inset 0 0 18px dodgerblue;
+    box-shadow:  0 0 18px dodgerblue;
     border-color: dodgerblue;
   }
 

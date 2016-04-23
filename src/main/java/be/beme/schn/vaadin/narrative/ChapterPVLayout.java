@@ -3,11 +3,12 @@ package be.beme.schn.vaadin.narrative;
 import be.beme.schn.narrative.component.Chapter;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Created by Dotista on 11-04-16.
  */
-public class ChapterPHLayout extends HorizontalLayout {
+public class ChapterPVLayout extends VerticalLayout {
 
     public void enableAllChildren(boolean enabled)
     {

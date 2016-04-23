@@ -5,7 +5,7 @@ import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
-import be.beme.schn.vaadin.narrative.ChapterPHLayout;
+import be.beme.schn.vaadin.narrative.ChapterPVLayout;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.*;
 import be.beme.schn.vaadin.narrative.view.*;
@@ -16,6 +16,7 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -185,6 +186,62 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         this.addWindow(window);
     }
 
+    public Panel loadSceneStickers(Chapter chapter)
+    {
+        Panel pstickers = new Panel();
+        pstickers.setStyleName("background-grey");
+        GridLayout gLayout= new GridLayout();
+        gLayout.setSpacing(true);
+
+        try {
+            int rows = (int) Math.ceil(chapter.getScenes().size()/3);
+            gLayout.removeAllComponents();
+
+            gLayout.setRows(rows);
+            gLayout.setColumns(3);
+
+
+
+            for(Scene s : chapter.getScenes())
+            {
+                Panel sticker= new Panel(s.getTag());
+                if(s.getPicture()!=null)
+                {
+                    Image image= new Image(null,new FileResource(new File(Constants.BASE_DIR+"Users\\1\\Diagrams\\"+chapter.getDiagramId()+"\\Scenes\\"+s.getPicture())));
+                    image.setHeight(100,Unit.PERCENTAGE);
+                    VerticalLayout ver= new VerticalLayout(image);
+                    ver.setSizeFull();
+                    ver.setComponentAlignment(image,Alignment.MIDDLE_CENTER);
+                    sticker.setContent(ver);
+//                    ((Image)sticker).addListener(this);
+                }
+
+                sticker.setWidth(100,Unit.PERCENTAGE);
+                sticker.setHeight(20,Unit.EM);
+                sticker.setStyleName("scene-sticker");
+//                sticker.;
+                sticker.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
+                gLayout.addComponent(sticker);
+
+            }
+
+        }
+        catch (NullPointerException e)
+        {
+            System.out.println("This chapter has no scenes");
+        }
+
+
+//        gLayout.setSizeFull(); //on ne fait pas setSpacign sinon on perd de la place pour les images. les bords arondit seront suffidants
+        gLayout.setWidth(100,Unit.PERCENTAGE);
+
+
+        pstickers.setSizeFull();
+        pstickers.setContent(gLayout);
+
+        return pstickers;
+    }
+
     @Override
     public void created(Scene o) {
         SceneViewExtended scv= new SceneViewExtended(o);
@@ -262,24 +319,26 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     private final class ChapterUI implements CrudListener<Chapter>
     {
         private List<Chapter> chapterList;
-        private Panel[] panelArray;
-        private ChapterPHLayout[] chapterLArray;
+        private HorizontalSplitPanel[] panelSplitArray;                //qui est le root du tab
+        private Panel[] panelArray;                     //qui est dansun split panel
+        private ChapterPVLayout[] chapterLArray;        //qui est dans un panel
 
         public void init()
         {
+            panelSplitArray= new HorizontalSplitPanel[6];
             panelArray = new Panel[6];
-            chapterLArray= new ChapterPHLayout[6];
+            chapterLArray= new ChapterPVLayout[6];
 
 
 
             for(int i=0;i<6;i++)
             {
-                chapterLArray[i]=new ChapterPHLayout();
+                chapterLArray[i]=new ChapterPVLayout();
                 chapterLArray[i].setImmediate(true);
-                chapterLArray[i].setHeight(100,Unit.PERCENTAGE);
+//                chapterLArray[i].setHeight(100,Unit.PERCENTAGE);
 //        chapterLayout.setMargin(true);
                 chapterLArray[i].setSpacing(true);
-                chapterLArray[i].setHeight(100,Unit.PERCENTAGE);
+//                chapterLArray[i].setHeight(100,Unit.PERCENTAGE);
             }
 
 
@@ -287,8 +346,18 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             {
                 panelArray[i]=new Panel();
                 panelArray[i].setContent(chapterLArray[i]);
-                panelArray[i].setHeight(100,Unit.PERCENTAGE);
+//                panelArray[i].setHeight(100,Unit.PERCENTAGE);
+                panelArray[i].setWidth(100,Unit.PERCENTAGE);
                 panelArray[i].setId(String.valueOf(i));             //Every Panel has the number of it's phase
+            }
+
+            for(int i=0;i<6;i++)
+            {
+                panelSplitArray[i]=new HorizontalSplitPanel(panelArray[i],null);
+                panelSplitArray[i].setSizeFull();
+                panelSplitArray[i].setId(Integer.toString(i));
+                panelSplitArray[i].setMinSplitPosition(20,Unit.PERCENTAGE);
+                panelSplitArray[i].setMaxSplitPosition(45,Unit.PERCENTAGE);
             }
 
         }
@@ -337,12 +406,12 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
         private void fillTabSheet()
         {
-            tabSheet.addTab(panelArray[0],"Exposition");
-            tabSheet.addTab(panelArray[1],"Conflict");
-            tabSheet.addTab(panelArray[2],"Rising Action");
-            tabSheet.addTab(panelArray[3],"Climax");
-            tabSheet.addTab(panelArray[4],"Falling Action");
-            tabSheet.addTab(panelArray[5],"Resolution");
+            tabSheet.addTab(panelSplitArray[0],"Exposition");
+            tabSheet.addTab(panelSplitArray[1],"Conflict");
+            tabSheet.addTab(panelSplitArray[2],"Rising Action");
+            tabSheet.addTab(panelSplitArray[3],"Climax");
+            tabSheet.addTab(panelSplitArray[4],"Falling Action");
+            tabSheet.addTab(panelSplitArray[5],"Resolution");
         }
 
         private void addChapterView(Chapter chapter){
@@ -355,6 +424,12 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             NWrapperPanel wrapper=new NWrapperPanel(chapterW);
             wrapper.setSizeFull();
             wrapper.setId(String.valueOf(chapter.getId()));
+            wrapper.addClickListener(event -> {
+                if(event.isDoubleClick())
+                {
+                    panelSplitArray[phaseSelected].setSecondComponent(loadSceneStickers(chapter));
+                }
+            });
             chapterW.wrap(wrapper);
             chapterLArray[phaseSelected].addComponent(wrapper);
             VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
