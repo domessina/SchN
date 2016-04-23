@@ -16,6 +16,7 @@ public final class SceneViewExtended extends CustomComponent implements Narrativ
 
     private Scene scene;
     private ArrayList<CrudListener> listeners;
+    private SceneView scVLeft;
 
     private VerticalLayout charLayout;
 
@@ -43,7 +44,7 @@ public final class SceneViewExtended extends CustomComponent implements Narrativ
 
     private Component buildCmpntLeft()
     {
-      SceneView scVLeft =new SceneView(this.scene);
+        scVLeft =new SceneView(this.scene);
         NWrapperPanel wrapper= new NWrapperPanel(scVLeft);
         wrapper.setSizeFull();
 
@@ -84,7 +85,7 @@ public final class SceneViewExtended extends CustomComponent implements Narrativ
 
     @Override
     public void setHandler(NarrativePresenter narrativePresenter) {
-
+            scVLeft.setHandler(narrativePresenter);
     }
 
 }

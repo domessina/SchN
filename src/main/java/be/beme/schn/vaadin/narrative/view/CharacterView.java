@@ -189,6 +189,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
         name.setComponentError(null);
         type.setComponentError(null);
+        this.character.setName(name.getValue());
         if(name.isEmpty()||type.isEmpty())
         {
             name.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
@@ -200,7 +201,6 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         }
         else {
 
-            this.character.setName(name.getValue());
             this.character.setType(type.getValue().toString());
             this.character.setNote(textArea.getValue());
             this.character.setPicture(imageUploadPanel.getFileName());
@@ -221,11 +221,8 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
                             updateTraits();
                             deleteTraits();
                             imageUploadPanel.commit();
-                            if(imageUploadPanel.isImageEmpty())
-                            {
-                                imageUploadPanel.deleteOrigImage();
-                            }
-                           wrapper.close();
+
+                           wrapper.closeIfWindow();
 
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
@@ -239,7 +236,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
                         if (eraseCok)
                         {
                             imageUploadPanel.deleteImage();
-                            wrapper.close();
+                            wrapper.closeIfWindow();
                         }
                         else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);

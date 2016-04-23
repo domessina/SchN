@@ -52,7 +52,9 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
 
     public boolean exist(String characterName, int diagramId)            //unique constraint on this columns
     {
-        if(jdbcTemplate.query("select * from \"Character\" where diagram_id=? and name=?", new Object[]{diagramId,characterName},new CharacterMapper())==null)
+        List<Character> list=jdbcTemplate.query("select * from \"Character\" where diagram_id=? and name=?", new Object[]{diagramId,characterName},new CharacterMapper());
+
+        if(list.isEmpty())
         {
             return false;
         }

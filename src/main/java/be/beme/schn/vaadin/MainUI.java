@@ -6,6 +6,9 @@ import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import be.beme.schn.vaadin.dd.DDGridLayout;
+import be.beme.schn.vaadin.dd.GridLayoutDropEvent;
+import be.beme.schn.vaadin.dd.GridLayoutDropHandler;
+import be.beme.schn.vaadin.dd.WrappedComponent;
 import be.beme.schn.vaadin.narrative.ChapterPVLayout;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.*;
@@ -18,6 +21,7 @@ import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -28,7 +32,7 @@ import java.util.List;
 //@PreserveOnRefresh  Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
 @SpringUI                                                                                                               //TODO rajouter une grande scrollbar verticale pour quand on rapetissie la page
-public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Scene>{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
+public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Scene>, Component.Listener{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
 
     @Autowired
     DiagramDaoImpl diagramService;
@@ -55,7 +59,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 //    private ArrayList<Scene> scenes;
     private ChapterUI chapterUI;
     private CharacterUI characterUI;
-
+    private DDGridLayout gLayout;
 
 
     @Override
@@ -159,8 +163,9 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         chScV.loadTraits();
 
         scv.addCharacterSceneView(chScV);
+        scv.setHandler(scenePresenter);
 
-       tabSheet.addTab(scv,"New Scene");
+       tabSheet.addTab(scv,scene.getTag());
         tabSheet.getTab(tabSheet.getComponentCount()-1).setClosable(true);
         tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
     }
@@ -169,8 +174,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     {
         Scene scene = new Scene();
         scene.setChapterId(chapterId);
-        scene.setPlace(2);
-        scene.setPicture("ze.jpg");
+        scene.setPlace(gLayout.getComponentCount());
         SceneView scV= new SceneView(scene);
         NWrapperPanel wrapper= new NWrapperPanel(scV);
         wrapper.setSizeFull();
@@ -182,16 +186,19 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         window.setModal(true);
         window.setResizable(false);
         window.setHeight(99,Unit.PERCENTAGE);
+        window.addCloseListener(scV);
 
         window.setWidth( 31,Unit.EM);
         this.addWindow(window);
     }
 
+
     public Panel loadSceneStickers(Chapter chapter)
     {
         Panel pstickers = new Panel();
         pstickers.setStyleName("background-grey");
-        DDGridLayout gLayout= new DDGridLayout();
+        gLayout= new DDGridLayout();
+        gLayout.addDropListener(this);
         gLayout.layout.setSpacing(true);
         gLayout.addStyleName("no-vertical-drag-hints");
         gLayout.addStyleName("no-horizontal-drag-hints");
@@ -226,9 +233,10 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 }
 
                 sticker.setWidth(100,Unit.PERCENTAGE);
-                sticker.setHeight(20,Unit.EM);
+                sticker.setHeight(18.5F,Unit.EM);
                 sticker.setStyleName("blue-hover",true);
-                sticker.setId("Sc"+String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
+                sticker.setId(String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
+//                sticker.setData(getComponentCount());
                 gLayout.addComponent(sticker);
 
             }
@@ -240,6 +248,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         }
 
         gLayout.layout.setWidth(100,Unit.PERCENTAGE);
+
         pstickers.setSizeFull();
         pstickers.setContent(gLayout);
 
@@ -248,6 +257,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     @Override
     public void created(Scene o) {
+//        o.setPlace(gLayout.getComponentCount());
         SceneViewExtended scv= new SceneViewExtended(o);
         tabSheet.addTab(scv,o.getTag());
         tabSheet.getTab(tabSheet.getComponentCount()-1).setClosable(true);
@@ -261,6 +271,20 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     @Override
     public void deleted(Scene o) {
+
+    }
+
+    @Override
+    public void componentEvent(Event event) {
+       if(event instanceof GridLayoutDropEvent)
+       {
+           GridLayoutDropEvent e =(GridLayoutDropEvent) event;
+
+           WrappedComponent wrappedDrag=(WrappedComponent)gLayout.getLayout().getComponent(e.getX(),e.getY());
+           Panel p=(Panel)wrappedDrag.getCompositionRoot();
+           scenePresenter.getDaoService().setPlace(Integer.valueOf(p.getId()),e.getIndex());
+
+       }
 
     }
 
@@ -363,6 +387,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 panelSplitArray[i].setMinSplitPosition(20,Unit.PERCENTAGE);
                 panelSplitArray[i].setMaxSplitPosition(45,Unit.PERCENTAGE);
             }
+            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
 
         }
 
@@ -372,7 +397,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             Chapter chapter =new Chapter();
             chapter.setPhase(phaseSelected);
             chapter.setDiagramId(diagramId);
-            chapter.setPosition((short) VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase"));
+            Integer position = (Integer) VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase");
+            chapter.setPosition(position.shortValue());
 
             ChapterView chapterView= new ChapterView(chapter);
             chapterView.setHandler(chapterPresenter);
@@ -383,7 +409,6 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
             Window window=new Window("New Chapter",wrapper);
             window.setModal(true);
-            window.setDraggable(false);
             window.setResizable(false);
 
             MainUI.this.addWindow(window);
@@ -402,6 +427,9 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                     chapter.setScenes(scenePresenter.getDaoService().getAllScenesByChapter(chapter.getId()));
                     addChapterView(chapter);
                 }
+
+                panelSplitArray[phaseSelected].setSecondComponent(loadSceneStickers(chapterList.get(0)));                   //load scene for the first chapter displayed at starting
+
             }
             else{
                 System.out.println("No chapter fot this phase");
@@ -451,6 +479,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 }
             }
 
+            panelSplitArray[phaseSelected].setSecondComponent(loadSceneStickers(o));
         }
 
         @Override
@@ -470,6 +499,27 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         public void deleted(Chapter o) {
 
             chapterLArray[(int)phaseSelected].removeChapter(o.getId());
+
+            if(o.getScenes()!=null)
+            {
+                for (Scene s : o.getScenes())
+                {
+                    try{
+                        scenePresenter.getDaoService().deleteImage(s.getPicture(), 1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("diagramId").toString()));
+                    }
+                    catch (IOException e)
+                    {
+                        System.out.println("The scene "+s.getId()+" had no image");
+                    }
+                }
+
+            }
+
+            for(int i=(tabSheet.getComponentCount()-1);i>=6;i--)
+            {
+                tabSheet.removeTab(tabSheet.getTab(i));
+            }
+
 
         }
 

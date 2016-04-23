@@ -1,11 +1,16 @@
 package be.beme.schn.persistence.daoimpl;
 
+import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.SceneDao;
+import org.apache.tomcat.jni.File;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -29,7 +34,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
     @Override
     public void update(Object[] args) {
-        jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, note=? WHERE id=?",args,new int[]{
+        jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, notes=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
                 Types.INTEGER,
                 Types.VARCHAR,
@@ -47,6 +52,20 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     public List<Scene> getAllScenesByChapter(int chapterId) {
         return jdbcTemplate.query("select * from \"Scene\" where chapter_id=? order by place asc",
                 new Object[]{chapterId},new SceneMapper());
+    }
+
+    @Override
+    public void deleteImage(String filename,int userId, int diagramId) throws IOException {
+        String target= Constants.BASE_DIR+"Users\\"+userId+"\\Diagrams\\"+diagramId+"\\Scenes\\"+filename;
+
+        Files.delete(Paths.get(target));
+
+    }
+
+    @Override
+    public void setPlace(int id, int place)
+    {
+        jdbcTemplate.update("update \"Scene\" SET place=? where id=?",place, id);
     }
 
 

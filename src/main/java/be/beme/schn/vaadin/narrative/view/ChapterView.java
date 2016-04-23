@@ -61,8 +61,8 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         if(this.chapter.getId()==0)
         {
             toggleSettings();
-//            buttonErase.setVisible(false);
-//            buttonSet.setVisible(false);
+            buttonErase.setVisible(false);
+            buttonSet.setVisible(false);
         }
 
     }

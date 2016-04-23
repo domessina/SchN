@@ -5,7 +5,7 @@
 -- Dumped from database version 9.5.2
 -- Dumped by pg_dump version 9.5.2
 
--- Started on 2016-04-22 23:14:56
+-- Started on 2016-04-24 01:25:23
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -691,21 +691,21 @@ ALTER TABLE ONLY "Chapter"
 
 
 --
--- TOC entry 2112 (class 2606 OID 24998)
+-- TOC entry 2111 (class 2606 OID 25040)
 -- Name: CharacterScene_character_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "CharacterScene"
-    ADD CONSTRAINT "CharacterScene_character_id_fkey" FOREIGN KEY (character_id) REFERENCES "Character"(id);
+    ADD CONSTRAINT "CharacterScene_character_id_fkey" FOREIGN KEY (character_id) REFERENCES "Character"(id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 2111 (class 2606 OID 24993)
+-- TOC entry 2112 (class 2606 OID 25045)
 -- Name: CharacterScene_scene_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "CharacterScene"
-    ADD CONSTRAINT "CharacterScene_scene_id_fkey" FOREIGN KEY (scene_id) REFERENCES "Scene"(id);
+    ADD CONSTRAINT "CharacterScene_scene_id_fkey" FOREIGN KEY (scene_id) REFERENCES "Scene"(id) ON DELETE CASCADE;
 
 
 --
@@ -781,30 +781,30 @@ ALTER TABLE ONLY "Rule"
 
 
 --
--- TOC entry 2107 (class 2606 OID 16749)
+-- TOC entry 2107 (class 2606 OID 25035)
 -- Name: Scene_chapter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "Scene"
-    ADD CONSTRAINT "Scene_chapter_id_fkey" FOREIGN KEY (chapter_id) REFERENCES "Chapter"(id);
+    ADD CONSTRAINT "Scene_chapter_id_fkey" FOREIGN KEY (chapter_id) REFERENCES "Chapter"(id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 2109 (class 2606 OID 16759)
+-- TOC entry 2110 (class 2606 OID 25055)
 -- Name: TraitScene_scene_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "TraitScene"
-    ADD CONSTRAINT "TraitScene_scene_id_fkey" FOREIGN KEY (scene_id) REFERENCES "Scene"(id);
+    ADD CONSTRAINT "TraitScene_scene_id_fkey" FOREIGN KEY (scene_id) REFERENCES "Scene"(id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 2110 (class 2606 OID 16764)
+-- TOC entry 2109 (class 2606 OID 25050)
 -- Name: TraitScene_trait_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "TraitScene"
-    ADD CONSTRAINT "TraitScene_trait_id_fkey" FOREIGN KEY (trait_id) REFERENCES "Trait"(id);
+    ADD CONSTRAINT "TraitScene_trait_id_fkey" FOREIGN KEY (trait_id) REFERENCES "Trait"(id) ON DELETE CASCADE;
 
 
 --
@@ -816,7 +816,7 @@ ALTER TABLE ONLY "Trait"
     ADD CONSTRAINT "Trait_character_id_fkey" FOREIGN KEY (character_id) REFERENCES "Character"(id) ON DELETE CASCADE;
 
 
--- Completed on 2016-04-22 23:14:58
+-- Completed on 2016-04-24 01:25:23
 
 --
 -- PostgreSQL database dump complete

@@ -127,9 +127,20 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
     public void commit()
     {
         try {
-            Files.move(file,new File(this.path+this.fileName));
-        } catch (IOException | NullPointerException e) {
+            if(!file.getPath().equals(this.path+this.fileName))
+                Files.move(file,new File(this.path+this.fileName));
+        }
+        catch (IOException e) {
             e.printStackTrace();
+        }
+        catch(NullPointerException e)
+        {
+            System.out.println("No image to save");
+
+        }
+        if(isImageEmpty())
+        {
+            deleteOrigImage();
         }
 
     }
@@ -165,7 +176,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         }
         catch(NullPointerException e)
         {
-            e.printStackTrace();
+            System.out.println("Failed to delete image---Image doesn't exist");
         }
     }
 

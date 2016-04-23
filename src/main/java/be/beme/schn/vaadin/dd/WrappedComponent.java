@@ -16,6 +16,12 @@ public class WrappedComponent extends DragAndDropWrapper {
         super(content);
         this.dropHandler = dropHandler;
         setDragStartMode(DragAndDropWrapper.DragStartMode.WRAPPER);
+
+    }
+
+    public Component getCompositionRoot()
+    {
+        return super.getCompositionRoot();
     }
 
     @Override

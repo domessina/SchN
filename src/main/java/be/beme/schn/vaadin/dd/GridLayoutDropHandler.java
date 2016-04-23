@@ -11,6 +11,8 @@ import com.vaadin.event.dd.acceptcriteria.SourceIsTarget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 
+import java.util.ArrayList;
+
 /**
  * Created by Dotista on 23-04-16.
  */
@@ -20,9 +22,11 @@ public class GridLayoutDropHandler implements DropHandler {
     private int xdest;
     private int ydest;
     private int indexdest;
+    private ArrayList<Component.Listener> listeners;
 
     public GridLayoutDropHandler(final GridLayout layout) {
         this.layout = layout;
+        listeners=new ArrayList<>();
     }
 
     @Override
@@ -42,7 +46,10 @@ public class GridLayoutDropHandler implements DropHandler {
             findComponent(target);
             layout.replaceComponent(layout.getComponent(xdest,ydest),sourceComponent);
         }
+
+        fireDropEvent();
     }
+
     private void findComponent(DropTarget target)
     {
         indexdest=0;
@@ -59,6 +66,19 @@ public class GridLayoutDropHandler implements DropHandler {
                 }
                 indexdest++;
             }
+        }
+    }
+
+    public void addDropListener(Component.Listener listener)
+    {
+        listeners.add(listener);
+    }
+
+    public void fireDropEvent()
+    {
+        for(Component.Listener l: listeners)
+        {
+            l.componentEvent(new GridLayoutDropEvent(this.layout,xdest,ydest,indexdest));
         }
     }
 }

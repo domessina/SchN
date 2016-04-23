@@ -17,12 +17,11 @@ import com.vaadin.ui.*;
 
 import java.util.ArrayList;
 
-public final class SceneView extends CustomComponent implements NWrapped, NarrativeView, CrudNotifier<Scene>
+public final class SceneView extends CustomComponent implements NWrapped, NarrativeView, CrudNotifier<Scene>, Window.CloseListener
 {
 
     private ImageUploadPanel imageUploadPanel;
     private TextField tagField;
-    private TextField placeField;
     private TextArea notes;
     private Panel propertiesPanel;
     private NWrapperPanel wrapper;
@@ -54,7 +53,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         buttonSet=wrapper.getButtonSet();
         buttonErase.addClickListener(this);
         buttonSave.addClickListener(this);
-        buttonSet.addClickListener(this);
+        buttonSet.setVisible(false);
         if(this.scene.getId()==0)
         {
             buttonErase.setVisible(false);
@@ -94,16 +93,13 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         VerticalLayout verticalLayout= new VerticalLayout();
         verticalLayout.setMargin(true);
         tagField= new TextField("Tag",this.scene.getTag());
-        placeField= new TextField("Place",Integer.toString(this.scene.getPlace()));
         notes= new TextArea("Notes",this.scene.getNote());
 
         fLayout.setSpacing(true);
         tagField.setNullRepresentation("");
-        placeField.setNullRepresentation("");
         notes.setNullRepresentation("");
         notes.setWidth(100,Unit.PERCENTAGE);
         fLayout.addComponent(tagField);
-        fLayout.addComponent(placeField);
         fLayout.setComponentAlignment(tagField,Alignment.MIDDLE_CENTER);
 
         verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>", ContentMode.HTML));
@@ -137,14 +133,30 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
 
     private void saveUpdate()
     {
+        boolean isNewScene=(scene.getId()==0);
+
         this.scene.setTag(tagField.getValue());
-        this.scene.setPlace(Integer.valueOf(placeField.getValue()));
         this.scene.setPicture(imageUploadPanel.getFileName());
         this.scene.setNote(notes.getValue());
         presenter.setView(this);
         this.scene=presenter.save();
+
+        if(scene!=null)
+        {
+            imageUploadPanel.commit();
+            wrapper.closeIfWindow();
+        }
+        else
+        {
+            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+        }
+
         notifyCreated(this.scene);
-        wrapper.close();
+    }
+
+    private void erase()
+    {
+        imageUploadPanel.deleteImage();
     }
     private boolean verifyFields()
     {
@@ -154,11 +166,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
             tagField.setComponentError(new UserError("Required field not filled"));     //TODO créer constante pour requiered field not filled
             return false;
         }
-        else if(placeField.isEmpty())
-        {
-            placeField.setComponentError(new UserError("Required field not filled"));
-            return false;
-        }
+
         return true;
     }
 
@@ -193,5 +201,10 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
     public Scene getScene()
     {
         return this.scene;
+    }
+
+    @Override
+    public void windowClose(Window.CloseEvent e) {
+        imageUploadPanel.deleteTmpDir();
     }
 }
