@@ -20,13 +20,13 @@ public class TraitSceneDaoImpl extends AbstractPersistenceService implements Tra
 
     @Override
     public void create(int traitId, int sceneId) {
-        jdbcTemplate.update("insert into TraitScene (trait_id,scene_id) values (?,?)",traitId,sceneId);
+        jdbcTemplate.update("insert into \"TraitScene\" (trait_id,scene_id) values (?,?)",traitId,sceneId);
 
     }
 
     @Override
     public void delete(int traitId, int sceneId) {
-        jdbcTemplate.update("delete from TraitScene where trait_id=? AND scene_id=? AND diagram_id=?",traitId,sceneId);
+        jdbcTemplate.update("delete from \"TraitScene\" where trait_id=? AND scene_id=?",traitId,sceneId);
     }
 
     @Override
@@ -34,6 +34,8 @@ public class TraitSceneDaoImpl extends AbstractPersistenceService implements Tra
         return jdbcTemplate.query("select * from \"Trait\" inner join \"TraitScene\" on \"Trait\".id=\"TraitScene\".trait_id where \"TraitScene\".scene_id=?",
                 new Object[]{sceneId},new TraitMapper());
     }
+
+
 
 
     private static final class TraitSceneMapper implements RowMapper<TraitScene> {

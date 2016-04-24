@@ -209,6 +209,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
                 else
                 {
                     Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                    return;
                 }
             }
 
@@ -225,6 +226,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
             }
             else {
                 Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                return;
             }
         }
         else if(event.getButton().equals(this.buttonSet))

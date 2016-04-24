@@ -34,7 +34,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         //super();              //même si tu ne l'écrit pas il l'appelle
         this.path = path;
         this.fileName=fileName;
-        tmpdir =Files.createTempDir();
+
         VerticalLayout layout= new VerticalLayout();
         setSizeFull();
         layout.setSizeFull();
@@ -55,6 +55,10 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
             return null;
         }
 
+        if(tmpdir==null)
+        {
+            tmpdir =Files.createTempDir();
+        }
         FileOutputStream fos = null;
         UUID imageId= UUID.randomUUID();
         this.fileName=imageId.toString()+filename.substring(filename.lastIndexOf("."));
@@ -147,11 +151,17 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
 
     public void deleteTmpDir()
     {
-        try {
-            FileUtils.deleteDirectory(this.tmpdir);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(this.tmpdir!=null)
+        {
+            try {
+                FileUtils.deleteDirectory(this.tmpdir);
+                this.tmpdir=null;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     public void deleteImage()

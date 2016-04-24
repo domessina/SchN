@@ -53,12 +53,22 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         buttonSet=wrapper.getButtonSet();
         buttonErase.addClickListener(this);
         buttonSave.addClickListener(this);
-        buttonSet.setVisible(false);
+        buttonSet.addClickListener(this);
         if(this.scene.getId()==0)
         {
             buttonErase.setVisible(false);
             buttonSet.setVisible(false);
         }
+        else
+        {
+            toggleButtons();
+        }
+    }
+
+    private void toggleButtons()
+    {
+        buttonErase.setVisible(!buttonErase.isVisible());
+        buttonSave.setVisible(!buttonSave.isVisible());
     }
 
     private Component buildContent()
@@ -122,12 +132,23 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
-        if(event.getButton().equals(this.buttonSave))
+
+        Button btn=event.getButton();
+        if(btn.equals(this.buttonSave))
         {
          if(verifyFields())
          {
              saveUpdate();
+             toggleButtons();
          }
+        }
+        else if(btn.equals(this.buttonErase))
+        {
+            erase();
+        }
+        else if(btn.equals(this.buttonSet))
+        {
+            toggleButtons();
         }
     }
 
@@ -149,14 +170,37 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         else
         {
             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            return;
         }
 
-        notifyCreated(this.scene);
+        if(isNewScene)
+        {
+
+            notifyCreated(this.scene);
+        }
+        else
+        {
+            notifyUpdated(this.scene);
+
+        }
+        imageUploadPanel.deleteTmpDir();
     }
 
     private void erase()
     {
-        imageUploadPanel.deleteImage();
+//        imageUploadPanel.deleteImage();
+        presenter.setView(this);
+
+        if(presenter.erase())
+        {
+            imageUploadPanel.deleteTmpDir();
+            notifyDeleted(this.scene);
+        }
+        else
+        {
+            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            return ;
+        }
     }
     private boolean verifyFields()
     {
@@ -195,7 +239,10 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
 
     @Override
     public void notifyDeleted(Scene target) {
-
+        for(CrudListener listener:listeners)
+        {
+            listener.deleted(target);
+        }
     }
 
     public Scene getScene()

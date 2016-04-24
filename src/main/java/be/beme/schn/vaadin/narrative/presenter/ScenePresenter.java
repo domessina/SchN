@@ -1,14 +1,19 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
+import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.dao.SceneDao;
 import be.beme.schn.persistence.daoimpl.SceneDaoImpl;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import be.beme.schn.vaadin.narrative.view.SceneView;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Created by Dotista on 19-04-16.
@@ -59,7 +64,22 @@ public class ScenePresenter implements WrapperPanelPresenter {
 
     @Override
     public boolean erase() {
-        return false;
+
+        try
+        {
+
+            this.scene=this.view.getScene();
+            dao.delete(scene.getId());
+
+            dao.deleteImage(scene.getPicture(), 1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("diagramId").toString()));
+
+        }
+        catch (Exception e)                 //doens't matter if it's SQLException or other.
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override

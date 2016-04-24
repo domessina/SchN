@@ -226,6 +226,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                            return;
                         }
 
                         break;
@@ -240,6 +241,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
                         }
                         else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                            return;
                         }
                         break;
                     }

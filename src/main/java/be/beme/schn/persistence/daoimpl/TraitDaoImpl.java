@@ -43,6 +43,12 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
                 scenesArray, traitId);
     }
 
+    public Trait getTrait(int traitId)
+    {
+        return jdbcTemplate.queryForObject("select * from \"Trait\" where id=?",new TraitMapper());
+
+    }
+
 
     @Override
     public List<Trait> getTraitsByCharacter(int characterId) {

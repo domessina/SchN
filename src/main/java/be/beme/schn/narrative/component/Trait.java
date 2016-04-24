@@ -58,4 +58,6 @@ public class Trait implements NarrativeComponent {
    public String toString() {
         return this.getName();
     }
+
+
 }

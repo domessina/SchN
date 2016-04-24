@@ -1,5 +1,6 @@
 package be.beme.schn.vaadin.narrative.view;
 
+import be.beme.schn.Constants;
 import be.beme.schn.ImageUtil;
 import be.beme.schn.narrative.component.*;
 import be.beme.schn.narrative.component.Character;
@@ -26,7 +27,7 @@ import java.util.Set;
 /**
  * Created by Dotista on 19-04-16.
  */
-public class CharacterSceneView extends CustomComponent implements NarrativeView, CrudListener<Trait> {                      //TODO characterSceneView?
+public class CharacterSceneView extends CustomComponent implements NarrativeView, CrudListener<Trait>, PopupView.PopupVisibilityListener {                      //TODO characterSceneView?
 
     private HorizontalLayout rootLayout;
     private CharacterScenePresenter presenter;
@@ -38,6 +39,7 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
     private VerticalLayout vLR;
     private ArrayList<UpDownView> linkviews;
     private ArrayList<Trait> traitsChallenged;
+    private ArrayList<Trait> traitsChaltoDelete;
     private int sceneId;
     private TwinColSelect selectTrait;
 
@@ -112,14 +114,26 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
                 vLM.removeAllComponents();
                 vLM.addComponent(pop);
 
+                traitsChaltoDelete=new ArrayList<Trait>(traitsChallenged);
+                traitsChallenged.clear();
+
                 for(Object o:(Set)selectTrait.getValue())
                 {
+                    Trait t=(Trait)o;
                    /* Link link= new Link();
                     link.setName(o.toString());*/
-                    vLM.addComponent(new UpDownView(o.toString()));
+                    vLM.addComponent(new UpDownView(t.getName()));
+                    updateTraitChallengedList(t);
                 }
 
+                createToDeleteTraitChallengedList();
+                presenter.setView(this);
+                if(!presenter.save()||!presenter.delete())
+                {
+                    Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                }
                selectTrait.isVisible();
+
             }
 
         });
@@ -170,6 +184,7 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
                 ArrayList<Object> test= new ArrayList();
 
                         test.addAll((Set)select.getValue());
+
                 select.isVisible();
             }
 
@@ -192,6 +207,38 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
             catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+
+    }
+
+    private void updateTraitChallengedList(Trait t)
+    {
+        traitsChallenged.add(t);
+
+    }
+
+    public void createToDeleteTraitChallengedList()
+    {
+        try{
+            for(int i=0;i<traitsChaltoDelete.size();i++)
+            {
+                Trait t= traitsChaltoDelete.get(i);
+                for(Trait t2:traitsChallenged)
+                {
+                    if(t.getId()==t2.getId())
+                    {
+                        traitsChaltoDelete.set(i,null);               //si pase ici alors trait ne sera pas supprimé
+                    }
+                }
+
+
+            }
+        }
+        catch(IndexOutOfBoundsException e)
+        {
+
+            System.out.println("Si vous voyez ça le sprofesseurs c'est que vous avez bien regfardé");
         }
 
 
@@ -258,5 +305,21 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
     public void setCharacter(Character character)
     {
         this.character=character;
+    }
+
+    @Override
+    public void popupVisibilityChange(PopupView.PopupVisibilityEvent event) {
+
+    }
+
+    public ArrayList<Trait> getTraitsChallenged() {
+        return traitsChallenged;
+    }
+    public ArrayList<Trait> getTraitsChallengedToDelete() {
+        return traitsChaltoDelete;
+    }
+    public int getSceneId()
+    {
+        return  this.sceneId;
     }
 }

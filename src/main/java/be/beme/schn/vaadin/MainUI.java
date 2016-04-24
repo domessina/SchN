@@ -154,7 +154,17 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     public void openScene(Scene scene)
     {
-        SceneViewExtended scv= new SceneViewExtended(scene);
+        for(int i=6;i<tabSheet.getComponentCount();i++)
+        {
+            TabSheet.Tab tab= tabSheet.getTab(i);
+            if(tab.getCaption().equals(scene.getTag()))
+            {
+                return;
+            }
+        }
+
+
+        SceneViewExtended scvE= new SceneViewExtended(scene);
         Character character= characterPresenter.getDaoService().getCharacterById(30);
   /*     character.setPicture("dd.jpg");
         character.setName("Jean Pierre");*/
@@ -162,10 +172,11 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         chScV.setHandler(characterScenePresenter);
         chScV.loadTraits();
 
-        scv.addCharacterSceneView(chScV);
-        scv.setHandler(scenePresenter);
+        scvE.addCharacterSceneView(chScV);
+        scvE.setHandler(scenePresenter);
+        scvE.addCrudListener(this);
 
-       tabSheet.addTab(scv,scene.getTag());
+       tabSheet.addTab(scvE,scene.getTag());
         tabSheet.getTab(tabSheet.getComponentCount()-1).setClosable(true);
         tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
     }
@@ -216,6 +227,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             for(Scene s : chapter.getScenes())
             {
                 Panel sticker= new Panel(s.getTag());
+
                 if(s.getPicture()!=null)
                 {
                     Image image= new Image(null,new FileResource(new File(Constants.BASE_DIR+"Users\\1\\Diagrams\\"+chapter.getDiagramId()+"\\Scenes\\"+s.getPicture())));
@@ -224,14 +236,15 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                     ver.setSizeFull();
                     ver.setComponentAlignment(image,Alignment.MIDDLE_CENTER);
                     sticker.setContent(ver);
-                    sticker.addClickListener(event -> {
-                        if(event.isDoubleClick())
-                        {
-                            this.openScene(s);
-                        }
-                    });
+
                 }
 
+                sticker.addClickListener(event -> {
+                    if(event.isDoubleClick())
+                    {
+                        this.openScene(s);
+                    }
+                });
                 sticker.setWidth(100,Unit.PERCENTAGE);
                 sticker.setHeight(18.5F,Unit.EM);
                 sticker.setStyleName("blue-hover",true);
@@ -259,6 +272,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     public void created(Scene o) {
 //        o.setPlace(gLayout.getComponentCount());
         SceneViewExtended scv= new SceneViewExtended(o);
+        scv.setHandler(scenePresenter);
+        scv.addCrudListener(this);
         tabSheet.addTab(scv,o.getTag());
         tabSheet.getTab(tabSheet.getComponentCount()-1).setClosable(true);
         tabSheet.setSelectedTab(tabSheet.getComponentCount()-1);
@@ -271,7 +286,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     @Override
     public void deleted(Scene o) {
-
+        tabSheet.removeTab(tabSheet.getTab(tabSheet.getSelectedTab()));
     }
 
     @Override
@@ -505,6 +520,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 for (Scene s : o.getScenes())
                 {
                     try{
+
                         scenePresenter.getDaoService().deleteImage(s.getPicture(), 1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("diagramId").toString()));
                     }
                     catch (IOException e)
@@ -519,6 +535,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             {
                 tabSheet.removeTab(tabSheet.getTab(i));
             }
+            panelSplitArray[phaseSelected].setSecondComponent(null);
 
 
         }
