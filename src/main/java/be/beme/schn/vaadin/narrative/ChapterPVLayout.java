@@ -1,8 +1,6 @@
 package be.beme.schn.vaadin.narrative;
 
-import be.beme.schn.narrative.component.Chapter;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 /**

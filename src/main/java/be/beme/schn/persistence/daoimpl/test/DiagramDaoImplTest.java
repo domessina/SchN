@@ -1,7 +1,7 @@
 package be.beme.schn.persistence.daoimpl.test;
 
-import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.narrative.component.Diagram;
+import be.beme.schn.persistence.dao.DiagramDao;
 
 import java.util.List;
 

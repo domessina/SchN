@@ -5,6 +5,7 @@ import be.beme.schn.narrative.component.Character;
 import be.beme.schn.persistence.dao.CharacterDao;
 import be.beme.schn.vaadin.narrative.view.CharacterView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -77,6 +78,7 @@ public class CharacterPresenter implements WrapperPanelPresenter {
             if(character.getPicture()!=null)
             {
                 Files.delete(Paths.get(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+String.valueOf(character.getDiagram_id())+"\\Characters\\"+character.getPicture()));
+                Files.delete(Paths.get(VaadinSession.getCurrent().getAttribute("characterDirectory")+"Cropped\\"+this.character.getPicture()));
             }
         }
         catch (Exception e)                 //doens't matter if it's SQLException or other.

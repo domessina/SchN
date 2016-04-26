@@ -1,7 +1,6 @@
 package be.beme.schn.persistence.daoimpl;
 
 import be.beme.schn.narrative.component.Chapter;
-import be.beme.schn.narrative.component.Character;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.ChapterDao;
 import org.springframework.jdbc.core.RowMapper;

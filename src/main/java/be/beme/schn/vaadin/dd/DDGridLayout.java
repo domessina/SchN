@@ -1,9 +1,10 @@
 package be.beme.schn.vaadin.dd;
 
-import be.beme.schn.vaadin.MainUI;
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.ui.*;
+
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.DragAndDropWrapper;
+import com.vaadin.ui.GridLayout;
 
 /**
  * Created by Dotista on 23-04-16.
@@ -21,7 +22,7 @@ public class DDGridLayout extends CustomComponent {
     }
 
     public void addComponent(final Component component) {
-        final WrappedComponent wrapper = new WrappedComponent(component,
+        final CustomDragAndDropWrapper wrapper = new CustomDragAndDropWrapper(component,
                 dropHandler);
 
         layout.addComponent(wrapper);

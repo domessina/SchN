@@ -2,9 +2,8 @@ package be.beme.schn.vaadin.narrative.view;
 
 import be.beme.schn.Constants;
 import be.beme.schn.ImageUtil;
-import be.beme.schn.narrative.component.*;
 import be.beme.schn.narrative.component.Character;
-import be.beme.schn.narrative.component.Link;
+import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.narrative.presenter.CharacterScenePresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
@@ -21,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -40,8 +38,11 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
     private ArrayList<UpDownView> linkviews;
     private ArrayList<Trait> traitsChallenged;
     private ArrayList<Trait> traitsChaltoDelete;
+    private ArrayList<Character> linkToDelete;
+    private ArrayList<Character>     linkList;
     private int sceneId;
     private TwinColSelect selectTrait;
+    private TwinColSelect selectTrait2;
 
 
     public CharacterSceneView(Character character,int sceneId) {
@@ -51,6 +52,7 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
         imageFile = new File(VaadinSession.getCurrent().getAttribute("characterDirectory")+this.character.getPicture());
         linkviews= new ArrayList<>();
         traitsChallenged=new ArrayList<>();
+        linkList= new ArrayList<>();
         setStyleName("background-white",true);
         setStyleName("round-corner",true);
         setCompositionRoot(buildContent());
@@ -75,15 +77,22 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
     private Component buildLeft(){
 
         Label name = new Label(this.character.getName());
-        name.setSizeUndefined();
-        writeImageSticker();
-        Image image = new Image();
-        Resource resource= new FileResource(croppedImage);
-        image.setSource(resource);
-        image.setStyleName("circular");
 
-        vLL= new VerticalLayout(image, name);
-        vLL.setComponentAlignment(image,Alignment.MIDDLE_CENTER);
+        name.setSizeUndefined();
+        vLL= new VerticalLayout();
+
+        writeImageSticker();
+        if(croppedImage!=null)
+        {
+            Image image = new Image();
+            Resource resource= new FileResource(croppedImage);
+            image.setSource(resource);
+            image.setStyleName("circular");
+            vLL.addComponent(image);
+            vLL.setComponentAlignment(image,Alignment.MIDDLE_CENTER);
+        }
+
+        vLL.addComponent(name);
         vLL.setComponentAlignment(name,Alignment.MIDDLE_CENTER);
         vLL.setSizeFull();
         vLL.setSpacing(true);
@@ -156,62 +165,149 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
     private Component buildRight()
     {
 
-        UpDownView lV =new UpDownView("test");
 
-        vLR = new VerticalLayout(lV,twinColPopUp());
+        vLR = new VerticalLayout();
         vLR.setSpacing(true);
         vLR.setSizeFull();
         vLR.setMargin(true);
 
+        selectTrait2 = new TwinColSelect();
+        selectTrait2.setLeftColumnCaption("Characters");
+        selectTrait2.setRightColumnCaption("To rel");
+
+        selectTrait2.setRows(10);
+        selectTrait2.setMultiSelect(true);//in this case getValue returns a Set
+
+//        PopupView pop=new PopupView("Relationship",selectTrait2);
+//        pop.setHideOnMouseOut(false);
+//        pop.addPopupVisibilityListener(event -> {
+//            if(!event.isPopupVisible())
+            {
+              /*  vLR.removeAllComponents();
+                vLR.addComponent(pop);
+
+                linkToDelete=new ArrayList<Character>(linkList);
+                linkList.clear();
+
+                for(Object o:(Set)selectTrait2.getValue())
+                {
+                    Character t=(Character)o;
+                   *//* Link link= new Link();
+                    link.setName(o.toString());*//*
+                    vLR.addComponent(new UpDownView(t.getName()));
+                    updateLinkList(t);
+                }
+
+                createToDeleteLinkList();
+                presenter.setView(this);
+                if(!presenter.saveLink()||!presenter.deleteLink())
+                {
+                    Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                }
+                selectTrait2.isVisible();
+*/
+            }
+
+//        });
+
+
+        vLR = new VerticalLayout();
+
+
+//        vLR.addComponent(pop);
+        vLR.setSizeFull();
+        vLR.setSpacing(true);
+        vLR.setMargin(true);
+
+
+
+
         return vLR;
     }
 
-    private Component twinColPopUp()                //TODO attention je viens de remarquer que le setId des components est peut etre utilisé qu'en mode debug, lis la javadoc sur cette méthode
-    {
-        TwinColSelect select = new TwinColSelect();
-        select.setLeftColumnCaption("Characters");
-        select.setRightColumnCaption("To rel");
-        select.addItems("Mercury", "Venus", "Earth", "Mars",
-                "Jupiter", "Saturn", "Uranus", "Neptune");
+        //TODO attention je viens de remarquer que le setId des components est peut etre utilisé qu'en mode debug, lis la javadoc sur cette méthode
 
-        select.setRows(10);
-
-        PopupView pop=new PopupView("Trait played",select);
-        pop.addPopupVisibilityListener(event -> {
-            if(!event.isPopupVisible())
-            {
-                linkviews.clear();
-                ArrayList<Object> test= new ArrayList();
-
-                        test.addAll((Set)select.getValue());
-
-                select.isVisible();
-            }
-
-        });
-        pop.setHideOnMouseOut(false);
-        return pop;
-    }
 
     private void writeImageSticker()
     {
-        croppedImage=new File(VaadinSession.getCurrent().getAttribute("characterDirectory")+"Cropped\\"+this.character.getPicture());
-        if(!Files.exists(Paths.get(croppedImage.toURI())))
+        if(this.character.getPicture()!=null)
         {
-            try
+            croppedImage=new File(VaadinSession.getCurrent().getAttribute("characterDirectory")+"Cropped\\"+this.character.getPicture());
+            if((!Files.exists(Paths.get(croppedImage.toURI())))&&this.character.getPicture()!=null)
             {
-                BufferedImage img = ImageIO.read(imageFile);
-                img=ImageUtil.squareCropAndScale(img,100,100);
-                ImageIO.write(img, "png", croppedImage);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
+                try
+                {
+                    BufferedImage img = ImageIO.read(imageFile);
+                    img=ImageUtil.squareCropAndScale(img,100,100);
+                    ImageIO.write(img, "png", croppedImage);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
 
+
     }
 
+    //--------Link----------
+
+   /* private void updateLinkList(Character t)
+    {
+        linkList.add(t);
+
+    }*/
+   /* public void createToDeleteLinkList()
+    {
+        try{
+            for(int i=0;i<linkToDelete.size();i++)
+            {
+               Character t= linkToDelete.get(i);
+                for(Character t2:linkList)
+                {
+                    if(t.getId()==t2.getId())
+                    {
+                        linkToDelete.set(i,null);               //si pase ici alors trait ne sera pas supprimé
+                    }
+                }
+
+
+            }
+        }
+        catch(IndexOutOfBoundsException e)
+        {
+
+            System.out.println("Si vous voyez ça le sprofesseurs c'est que vous avez bien regfardé");
+        }
+
+
+    }*/
+
+    /**The Handler have to be set before*/
+    public void loadLinks()
+    {
+      /*  presenter.setView(this);
+
+        ArrayList<Link> linkList= new ArrayList<>(presenter.getLinksByScAndCh(character.getId(),sceneId));*/
+//        selectTrait2.addItems(presenter.characterDao.getAllCharactersByDiagram((int)VaadinSession.getCurrent().getAttribute("diagramId")));
+
+
+       /* for (Link t:linkList)
+        {
+
+            vLR.addComponent(new UpDownView(presenter.characterDao.getCharacterById(t.getToCharacterId()).getName()));
+
+        }
+*/
+
+
+
+
+
+
+    }
+    //-----------------Trait--------------
     private void updateTraitChallengedList(Trait t)
     {
         traitsChallenged.add(t);
@@ -252,18 +348,20 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
         traitsChallenged= new ArrayList<>(presenter.getTraitsByScene(this.sceneId));
         selectTrait.addItems(presenter.getTraitsByCharacter(this.character.getId()));
 
+           for(int i=0;i<traitsChallenged.size();i++)
+            {
+                Trait t=traitsChallenged.get(i);
+                if(t.getCharacterId()!=this.character.getId())
+                {
+                    traitsChallenged.remove(t);
+                }
+                else
+                {
+                    vLM.addComponent(new UpDownView(t.getName()));
+                }
+            }
 
-        for (Trait t:traitsChallenged)
-        {
-            if(t.getCharacterId()!=this.character.getId())
-            {
-                traitsChallenged.remove(t);
-            }
-            else
-            {
-                vLM.addComponent(new UpDownView(t.getName()));
-            }
-        }
+
 
 
 
@@ -272,6 +370,7 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
 
 
     }
+    //-----------------------------
 
     private void fillVLM(Collection c)
     {
@@ -318,6 +417,17 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
     public ArrayList<Trait> getTraitsChallengedToDelete() {
         return traitsChaltoDelete;
     }
+
+   /* public ArrayList<Character> getLinkList() {
+        return linkList;
+    }
+    public ArrayList<Character> getLinkToDelete() {
+        return linkToDelete;
+    }
+*/
+
+
+    public Character getCharacter(){return  this.character;}
     public int getSceneId()
     {
         return  this.sceneId;

@@ -17,6 +17,7 @@ public class GridLayoutDropEvent extends Component.Event {
      * Constructs a new event with the specified source component.
      *
      * @param source the source component of the event
+     * @param index the cell number of the source dropped
      */
     public GridLayoutDropEvent(Component source, int column, int row, int index) {
         super(source);

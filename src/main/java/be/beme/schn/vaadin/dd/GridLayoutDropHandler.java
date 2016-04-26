@@ -39,7 +39,7 @@ public class GridLayoutDropHandler implements DropHandler {
         final Transferable transferable = dropEvent.getTransferable();
         final Component sourceComponent = transferable.getSourceComponent();
 
-        if (sourceComponent instanceof WrappedComponent)
+        if (sourceComponent instanceof CustomDragAndDropWrapper)
         {
             final TargetDetails dropTargetData = dropEvent.getTargetDetails();
             final DropTarget target = dropTargetData.getTarget();

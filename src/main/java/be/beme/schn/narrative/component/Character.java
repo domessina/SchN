@@ -79,4 +79,10 @@ public class Character implements NarrativeComponent{
     public void setAllTraits(List<Trait> allTraits) {
         this.allTraits = allTraits;
     }
+
+    @Override
+    public String toString()
+    {
+        return this.name;
+    }
 }

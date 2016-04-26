@@ -4,7 +4,6 @@ import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.SceneDao;
-import org.apache.tomcat.jni.File;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 

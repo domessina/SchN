@@ -31,6 +31,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
     private Button buttonSave;
     private Button buttonSet;
     private ScenePresenter presenter;
+    private Panel rootPanel;
 
     public SceneView(Scene scene)
     {
@@ -88,11 +89,11 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         verticalLayout.setExpandRatio(imageUploadPanel,4);
         verticalLayout.setExpandRatio(propertiesPanel,6);
 
-        Panel rootLeft= new Panel();
-        rootLeft.setSizeFull();
-        rootLeft.setContent(verticalLayout);
+        rootPanel= new Panel();
+        rootPanel.setSizeFull();
+        rootPanel.setContent(verticalLayout);
 
-        return rootLeft;
+        return rootPanel;
     }
 
     private Panel buildProperties()
@@ -149,6 +150,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         else if(btn.equals(this.buttonSet))
         {
             toggleButtons();
+            rootPanel.setEnabled(!rootPanel.isEnabled());
         }
     }
 
@@ -234,7 +236,10 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
 
     @Override
     public void notifyUpdated(Scene target) {
-
+        for(CrudListener listener:listeners)
+        {
+            listener.updated(target);
+        }
     }
 
     @Override

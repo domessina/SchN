@@ -1,8 +1,10 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
+
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.Dao;
-import be.beme.schn.persistence.dao.*;
+import be.beme.schn.persistence.dao.CharacterDao;
+import be.beme.schn.persistence.dao.TraitSceneDao;
 import be.beme.schn.persistence.daoimpl.TraitDaoImpl;
 import be.beme.schn.vaadin.narrative.view.CharacterSceneView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
@@ -24,7 +26,7 @@ public class CharacterScenePresenter implements NarrativePresenter {
 
 
     @Autowired
-    private CharacterDao characterDao;
+    public CharacterDao characterDao;
 
     @Autowired
     private TraitDaoImpl traitDao;
@@ -32,10 +34,11 @@ public class CharacterScenePresenter implements NarrativePresenter {
     @Autowired
     private TraitSceneDao traitSceneDao;
 
-    @Autowired
-    private LinkDao linkDao;
+/*    @Autowired
+    private LinkDao linkDao;*/
 
     private CharacterSceneView view;
+
 
 
     @Override
@@ -95,6 +98,59 @@ public class CharacterScenePresenter implements NarrativePresenter {
         return true;
     }
 
+
+    /*public boolean saveLink(){
+        try{
+            int sceneId= this.view.getSceneId();
+
+            for(Character t:this.view.getLinkList())
+            {
+                try{
+//                    linkDao.createLink(t.getFromCharacterId(),t.getToCharacterId(),sceneId);
+                }
+                catch (DuplicateKeyException e)
+                {
+                    System.out.println("Trait "+t.getId() +" in Scene "+sceneId+" already exists");
+                }
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }*/
+
+    /*public boolean deleteLink()
+    {
+       *//* try{
+            int sceneId= this.view.getSceneId();
+
+            for(Link t:this.view.getLinkToDelete())
+            {
+                if(t!=null)
+                {
+                    linkDao.delete(t.getId());
+
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }*//*
+        return false;
+    }
+
+    public List<Link> getLinksByScAndCh(int characterId, int sceneId)
+    {
+        return linkDao.getLinksBy(characterId,sceneId);
+    }*/
+
     public List<Trait> getTraitsByCharacter(int id)
     {
       return    traitDao.getTraitsByCharacter(id);
@@ -108,6 +164,34 @@ public class CharacterScenePresenter implements NarrativePresenter {
     public TraitDaoImpl getTraitDao()
     {
         return this.traitDao;
+    }
+
+    public void addCharacterInScene(int characterId, int sceneId)
+    {
+       try{
+           characterDao.addCharacterInScene(characterId,sceneId);
+       }
+       catch (DuplicateKeyException e)
+       {
+           System.out.println("character "+characterId+" and "+sceneId+" are already associated");
+       }
+       catch(Exception e)
+       {
+           e.printStackTrace();
+       }
+    }
+
+    public boolean removeCharacterFromScene(int characterId, int sceneId)
+    {
+        try{
+            characterDao.removeCharacterFromScene(characterId,sceneId);
+        }
+                catch(Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }

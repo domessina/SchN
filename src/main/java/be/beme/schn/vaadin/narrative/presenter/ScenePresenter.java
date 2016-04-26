@@ -1,9 +1,6 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
-import be.beme.schn.Constants;
-import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.narrative.component.Scene;
-import be.beme.schn.persistence.dao.SceneDao;
 import be.beme.schn.persistence.daoimpl.SceneDaoImpl;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import be.beme.schn.vaadin.narrative.view.SceneView;
@@ -11,9 +8,6 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Created by Dotista on 19-04-16.

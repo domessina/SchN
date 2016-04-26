@@ -2,7 +2,6 @@ package be.beme.schn.vaadin.narrative.view;
 
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Chapter;
-import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.CrudListener;
 import be.beme.schn.vaadin.CrudNotifier;
 import be.beme.schn.vaadin.MainUI;
@@ -13,20 +12,18 @@ import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.ChapterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.event.MouseEvents;
-import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
  * Created by Dotista on 08-04-16.
  */
-public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped , CrudNotifier<Chapter>, Window.CloseListener{
+public class ChapterView extends CustomComponent implements NarrativeView, MouseEvents.ClickListener, NWrapped , CrudNotifier<Chapter>, Window.CloseListener {
 
     private ChapterPresenter presenter;
     private Chapter chapter;
@@ -44,33 +41,30 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private NWrapperPanel wrapper;
     private ArrayList<CrudListener> listeners;
 
-    public ChapterView(Chapter chapter)
-    {
-        this.chapter=chapter;
-        listeners= new ArrayList<>();
+    public ChapterView(Chapter chapter) {
+        this.chapter = chapter;
+        listeners = new ArrayList<>();
         setSizeFull();
         setCompositionRoot(buildContent());
     }
 
     @Override
-    public void wrap(NWrapper wrapper)
-    {
-        this.wrapper=(NWrapperPanel)wrapper;
+    public void wrap(NWrapper wrapper) {
+        this.wrapper = (NWrapperPanel) wrapper;
         confWrapperBtns();
 
-        if(this.chapter.getId()==0)
-        {
+        if (this.chapter.getId() == 0) {
             toggleSettings();
             buttonErase.setVisible(false);
             buttonSet.setVisible(false);
         }
 
     }
-    private void confWrapperBtns()
-    {
-        buttonErase=wrapper.getButtonErase();
-        buttonSave=wrapper.getButtonSave();
-        buttonSet=wrapper.getButtonSet();
+
+    private void confWrapperBtns() {
+        buttonErase = wrapper.getButtonErase();
+        buttonSave = wrapper.getButtonSave();
+        buttonSet = wrapper.getButtonSet();
         buttonErase.addClickListener(this);
         buttonSave.addClickListener(this);
         buttonSet.addClickListener(this);
@@ -78,17 +72,16 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         buttonSave.setVisible(false);
     }
 
-    private Layout buildContent()
-    {
-        VerticalLayout verticalLayout= new VerticalLayout();
+    private Layout buildContent() {
+        VerticalLayout verticalLayout = new VerticalLayout();
 
 
 //        verticalLayout.addComponent(buildScStickers());
         verticalLayout.addComponent(buildMiddleButtons());
         verticalLayout.addComponent(buildProperties());
 //        verticalLayout.setExpandRatio(pstickers,9);
-        verticalLayout.setExpandRatio(buttonHLayout,1);
-        verticalLayout.setExpandRatio(propertiesPanel,10);
+        verticalLayout.setExpandRatio(buttonHLayout, 1);
+        verticalLayout.setExpandRatio(propertiesPanel, 10);
         verticalLayout.setSizeFull();
         verticalLayout.setSpacing(true);
 
@@ -96,10 +89,8 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     }
 
 
-
-    private Layout buildMiddleButtons()
-    {
-        buttonHLayout= new HorizontalLayout();
+    private Layout buildMiddleButtons() {
+        buttonHLayout = new HorizontalLayout();
 
         buttonLeft = new Button(FontAwesome.ARROW_UP);
         buttonLeft.addClickListener(event1 -> changePosition(-1));
@@ -107,40 +98,38 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         buttonRight = new Button(FontAwesome.ARROW_DOWN);
         buttonRight.addClickListener(event1 -> changePosition(1));
 
-        buttonAddSc = new Button("+",event -> {
-            ((MainUI)getUI()).newScene(this.chapter.getId());
+        buttonAddSc = new Button("+", event -> {
+            ((MainUI) getUI()).newScene(this.chapter.getId());                      //TODO dommage, c'est le seul endoirt dans tout le code ou tu apelle depuis l'extérier la classe MainUI.
 
         });
 
         buttonHLayout.addComponent(buttonLeft);
         buttonHLayout.addComponent(buttonAddSc);
         buttonHLayout.addComponent(buttonRight);
-        buttonHLayout.setComponentAlignment(buttonLeft,Alignment.MIDDLE_LEFT);
-        buttonHLayout.setComponentAlignment(buttonAddSc,Alignment.MIDDLE_CENTER);
-        buttonHLayout.setComponentAlignment(buttonRight,Alignment.MIDDLE_RIGHT);
+        buttonHLayout.setComponentAlignment(buttonLeft, Alignment.MIDDLE_LEFT);
+        buttonHLayout.setComponentAlignment(buttonAddSc, Alignment.MIDDLE_CENTER);
+        buttonHLayout.setComponentAlignment(buttonRight, Alignment.MIDDLE_RIGHT);
         buttonHLayout.setSizeFull();
 
         return buttonHLayout;
     }
 
 
+    private Panel buildProperties() {
 
-    private Panel buildProperties()
-    {
-
-       propertiesPanel= new Panel();
-        FormLayout fLayout= new FormLayout();
-        VerticalLayout verticalLayout= new VerticalLayout();
+        propertiesPanel = new Panel();
+        FormLayout fLayout = new FormLayout();
+        VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setMargin(true);
-        titleTF= new TextField("Title",this.chapter.getTitle());
-        notes= new TextArea("Notes",this.chapter.getNote());
+        titleTF = new TextField("Title", this.chapter.getTitle());
+        notes = new TextArea("Notes", this.chapter.getNote());
 
         fLayout.setSpacing(true);
         titleTF.setNullRepresentation("");
         notes.setNullRepresentation("");
-        notes.setWidth(100,Unit.PERCENTAGE);
+        notes.setWidth(100, Unit.PERCENTAGE);
         fLayout.addComponent(titleTF);
-        fLayout.setComponentAlignment(titleTF,Alignment.MIDDLE_CENTER);
+        fLayout.setComponentAlignment(titleTF, Alignment.MIDDLE_CENTER);
 
         verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>", ContentMode.HTML));
         verticalLayout.addComponent(fLayout);
@@ -153,19 +142,16 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         return propertiesPanel;
     }
 
-    private Component buildUserProperties()
-    {
+    private Component buildUserProperties() {
         return new Button("Yolo");
     }
 
-    private void changePosition(int offset)
-    {
+    private void changePosition(int offset) {
 
 
-            short position=(short)(chapter.getPosition()+offset);
-        int chapter_count=(int)VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase");
-        if((position!=-1)&&(position!=chapter_count))
-        {
+        short position = (short) (chapter.getPosition() + offset);
+        int chapter_count = (int) VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase");
+        if ((position != -1) && (position != chapter_count)) {
             this.chapter.setPosition(position);
             presenter.setView(this);
             presenter.save();
@@ -175,12 +161,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
 
     }
 
-    public void addScene(Scene scene)
-    {
-        this.chapter.getScenes().add(scene);
-//        updateGridLayout();
-
-    }
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
@@ -256,6 +236,8 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         buttonSave.setVisible(settingsMode);
         propertiesPanel.setEnabled(settingsMode);
         buttonAddSc.setEnabled(!settingsMode);
+        buttonLeft.setEnabled(!settingsMode);
+        buttonRight.setEnabled(!settingsMode);
 
 
         wrapper.setEnabled(true);

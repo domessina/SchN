@@ -18,8 +18,7 @@ package be.beme.schn;
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

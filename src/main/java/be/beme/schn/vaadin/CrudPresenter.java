@@ -1,7 +1,5 @@
 package be.beme.schn.vaadin;
 
-import be.beme.schn.narrative.component.Trait;
-
 /**
  * Created by Dotista on 07-04-16.
  */

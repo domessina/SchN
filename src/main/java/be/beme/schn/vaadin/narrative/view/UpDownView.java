@@ -1,6 +1,5 @@
 package be.beme.schn.vaadin.narrative.view;
 
-import be.beme.schn.narrative.component.Link;
 import be.beme.schn.vaadin.narrative.presenter.LinkPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import com.vaadin.server.FontAwesome;

@@ -2,7 +2,6 @@ package be.beme.schn.vaadin.narrative;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Window;
 
 /**
  * Created by Dotista on 11-04-16.

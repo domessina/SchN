@@ -11,7 +11,6 @@ public abstract class AbstractPersistenceService  {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
-
-
+//TODO remarque que durant lancer le rpogramme s'affiche à al fin SQLErrorCodes loaded: [DB2, Derby, H2, HSQL, Informix, MS-SQL, MySQL, Oracle, PostgreSQL, Sybase, Hana... utiliser SQLErrorCodes pour dire de charger que Postgres
 
 }

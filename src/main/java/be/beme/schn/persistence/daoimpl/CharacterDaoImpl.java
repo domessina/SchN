@@ -75,7 +75,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
 
     @Override
     public List<Character> getAllCharactersByDiagram(int diagramId) {
-        return jdbcTemplate.query("select * from Character where diagram_id=?",
+        return jdbcTemplate.query("select * from \"Character\" where diagram_id=?",
                 new Object[]{diagramId},new CharacterMapper());
     }
 
@@ -83,6 +83,20 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
     public void delete(int characterId)
     {
         jdbcTemplate.update("delete from public.\"Character\" where id=? ",characterId);
+    }
+
+@Override
+    public void addCharacterInScene(int characterId, int sceneId)
+    {
+        jdbcTemplate.update("insert into public.\"CharacterScene\" (character_id,scene_id) values (?,?)"
+                ,characterId,sceneId);
+    }
+
+    @Override
+    public void removeCharacterFromScene(int characterId, int sceneId)
+    {
+        jdbcTemplate.update("delete from \"CharacterScene\" where character_id=? and scene_id=?",
+                characterId,sceneId);
     }
 
 
@@ -93,6 +107,8 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
         return jdbcTemplate.query("select * from \"Character\" inner join \"CharacterScene\" on \"Character\".id=\"CharacterScene\".character_id where \"CharacterScene\".scene_id=?",
                 new Object[]{sceneId},new CharacterMapper());
     }
+
+
 
     private static final class CharacterMapper implements RowMapper<Character> {
 

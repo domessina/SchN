@@ -1,8 +1,5 @@
 package be.beme.schn.narrative.component;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 /**
  * Created by Dorito on 22-03-16.
  */

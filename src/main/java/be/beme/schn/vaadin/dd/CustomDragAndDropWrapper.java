@@ -7,12 +7,12 @@ import com.vaadin.ui.DragAndDropWrapper;
 /**
  * Created by Dotista on 23-04-16.
  */
-public class WrappedComponent extends DragAndDropWrapper {
+public class CustomDragAndDropWrapper extends DragAndDropWrapper {
 
     private final DropHandler dropHandler;
 
-    public WrappedComponent(final Component content,
-                            final DropHandler dropHandler) {
+    public CustomDragAndDropWrapper(final Component content,
+                                    final DropHandler dropHandler) {
         super(content);
         this.dropHandler = dropHandler;
         setDragStartMode(DragAndDropWrapper.DragStartMode.WRAPPER);

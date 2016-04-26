@@ -1,10 +1,5 @@
 package be.beme.schn.persistence.configuration;
 
-import be.beme.schn.persistence.dao.CharacterDao;
-import be.beme.schn.persistence.dao.DiagramDao;
-import be.beme.schn.persistence.daoimpl.ChapterDaoImpl;
-import be.beme.schn.persistence.daoimpl.CharacterDaoImpl;
-import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import com.vaadin.spring.annotation.EnableVaadin;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;

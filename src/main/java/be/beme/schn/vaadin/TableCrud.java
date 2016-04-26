@@ -1,10 +1,11 @@
 package be.beme.schn.vaadin;
 
 import be.beme.schn.Constants;
-import be.beme.schn.narrative.component.Trait;
-import be.beme.schn.vaadin.narrative.TraitTableCrud;
 import com.vaadin.event.Action;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
+
 import java.util.ArrayList;
 import java.util.List;
 

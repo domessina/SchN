@@ -26,6 +26,10 @@ public interface CharacterDao  extends Dao {
 
     void delete(int chapterId);
 
+    void addCharacterInScene(int characterId, int sceneId);
+
+    void removeCharacterFromScene(int charaterId, int sceneId);
+
     void update( Object[] args); //J'aimerais remplacer par update(int characterId, Object[ args);
 
 }

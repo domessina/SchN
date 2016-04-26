@@ -1,8 +1,8 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
 import be.beme.schn.persistence.Dao;
-import be.beme.schn.vaadin.narrative.view.UpDownView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
+import be.beme.schn.vaadin.narrative.view.UpDownView;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.stereotype.Component;
 

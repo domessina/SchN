@@ -1,6 +1,5 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.TraitScene;
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.Dao;
 
