@@ -11,7 +11,7 @@ import javax.servlet.http.Cookie;
  */
 public class CookieInitializer {
 
-    private static final String USER_ID="userId";
+
 
     private CookieInitializer()
     {
@@ -31,30 +31,57 @@ public class CookieInitializer {
     * lock/unloack/haslock
     * */
 
-    public void initCookies() //TODO créer cookie pour le de diagram utilisé en cours. Qujan dl'user se reconnecte ça ne présente pas le choix des diagramme mais ouvre ce dernier diagram.
+    public static void initCookies() //TODO créer cookie pour le de diagram utilisé en cours. Qujan dl'user se reconnecte ça ne présente pas le choix des diagramme mais ouvre ce dernier diagram.
     {
-        Cookie nameCookie = VaadinUtils.getCookieByName(USER_ID);
+      userCookie();
+        diagramCookie();
+    }
 
-        if (nameCookie != null) {
-            String oldName = nameCookie.getValue();
-            nameCookie.setValue("1");
-            Notification.show("Updated name in cookie from " + oldName + " to " + "1");
+    private static void userCookie()
+    {
+        Cookie cookie = VaadinUtils.getCookieByName(Constants.CK_USER_ID);
+
+        if (cookie != null) {
+//            String oldName = cookie.getValue();
+            cookie.setValue("1");
 
         } else {
-            // Create a new cookie
-//            nameCookie = new Cookie(NAME_COOKIE, name);
-            nameCookie .setComment("Cookie for storing the name of the user");
-//            Notification.show("Stored name " + name + " in cookie");
+            cookie = new Cookie(Constants.CK_USER_ID, "1");
+            cookie .setComment("Cookie for storing the id of the user");
+//            cookie.setHttpOnly(true);
+//            cookie.setSecure(true);
+            cookie.setMaxAge(604800);
+            // Set the cookie path.
+            cookie.setPath(VaadinService.getCurrentRequest().getContextPath());
         }
 
-        // Make cookie expire in 2 minutes
-        nameCookie.setMaxAge(120);
+        // Make cookie expire in one week
+//        cookie.setMaxAge(604800);
 
-        // Set the cookie path.
-        nameCookie.setPath(VaadinService.getCurrentRequest() .getContextPath());
+
+
 
         // Save cookie
-        VaadinService.getCurrentResponse().addCookie(nameCookie);
+        VaadinService.getCurrentResponse().addCookie(cookie);
     }
+    private static void diagramCookie()
+    {
+        Cookie cookie = VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID);
+
+        if (cookie != null) {
+            cookie.setValue("3");
+
+        } else {
+            cookie = new Cookie(Constants.CK_DIAGRAM_ID, "3");
+            cookie .setComment("Cookie for storing the id of the user");
+            cookie.setPath(VaadinService.getCurrentRequest().getContextPath());
+        }
+        //if no Max age specified , it's session scope
+        cookie.setMaxAge(604800);
+
+
+        VaadinService.getCurrentResponse().addCookie(cookie);
+    }
+
 
 }

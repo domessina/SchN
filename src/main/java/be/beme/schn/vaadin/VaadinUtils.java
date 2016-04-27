@@ -20,7 +20,7 @@ public final class VaadinUtils {
 
     }
 
-    public static Component findComponentById(HasComponents root, String id) {
+    public final static Component findComponentById(HasComponents root, String id) {
 
         for(Component child : root) {
             if(id.equals(child.getId())) {
@@ -38,18 +38,9 @@ public final class VaadinUtils {
         return null;
     }
 
-    public static Image getInternalImageResource(String imageName)
-    {
 
-        String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 
-        FileResource imgres = new FileResource(new File(basepath + "/WEB-INF/images/"+imageName));
-        Image image= new Image(null, imgres);
-
-        return image;
-    }
-
-    public static Window findWindowById(String id)
+    public final static Window findWindowById(String id)
     {
         ArrayList<Window> arrayList=new ArrayList<>(UI.getCurrent().getWindows());
 
@@ -65,7 +56,7 @@ public final class VaadinUtils {
 
     }
 
-    public static Cookie getCookieByName(String name) {
+    public final static Cookie getCookieByName(String name) {
         // Fetch all cookies from the request
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
 

@@ -1,6 +1,7 @@
 package be.beme.schn.vaadin;
 
 import be.beme.schn.Constants;
+import be.beme.schn.CookieInitializer;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
@@ -18,6 +19,7 @@ import be.beme.schn.vaadin.narrative.view.SceneViewExtended;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
@@ -34,7 +36,7 @@ import java.util.List;
  */
 @Theme("mytheme")
 @Title("Narrative Diagram")
-//@PreserveOnRefresh  Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
+//@PreserveOnRefresh  //Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
 @SpringUI                                                                                                               //TODO rajouter une grande scrollbar verticale pour quand on rapetissie la page
 public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
@@ -79,14 +81,13 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
     protected void init(VaadinRequest vaadinRequest) {
 
 
-
-        diagramId=3;
-
-        VaadinSession.getCurrent().setAttribute("diagramId",3);
-        VaadinSession.getCurrent().setAttribute("userId",1);
-        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\"+ VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+VaadinSession.getCurrent().getAttribute("diagramId")+"\\Characters\\");
+        CookieInitializer.initCookies();
+        Integer integer=Integer.valueOf(VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID).getValue());
+        diagramId=integer.shortValue();
+        VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
+        VaadinSession.getCurrent().setAttribute("userId",VaadinUtils.getCookieByName(Constants.CK_USER_ID).getValue());
+        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\"+ VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+diagramId+"\\Characters\\");
         System.out.println(VaadinSession.getCurrent().getCsrfToken());
-
 
         tabSheet.setSizeFull();
         tabSheet.setImmediate(true);
@@ -100,23 +101,41 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
         setContent(buildContent());
     }
 
-    private Component buildContent()
+    private Component buildContent()               //TODO dire au forums que mettre un command dans un sous menu ne marche pas
+
     {
-        HorizontalLayout hl= new HorizontalLayout(new Button("new Chapter",clickEvent -> chapterUI.newChapter()));
-        hl.setSizeFull();
-        TextField tf= new TextField("Character Id");
-        hl.addComponent(tf);
-        hl.addComponent(new Button("show character",event1 -> characterUI.showCharacter(Integer.valueOf(tf.getValue()))));
-        hl.addComponent(new Button("new Character", event -> characterUI.newCharacter()));
+
+
+        MenuBar menuBar=buildMenu();
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.setSizeFull();
-        verticalLayout.addComponent(hl);
+        verticalLayout.addComponent(menuBar);
+        verticalLayout.setExpandRatio(menuBar,1);
         verticalLayout.addComponent(tabSheet);
         verticalLayout.setMargin(true);
-        verticalLayout.setExpandRatio(tabSheet,9);
-        verticalLayout.setExpandRatio(hl,1);
+        verticalLayout.setExpandRatio(tabSheet,14);
         return verticalLayout;
+    }
+
+    private MenuBar buildMenu()
+    {
+        MenuBar menuBar=new MenuBar();
+
+
+
+        MenuBar.MenuItem newz = menuBar.addItem("New...",null, null);
+        newz.addItem("Chapter",selectedItem ->chapterUI.newChapter());
+        newz.addItem("Scene",null);
+        newz.addItem("Character",selectedItem ->  characterUI.newCharacter());
+
+        MenuBar.MenuItem open= menuBar.addItem("Open...",null,null);
+        open.addItem("Diagram",null);
+        open.addItem("Character",selectedItem ->  characterUI.showCharacter(30));
+
+        MenuBar.MenuItem options=menuBar.addItem("Settings",null,null);
+
+        return menuBar;
     }
 
 
@@ -160,7 +179,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
             }
 
 
-            SceneViewExtended scvE= new SceneViewExtended(scene,characterPresenter.getDaoService().getAllCharactersByDiagram((int)VaadinSession.getCurrent().getAttribute("diagramId")));
+            SceneViewExtended scvE= new SceneViewExtended(scene,characterPresenter.getDaoService().getAllCharactersByDiagram(diagramId));
 
             List<Character> characterSc =characterPresenter.getDaoService().getAllCharactersByScene(scene.getId());
             scvE.setChScenePresenter(characterScenePresenter);
@@ -391,8 +410,9 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
                 panelSplitArray[i]=new HorizontalSplitPanel(panelArray[i],null);
                 panelSplitArray[i].setSizeFull();
                 panelSplitArray[i].setId(Integer.toString(i));
-                panelSplitArray[i].setMinSplitPosition(20,Unit.PERCENTAGE);
                 panelSplitArray[i].setMaxSplitPosition(45,Unit.PERCENTAGE);
+                panelSplitArray[i].setMinSplitPosition(20,Unit.PERCENTAGE);
+                panelSplitArray[i].setSplitPosition(20,Unit.PERCENTAGE);
             }
             VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
 
@@ -414,6 +434,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
             chapterView.wrap(wrapper);
 
             Window window=new Window("New Chapter",wrapper);
+            window.setId("New Chapter");
             window.setModal(true);
             window.setResizable(false);
 
@@ -476,13 +497,14 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
         @Override
         public void created(Chapter o) {
             addChapterView(o);
-            for(Window w: MainUI.this.getWindows())
+            /*for(Window w: MainUI.this.getWindows())
             {
                 if(w.getCaption().equals("New Chapter"))
                 {
                     w.close();
                 }
-            }
+            }*/
+            VaadinUtils.findWindowById("New Chapter").close();
 
             panelSplitArray[phaseSelected].setSecondComponent(sceneUI.loadSceneStickers(o));
         }
@@ -510,7 +532,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
                 {
                     try{
 
-                        scenePresenter.getDaoService().deleteImage(s.getPicture(), 1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("diagramId").toString()));
+                        scenePresenter.getDaoService().deleteImage(s.getPicture(), 1, diagramId);
                     }
                     catch (IOException e)
                     {

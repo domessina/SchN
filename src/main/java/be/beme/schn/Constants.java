@@ -20,5 +20,9 @@ public final class Constants {
     public static final Action ACTION_DELETE=new Action("Delete");
     public static final Action ACTION_MODIFY=new Action("Modify");
 
+    //Cookies
+   public static final String CK_USER_ID="userId";
+   public static final String CK_DIAGRAM_ID="diagramId";
+
 
 }
