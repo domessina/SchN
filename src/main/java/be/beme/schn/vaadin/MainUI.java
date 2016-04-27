@@ -39,7 +39,7 @@ import java.util.List;
 //@PreserveOnRefresh  //Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
 @SpringUI                                                                                                               //TODO rajouter une grande scrollbar verticale pour quand on rapetissie la page
-public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
+public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Character>{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
 
     @Autowired
     DiagramDaoImpl diagramService;
@@ -61,10 +61,13 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
 
     public short phaseSelected;
     public short diagramId;
+    public int selectedChapterId;
     private final TabSheet tabSheet;
     private final ChapterUI chapterUI;
     private final CharacterUI characterUI;
     private final SceneUI sceneUI;
+    private MenuBar.MenuItem charsItem;
+    private MenuBar.Command command;
 
 
     public MainUI()
@@ -91,6 +94,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
 
         tabSheet.setSizeFull();
         tabSheet.setImmediate(true);
+        tabSheet.setStyleName("margins");
         tabSheet.addSelectedTabChangeListener(this);    //must be set before
         chapterUI.init();
         chapterUI.initTabSheet();
@@ -113,25 +117,36 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
         verticalLayout.addComponent(menuBar);
         verticalLayout.setExpandRatio(menuBar,1);
         verticalLayout.addComponent(tabSheet);
-        verticalLayout.setMargin(true);
         verticalLayout.setExpandRatio(tabSheet,14);
         return verticalLayout;
     }
 
     private MenuBar buildMenu()
     {
+        command=selectedItem2 ->characterUI.showCharacter(Integer.valueOf(selectedItem2.getDescription()));
+
         MenuBar menuBar=new MenuBar();
-
-
+        menuBar.setWidth(100,Unit.PERCENTAGE);
 
         MenuBar.MenuItem newz = menuBar.addItem("New...",null, null);
         newz.addItem("Chapter",selectedItem ->chapterUI.newChapter());
-        newz.addItem("Scene",null);
+        newz.addItem("Scene",selectedItem1 -> {
+            if(selectedChapterId!=-1)
+            {
+                sceneUI.newScene(selectedChapterId);
+            }
+
+        });
         newz.addItem("Character",selectedItem ->  characterUI.newCharacter());
 
         MenuBar.MenuItem open= menuBar.addItem("Open...",null,null);
         open.addItem("Diagram",null);
-        open.addItem("Character",selectedItem ->  characterUI.showCharacter(30));
+
+        charsItem=open.addItem("Character",null);
+        for(Character c:characterPresenter.getDaoService().getAllCharactersByDiagram(diagramId))
+        {
+            charsItem.addItem(c.getName(),command).setDescription(Integer.toString(c.getId()));
+        }
 
         MenuBar.MenuItem options=menuBar.addItem("Settings",null,null);
 
@@ -155,8 +170,33 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
         }
     }
 
-    public void newScene(int chapterId){                    //TODO dommage
-        sceneUI.newScene(chapterId);
+    @Override
+    public void created(Character o) {
+        //addItem returns MenuItem
+       charsItem.addItem(o.getName(),command).setDescription(Integer.toString(o.getId()));
+    }
+
+    @Override
+    public void updated(Character o) {
+
+    }
+
+    @Override
+    public void deleted(Character o) {
+        List<MenuBar.MenuItem> list=charsItem.getChildren();
+        List<MenuBar.MenuItem> iToRemove=new ArrayList<>();
+        for(MenuBar.MenuItem mi:list)
+        {
+            if(mi.getText().equals(o.getName()))
+            {
+                iToRemove.add(mi);
+            }
+        }
+        for(MenuBar.MenuItem mi:iToRemove)
+        {
+            charsItem.removeChild(mi);
+        }
+        iToRemove.clear();
     }
 
 
@@ -219,7 +259,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
 
         public Panel loadSceneStickers(Chapter chapter)
         {
-            System.err.println("loool");
+            selectedChapterId=chapter.getId();
             Panel pstickers = new Panel();
             pstickers.setStyleName("background-grey");
             gLayout= new DDGridLayout();
@@ -330,6 +370,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
 
             CharacterView characterView = new CharacterView(character, traitPresenter);
             characterView.setHandler(characterPresenter);
+            characterView.addCrudListener(MainUI.this);
             characterPresenter.setView(characterView);
             NWrapperPanel wrapper= new NWrapperPanel(characterView);
             wrapper.setSizeFull();
@@ -350,12 +391,13 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
             Character character = characterPresenter.getDaoService().getCharacterById(id);
             CharacterView characterView = new CharacterView(character, traitPresenter);
             characterView.setHandler(characterPresenter);
+            characterView.addCrudListener(MainUI.this);
             characterPresenter.setView(characterView);
             NWrapperPanel wrapper= new NWrapperPanel(characterView);
             wrapper.setSizeFull();
             characterView.wrap(wrapper);
 
-            Window window = new Window("New Character",wrapper);
+            Window window = new Window(null,wrapper);
             window.setModal(true);
             window.setDraggable(false);
             window.setResizable(false);
@@ -459,6 +501,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
 
             }
             else{
+                selectedChapterId=-1;
                 System.out.println("No chapter fot this phase");
             }
         }
@@ -507,6 +550,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
             VaadinUtils.findWindowById("New Chapter").close();
 
             panelSplitArray[phaseSelected].setSecondComponent(sceneUI.loadSceneStickers(o));
+            chapterList.add(o);
+
         }
 
         @Override
@@ -547,9 +592,14 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener{   
                 tabSheet.removeTab(tabSheet.getTab(i));
             }
             panelSplitArray[phaseSelected].setSecondComponent(null);
+            chapterList.remove(o);
 
+            //value will be non negative again when loadStickers() is called
+            //when no chapter is selected id =-1
+            selectedChapterId=-1;
 
         }
+
 
     }
 

@@ -222,7 +222,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
     }
 
     @Override
-    public void addCrudListener(CrudListener listener) {
+    public void addCrudListener(CrudListener<Scene> listener) {
         listeners.add(listener);
     }
 

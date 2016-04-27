@@ -12943,6 +12943,26 @@ div.v-layout.v-horizontal.v-widget {
 	border-radius: 15px;
 }
 
+.mytheme .margins {
+	margin: 1em 1em 1em 1em;
+}
+
+.mytheme .v-menubar {
+	background: #404040;
+}
+
+.mytheme .v-menubar-submenu {
+	color: black;
+}
+
+.mytheme .v-menubar-menuitem-caption {
+	color: white;
+}
+
+.mytheme .v-menubar-menuitem {
+	background: #404040;
+}
+
 .mytheme .v-panel-caption {
 	background: #404040;
 	color: white;

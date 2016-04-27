@@ -31,7 +31,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     private Panel propertiesPanel;
     private TextArea notes;
     private boolean settingsMode;
-    private Button buttonAddSc;
     private Button buttonErase;
     private Button buttonSave;
     private Button buttonSet;
@@ -98,16 +97,10 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         buttonRight = new Button(FontAwesome.ARROW_DOWN);
         buttonRight.addClickListener(event1 -> changePosition(1));
 
-        buttonAddSc = new Button("+", event -> {
-            ((MainUI) getUI()).newScene(this.chapter.getId());                      //TODO dommage, c'est le seul endoirt dans tout le code ou tu apelle depuis l'extérier la classe MainUI.
-
-        });
 
         buttonHLayout.addComponent(buttonLeft);
-        buttonHLayout.addComponent(buttonAddSc);
         buttonHLayout.addComponent(buttonRight);
         buttonHLayout.setComponentAlignment(buttonLeft, Alignment.MIDDLE_LEFT);
-        buttonHLayout.setComponentAlignment(buttonAddSc, Alignment.MIDDLE_CENTER);
         buttonHLayout.setComponentAlignment(buttonRight, Alignment.MIDDLE_RIGHT);
         buttonHLayout.setSizeFull();
 
@@ -235,7 +228,6 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         buttonErase.setVisible(settingsMode);
         buttonSave.setVisible(settingsMode);
         propertiesPanel.setEnabled(settingsMode);
-        buttonAddSc.setEnabled(!settingsMode);
         buttonLeft.setEnabled(!settingsMode);
         buttonRight.setEnabled(!settingsMode);
 
@@ -286,7 +278,7 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
     }
 
     @Override
-    public void addCrudListener(CrudListener listener) {
+    public void addCrudListener(CrudListener<Chapter> listener) {
         listeners.add(listener);
     }
 

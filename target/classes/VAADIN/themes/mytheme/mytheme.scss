@@ -49,7 +49,25 @@
 
   }
 
+  .margins
+  {
+    margin: 1em 1em 1em 1em ;
+  }
 
+  .v-menubar {
+    background: #404040;
+  }
+
+  .v-menubar-submenu {
+    color:black;
+  }
+
+  .v-menubar-menuitem-caption {
+    color:white;
+  }
+  .v-menubar-menuitem {
+    background: #404040;
+  }
 
   .v-panel-caption {
     background: #404040;

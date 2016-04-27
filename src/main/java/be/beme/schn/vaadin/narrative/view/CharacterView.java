@@ -5,6 +5,7 @@ import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.narrative.component.UserProperty;
 import be.beme.schn.vaadin.CrudListener;
+import be.beme.schn.vaadin.CrudNotifier;
 import be.beme.schn.vaadin.ImageUploadPanel;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
@@ -30,7 +31,7 @@ import java.util.List;
 //TODO un URI pour chaque Window?
     //TODO mettre tous les view et presenter en final rien ue parce que dans ton esprit elles n'ont pas été concues pour etre héritées, de plus que c'est un projet interne, pas un projet ver sl'exteiruer comme un framework.
 
-public final class CharacterView extends CustomComponent implements NarrativeView, NWrapped,CrudListener<Trait>, Window.CloseListener {
+public final class CharacterView extends CustomComponent implements NarrativeView, NWrapped,CrudListener<Trait>, Window.CloseListener ,CrudNotifier<Character>{
 
     private Panel rootPanel;
     private TraitTableCrud traitTableCrud;
@@ -52,6 +53,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     private Button buttonErase;
     private Button buttonSave;
     private Button buttonSet;
+    private ArrayList<CrudListener<Character>> listeners;
 
 
 
@@ -59,6 +61,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     {
         this.character= character;
         this.traitPresenter = traitPresenter;
+        listeners=new ArrayList<>();
 
         setId("CharacterView");
         setHeight(99, Unit.PERCENTAGE);
@@ -220,8 +223,9 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
                             updateTraits();
                             deleteTraits();
                             imageUploadPanel.commit();
-
+                            notifyCreated(this.character);
                            wrapper.closeIfWindow();
+
 
                         } else {
                             Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
@@ -236,6 +240,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
                         if (eraseCok)
                         {
                             imageUploadPanel.deleteImage();
+                            notifyDeleted(this.character);
                             wrapper.closeIfWindow();
                         }
                         else {
@@ -318,5 +323,32 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     @Override
     public NWrapper getWrapper() {
         return wrapper;
+    }
+
+
+    @Override
+    public void addCrudListener(CrudListener<Character> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void notifyCreated(Character target) {
+        for(CrudListener l:listeners)
+        {
+          l.created(target);
+        }
+    }
+
+    @Override
+    public void notifyUpdated(Character target) {
+
+    }
+
+    @Override
+    public void notifyDeleted(Character target) {
+        for(CrudListener l:listeners)
+        {
+            l.deleted(target);
+        }
     }
 }

@@ -6,7 +6,7 @@ package be.beme.schn.vaadin;
 public interface CrudNotifier<T> {
 
 
-   void addCrudListener(CrudListener listener);
+   void addCrudListener(CrudListener<T> listener);
 
     void notifyCreated(T target);
 
