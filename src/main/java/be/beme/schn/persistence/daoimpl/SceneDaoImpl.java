@@ -6,6 +6,7 @@ import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.SceneDao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +20,8 @@ import java.util.List;
  * Created by Dorito on 22-03-16.
  */
 @Repository
+@Transactional
+
 public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao {
 
 

@@ -5,6 +5,8 @@ import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.ChapterDao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +17,7 @@ import java.util.List;
  * Created by Dorito on 21-03-16.
  */
 @Repository
+@Transactional
 public class ChapterDaoImpl extends AbstractPersistenceService implements ChapterDao {
 
 

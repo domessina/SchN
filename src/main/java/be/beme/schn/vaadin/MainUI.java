@@ -109,7 +109,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     {
 
-
+                ArrayList<Character> c=new ArrayList<>();
+        c.add(new Character());
         MenuBar menuBar=buildMenu();
 
         VerticalLayout verticalLayout = new VerticalLayout();

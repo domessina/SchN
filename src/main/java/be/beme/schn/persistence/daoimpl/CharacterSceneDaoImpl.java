@@ -5,6 +5,7 @@ import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.CharacterSceneDao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,8 @@ import java.util.List;
  * Created by Dotista on 19-04-16.
  */
 @Repository
+@Transactional
+
 public class CharacterSceneDaoImpl extends AbstractPersistenceService implements CharacterSceneDao{
 
 

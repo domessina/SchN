@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Created by Dorito on 26-03-16.
+ *
+ * For @Transactional see: 10.5.3 Rolling back a declarative transaction Spring doc
  */
 public abstract class AbstractPersistenceService  {
 

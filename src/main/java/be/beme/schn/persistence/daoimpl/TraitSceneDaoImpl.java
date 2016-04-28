@@ -6,6 +6,7 @@ import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.TraitSceneDao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,8 @@ import java.util.List;
  */
 
 @Repository
+@Transactional
+
 public class TraitSceneDaoImpl extends AbstractPersistenceService implements TraitSceneDao {
 
     @Override

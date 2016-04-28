@@ -9,6 +9,7 @@ import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.DiagramDao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +19,8 @@ import java.util.List;
  * Created by Dorito on 17-03-16.
  */
 @Repository
+@Transactional
+
 public class DiagramDaoImpl extends AbstractPersistenceService implements DiagramDao
 {
 
