@@ -15,7 +15,7 @@ import java.util.List;
  * Created by Dorito on 22-03-16.
  */
 @Repository
-@Transactional
+//@Transactional
 
 public class RuleDaoImpl extends AbstractPersistenceService implements RuleDao {
 

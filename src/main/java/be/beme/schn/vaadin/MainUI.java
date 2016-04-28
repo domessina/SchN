@@ -5,6 +5,7 @@ import be.beme.schn.CookieInitializer;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
+import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import be.beme.schn.vaadin.dd.DDGridLayout;
 import be.beme.schn.vaadin.dd.GridLayoutDropEvent;
@@ -42,7 +43,7 @@ import java.util.List;
 public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Character>{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
 
     @Autowired
-    DiagramDaoImpl diagramService;
+    DiagramDao diagramService;
 
     @Autowired
     CharacterPresenter characterPresenter;

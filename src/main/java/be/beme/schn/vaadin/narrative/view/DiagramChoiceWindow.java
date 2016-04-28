@@ -55,6 +55,7 @@ public class DiagramChoiceWindow extends Window implements Button.ClickListener{
         gridLayout = new GridLayout(row_column,row_column);
         gridLayout.setSizeFull();
         gridLayout.setSpacing(true);
+//        gridLayout
 
         for(int i=0;i<diagramList.size();i++)
         {

@@ -1,6 +1,7 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
 import be.beme.schn.narrative.component.Scene;
+import be.beme.schn.persistence.dao.SceneDao;
 import be.beme.schn.persistence.daoimpl.SceneDaoImpl;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import be.beme.schn.vaadin.narrative.view.SceneView;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class ScenePresenter implements WrapperPanelPresenter {
 
     @Autowired
-    private SceneDaoImpl dao;
+    private SceneDao dao;
 
     private Scene scene;
 
@@ -82,7 +83,7 @@ public class ScenePresenter implements WrapperPanelPresenter {
     }
 
     @Override
-    public SceneDaoImpl getDaoService() {
+    public SceneDao getDaoService() {
         return this.dao;
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Dorito on 22-03-16.
  */
 @Repository
-@Transactional(rollbackFor = Exception.class)
+@Transactional
 
 public class CharacterDaoImpl extends AbstractPersistenceService implements CharacterDao{
 

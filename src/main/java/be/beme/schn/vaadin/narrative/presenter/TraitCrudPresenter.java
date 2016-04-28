@@ -1,6 +1,7 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
 import be.beme.schn.narrative.component.Trait;
+import be.beme.schn.persistence.dao.TraitDao;
 import be.beme.schn.persistence.daoimpl.TraitDaoImpl;
 import be.beme.schn.vaadin.CrudPresenter;
 import com.vaadin.spring.annotation.UIScope;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class TraitCrudPresenter implements CrudPresenter<Trait> {
 
     @Autowired
-    TraitDaoImpl traitService;
+    TraitDao traitService;
 
     @Override
     public boolean create(Trait trait) {
@@ -55,7 +56,7 @@ public class TraitCrudPresenter implements CrudPresenter<Trait> {
         return true;
     }
 
-    public TraitDaoImpl getTraitService()
+    public TraitDao getTraitService()
     {
         return traitService;
     }
