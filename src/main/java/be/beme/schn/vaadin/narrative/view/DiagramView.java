@@ -8,13 +8,14 @@ import java.util.List;
 /**
  * Created by Dorito on 25-03-16.
  */
-public class DiagramChoiceWindow extends Window implements Button.ClickListener{
+public class DiagramView extends Window implements Button.ClickListener{
 
 
     private List<Diagram> diagramList;
     private GridLayout gridLayout;
+    private int diagramId;
 
-    public DiagramChoiceWindow(List<Diagram> diagramList)
+    public DiagramView(List<Diagram> diagramList)
     {
         super("Choose a narrative diagram");
         setModal(true);
@@ -57,9 +58,11 @@ public class DiagramChoiceWindow extends Window implements Button.ClickListener{
         gridLayout.setSpacing(true);
 //        gridLayout
 
-        for(int i=0;i<diagramList.size();i++)
+        for(Diagram d: diagramList)
         {
-          gridLayout.addComponent(new Button(diagramList.get(i).getTitle(),this));
+            Button btn=new Button(d.getTitle(),this);
+            btn.setId(Integer.toString(d.getId()));
+            gridLayout.addComponent(btn);
         }
         return  gridLayout;
 
@@ -67,6 +70,11 @@ public class DiagramChoiceWindow extends Window implements Button.ClickListener{
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
+        this.diagramId=Integer.valueOf(event.getButton().getId());
         this.close();
+    }
+
+    public int getDiagramId() {
+        return diagramId;
     }
 }

@@ -9,7 +9,7 @@ import javax.servlet.http.Cookie;
 /**
  * Created by Dotista on 18-04-16.
  */
-public class CookieInitializer {
+public final class CookieInitializer {
 
 
 
@@ -31,13 +31,10 @@ public class CookieInitializer {
     * lock/unloack/haslock
     * */
 
-    public static void initCookies() //TODO créer cookie pour le de diagram utilisé en cours. Qujan dl'user se reconnecte ça ne présente pas le choix des diagramme mais ouvre ce dernier diagram.
-    {
-      userCookie();
-        diagramCookie();
-    }
+    //TODO créer cookie pour le de diagram utilisé en cours. Qujan dl'user se reconnecte ça ne présente pas le choix des diagramme mais ouvre ce dernier diagram.
 
-    private static void userCookie()
+
+    public final static void initUserCookie(String value)
     {
         Cookie cookie = VaadinUtils.getCookieByName(Constants.CK_USER_ID);
 
@@ -64,18 +61,15 @@ public class CookieInitializer {
         // Save cookie
         VaadinService.getCurrentResponse().addCookie(cookie);
     }
-    private static void diagramCookie()
+    public final static void initDiagramCookie(String value)
     {
-        Cookie cookie = VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID);
+//        Cookie cookie = VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID);
 
-        if (cookie != null) {
-            cookie.setValue("3");
 
-        } else {
-            cookie = new Cookie(Constants.CK_DIAGRAM_ID, "3");
+            Cookie cookie = new Cookie(Constants.CK_DIAGRAM_ID, value);
             cookie .setComment("Cookie for storing the id of the user");
             cookie.setPath(VaadinService.getCurrentRequest().getContextPath());
-        }
+
         //if no Max age specified , it's session scope
         cookie.setMaxAge(604800);
 

@@ -4,6 +4,7 @@ import be.beme.schn.Constants;
 import be.beme.schn.CookieInitializer;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
+import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
@@ -13,10 +14,7 @@ import be.beme.schn.vaadin.dd.CustomDragAndDropWrapper;
 import be.beme.schn.vaadin.narrative.ChapterPVLayout;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.*;
-import be.beme.schn.vaadin.narrative.view.ChapterView;
-import be.beme.schn.vaadin.narrative.view.CharacterView;
-import be.beme.schn.vaadin.narrative.view.SceneView;
-import be.beme.schn.vaadin.narrative.view.SceneViewExtended;
+import be.beme.schn.vaadin.narrative.view.*;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.FileResource;
@@ -27,6 +25,7 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.Cookie;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     CharacterScenePresenter characterScenePresenter;
 
     public short phaseSelected;
-    public short diagramId;
+    public int diagramId;
     public int selectedChapterId;
     private final TabSheet tabSheet;
     private final ChapterUI chapterUI;
@@ -85,13 +84,26 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     protected void init(VaadinRequest vaadinRequest) {
 
 
-        CookieInitializer.initCookies();
-        Integer integer=Integer.valueOf(VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID).getValue());
-        diagramId=integer.shortValue();
+        CookieInitializer.initUserCookie("1");
+        Cookie cookie=VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID);
+        if(cookie==null)
+        {
+            DiagramView dv= new DiagramView(diagramService.getAllDiagramsByUser(1));
+            dv.addCloseListener(e -> {
+                int didi=dv.getDiagramId();
+                CookieInitializer.initDiagramCookie(Integer.toString(didi));
+            });
+            this.addWindow(dv);
+        }
+
+
+//        diagramId=
+     /*           Integer inte=Integer.valueOf(VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID).getValue());
+        diagramId=inte;
         VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
         VaadinSession.getCurrent().setAttribute("userId",VaadinUtils.getCookieByName(Constants.CK_USER_ID).getValue());
         VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\"+ VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+diagramId+"\\Characters\\");
-        System.out.println(VaadinSession.getCurrent().getCsrfToken());
+        System.out.println(VaadinSession.getCurrent().getCsrfToken());*/
 
         tabSheet.setSizeFull();
         tabSheet.setImmediate(true);

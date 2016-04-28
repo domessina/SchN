@@ -63,7 +63,7 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
 
     @Override
     public List<Diagram> getAllDiagramsByUser(int userId) {
-        return jdbcTemplate.query("select * from Diagram where user_id=?",
+        return jdbcTemplate.query("select * from \"Diagram\" where user_id=?",
                 new Object[]{userId},new DiagramMapper());
     }
 
