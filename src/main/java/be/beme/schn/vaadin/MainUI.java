@@ -83,27 +83,10 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
+//        manageCookies();
 
-        CookieInitializer.initUserCookie("1");
-        Cookie cookie=VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID);
-        if(cookie==null)
-        {
-            DiagramView dv= new DiagramView(diagramService.getAllDiagramsByUser(1));
-            dv.addCloseListener(e -> {
-                int didi=dv.getDiagramId();
-                CookieInitializer.initDiagramCookie(Integer.toString(didi));
-            });
-            this.addWindow(dv);
-        }
+        initAttributes();
 
-
-//        diagramId=
-     /*           Integer inte=Integer.valueOf(VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID).getValue());
-        diagramId=inte;
-        VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
-        VaadinSession.getCurrent().setAttribute("userId",VaadinUtils.getCookieByName(Constants.CK_USER_ID).getValue());
-        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\"+ VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+diagramId+"\\Characters\\");
-        System.out.println(VaadinSession.getCurrent().getCsrfToken());*/
 
         tabSheet.setSizeFull();
         tabSheet.setImmediate(true);
@@ -116,6 +99,41 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
 
         setContent(buildContent());
+    }
+
+    private void manageCookies()
+    {
+
+        CookieInitializer.initUserCookie("1");
+        Cookie cookie=VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID);
+        if(cookie==null)
+        {
+            DiagramView dv= new DiagramView(diagramService.getAllDiagramsByUser(1));
+            dv.addCloseListener(e -> {
+                int didi=dv.getDiagramId();
+                CookieInitializer.initDiagramCookie(Integer.toString(didi));
+            });
+            this.addWindow(dv);
+        }
+    }
+
+
+
+    private void initAttributes()
+    {
+
+//        diagramId=
+     /*           Integer inte=Integer.valueOf(VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID).getValue());
+        diagramId=inte;
+        VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
+        VaadinSession.getCurrent().setAttribute("userId",VaadinUtils.getCookieByName(Constants.CK_USER_ID).getValue());
+        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\"+ VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+diagramId+"\\Characters\\");
+        System.out.println(VaadinSession.getCurrent().getCsrfToken());*/
+        diagramId=2;
+        VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
+        VaadinSession.getCurrent().setAttribute("userId",1);
+        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\1\\Diagrams\\2\\Characters\\");
+
     }
 
     private Component buildContent()               //TODO dire au forums que mettre un command dans un sous menu ne marche pas
