@@ -8,6 +8,7 @@ import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
@@ -28,6 +29,9 @@ public class CharacterPresenter implements WrapperPanelPresenter {
     @Autowired
     private CharacterDao characterService;
 
+
+    @Value("${file.root.path")
+    static String BASE_DIR;
 
     @Override
     public Character save() {
@@ -77,7 +81,7 @@ public class CharacterPresenter implements WrapperPanelPresenter {
             this.characterService.delete(this.character.getId());
             if(character.getPicture()!=null)
             {
-                Files.delete(Paths.get(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+String.valueOf(character.getDiagram_id())+"\\Characters\\"+character.getPicture()));
+                Files.delete(Paths.get(BASE_DIR+"Users\\1"+"\\Diagrams\\"+String.valueOf(character.getDiagram_id())+"\\Characters\\"+character.getPicture()));
                 Files.delete(Paths.get(VaadinSession.getCurrent().getAttribute("characterDirectory")+"Cropped\\"+this.character.getPicture()));
             }
         }

@@ -28,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.Cookie;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,13 +206,20 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     @Override
     public void created(Character o) {
-        //addItem returns MenuItem
+
        charsItem.addItem(o.getName(),command).setDescription(Integer.toString(o.getId()));
     }
 
     @Override
     public void updated(Character o) {
 
+        for(MenuBar.MenuItem item: charsItem.getChildren())
+        {
+            if(item.getDescription().equals(String.valueOf(o.getId())))                                                        //we update the character's name showed in the menu
+            {
+                item.setText(o.getName());
+            }
+        }
     }
 
     @Override
@@ -609,7 +618,13 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 {
                     try{
 
-                        scenePresenter.getDaoService().deleteImage(s.getPicture(), 1, diagramId);
+                        if(s.getPicture()!=null)
+                        {
+                            String target= Constants.BASE_DIR+"Users\\"+VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+diagramId+"\\Scenes\\"+s.getPicture();
+                            Files.delete(Paths.get(target));
+                        }
+
+//                        scenePresenter.getDaoService().deleteImage(s.getPicture(), 1, diagramId);
                     }
                     catch (IOException e)
                     {

@@ -55,17 +55,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
                 new Object[]{chapterId},new SceneMapper());
     }
 
-    @Override
-    public void deleteImage(String filename,int userId, int diagramId) throws IOException {
 
-        if(filename!=null)
-        {
-            String target= Constants.BASE_DIR+"Users\\"+userId+"\\Diagrams\\"+diagramId+"\\Scenes\\"+filename;
-            Files.delete(Paths.get(target));
-        }
-
-
-    }
 
     @Override
     public void setPlace(int id, int place)

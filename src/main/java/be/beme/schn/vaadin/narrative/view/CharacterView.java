@@ -189,6 +189,72 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     @Override
     public void buttonClick(Button.ClickEvent event) {
 
+
+        try {
+            switch (event.getButton().getCaption()) {
+
+                case "Save": {
+                    save();
+                    break;
+                }
+                case "Erase": {
+                    erase();
+                    break;
+                }
+                case "Show relations": {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void save()
+    {
+        boolean isNew=true;
+
+        if(saveCheck())
+        {
+            if(this.character.getId()!=0)
+                isNew=false;
+
+            this.character.setType(type.getValue().toString());
+            this.character.setNote(textArea.getValue());
+            this.character.setPicture(imageUploadPanel.getFileName());
+//            this.character.setAllTraits(traitTableCrud.getAllTraits());                          //reinit Character's list of traits
+
+
+            this.character = this.characterPresenter.save();
+
+            //TODO gérer si exception durant crud Traits
+            if (this.character != null) {
+                createTraits();
+                updateTraits();
+                deleteTraits();
+                imageUploadPanel.commit();
+
+                if(isNew)
+                    notifyCreated(this.character);
+                else
+                    notifyUpdated(this.character);
+
+                wrapper.closeIfWindow();
+
+
+            } else {
+                Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+
+
+    }
+
+    private boolean saveCheck()
+    {
         name.setComponentError(null);
         type.setComponentError(null);
         this.character.setName(name.getValue());
@@ -196,68 +262,30 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         {
             name.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
             type.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
+            return false;
         }
         else if(characterPresenter.checkExist()&&(this.character.getId()==0))
         {
             name.setComponentError(new UserError("This name character already exists", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
+            return false;
+        }
+        return true;
+    }
+
+    private void erase()
+    {
+        boolean eraseCok=false;
+        // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
+        eraseCok = this.characterPresenter.erase();
+        if (eraseCok)
+        {
+            imageUploadPanel.deleteImage();
+            notifyDeleted(this.character);
+            wrapper.closeIfWindow();
         }
         else {
-
-            this.character.setType(type.getValue().toString());
-            this.character.setNote(textArea.getValue());
-            this.character.setPicture(imageUploadPanel.getFileName());
-//            this.character.setAllTraits(traitTableCrud.getAllTraits());                          //reinit Character's list of traits
-
-            boolean eraseCok=false;
-            try {
-                switch (event.getButton().getCaption()) {
-
-                    case "Save": {
-
-                        this.character = this.characterPresenter.save();
-
-
-                        //TODO gérer si exception durant crud Traits
-                        if (this.character != null) {
-                            createTraits();
-                            updateTraits();
-                            deleteTraits();
-                            imageUploadPanel.commit();
-                            notifyCreated(this.character);
-                           wrapper.closeIfWindow();
-
-
-                        } else {
-                            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
-                            return;
-                        }
-
-                        break;
-                    }
-                    case "Erase": {
-                        // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
-                        eraseCok = this.characterPresenter.erase();
-                        if (eraseCok)
-                        {
-                            imageUploadPanel.deleteImage();
-                            notifyDeleted(this.character);
-                            wrapper.closeIfWindow();
-                        }
-                        else {
-                            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
-                            return;
-                        }
-                        break;
-                    }
-                    case "Show relations": {
-                        break;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            return;
         }
     }
 
@@ -341,7 +369,10 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
     @Override
     public void notifyUpdated(Character target) {
-
+        for(CrudListener l:listeners)
+        {
+            l.updated(target);
+        }
     }
 
     @Override

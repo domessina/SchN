@@ -1,5 +1,6 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
+import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.dao.SceneDao;
 import be.beme.schn.persistence.daoimpl.SceneDaoImpl;
@@ -8,7 +9,11 @@ import be.beme.schn.vaadin.narrative.view.SceneView;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Created by Dotista on 19-04-16.
@@ -23,6 +28,10 @@ public class ScenePresenter implements WrapperPanelPresenter {
     private Scene scene;
 
     private  SceneView view;
+
+    @Value("${file.root.path")
+    private static String BASE_DIR;
+
 
     @Override
     public Scene save() {
@@ -66,7 +75,13 @@ public class ScenePresenter implements WrapperPanelPresenter {
             this.scene=this.view.getScene();
             dao.delete(scene.getId());
 
-            dao.deleteImage(scene.getPicture(), 1, Integer.valueOf(VaadinSession.getCurrent().getAttribute("diagramId").toString()));
+            if(scene.getPicture()!=null)
+            {
+                VaadinSession session= VaadinSession.getCurrent();
+                String target= BASE_DIR+"Users\\"+session.getAttribute("userId")+"\\Diagrams\\"+session.getAttribute("diagramId").toString()+"\\Scenes\\"+scene.getPicture();
+                Files.delete(Paths.get(target));
+            }
+
 
         }
         catch (Exception e)                 //doens't matter if it's SQLException or other.

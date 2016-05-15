@@ -21,6 +21,5 @@ public interface SceneDao extends Dao {
 
     List<Scene> getAllScenesByChapter(int chapterId);
 
-    void deleteImage(String filename,int userId, int diagramId)  throws IOException;
 
 }

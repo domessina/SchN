@@ -3,6 +3,7 @@ package be.beme.schn.persistence.daoimpl;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.ChapterDao;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ChapterDaoImpl extends AbstractPersistenceService implements ChapterDao {
 
 
+
     @Override
     public int create(int diagramId, short phase, String title, short place, String note) {
 
@@ -33,6 +35,7 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
 
     @Override
     public void update(Object[] args) {
+
         jdbcTemplate.update("UPDATE public.\"Chapter\" SET phase=?,title=?,place=?,notes=? WHERE id=?",args,new int[]{
                 Types.SMALLINT,
                 Types.VARCHAR,
@@ -54,6 +57,7 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     @Override
     public Chapter getChapterById(int Id)
     {
+
         return jdbcTemplate.queryForObject("select * from \"Chapter\" where id=?",
                 new Object[]{Id},new ChapterMapper());
     }
