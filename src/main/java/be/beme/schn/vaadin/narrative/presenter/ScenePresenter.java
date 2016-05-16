@@ -29,8 +29,6 @@ public class ScenePresenter implements WrapperPanelPresenter {
 
     private  SceneView view;
 
-    @Value("${file.root.path")
-    private static String BASE_DIR;
 
 
     @Override
@@ -78,7 +76,7 @@ public class ScenePresenter implements WrapperPanelPresenter {
             if(scene.getPicture()!=null)
             {
                 VaadinSession session= VaadinSession.getCurrent();
-                String target= BASE_DIR+"Users\\"+session.getAttribute("userId")+"\\Diagrams\\"+session.getAttribute("diagramId").toString()+"\\Scenes\\"+scene.getPicture();
+                String target= Constants.BASE_DIR+"Users\\"+session.getAttribute("userId")+"\\Diagrams\\"+session.getAttribute("diagramId").toString()+"\\Scenes\\"+scene.getPicture();
                 Files.delete(Paths.get(target));
             }
 

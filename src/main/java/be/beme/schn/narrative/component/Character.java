@@ -12,8 +12,8 @@ public class Character implements NarrativeComponent{
     private String type;
     private String picture;
     private String note;
-    private List<UserProperty> userPropertyList;
-    private List<Trait> allTraits;
+    private List<UserProperty> userProperties;
+    private List<Trait> traits;
     private int diagram_id;
 
     public int getId() {
@@ -64,20 +64,20 @@ public class Character implements NarrativeComponent{
         this.diagram_id = diagram_id;
     }
 
-    public List<UserProperty> getUserPropertyList() {
-        return userPropertyList;
+    public List<UserProperty> getUserProperties() {
+        return userProperties;
     }
 
-    public void setUserPropertyList(List<UserProperty> userPropertyList) {
-        this.userPropertyList = userPropertyList;
+    public void setUserProperties(List<UserProperty> userProperties) {
+        this.userProperties = userProperties;
     }
 
-    public List<Trait> getAllTraits() {
-        return allTraits;
+    public List<Trait> getTraits() {
+        return traits;
     }
 
-    public void setAllTraits(List<Trait> allTraits) {
-        this.allTraits = allTraits;
+    public void setTraits(List<Trait> traits) {
+        this.traits = traits;
     }
 
     @Override

@@ -157,7 +157,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
     private Component buildFormLayoutUserProperties()
     {
-        userPropertyList = character.getUserPropertyList();
+        userPropertyList = character.getUserProperties();
         FormLayout formLayout= new FormLayout();
         try{
             for(UserProperty userProperty : userPropertyList)
@@ -223,7 +223,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
             this.character.setType(type.getValue().toString());
             this.character.setNote(textArea.getValue());
             this.character.setPicture(imageUploadPanel.getFileName());
-//            this.character.setAllTraits(traitTableCrud.getAllTraits());                          //reinit Character's list of traits
+//            this.character.setTraits(traitTableCrud.getTraits());                          //reinit Character's list of traits
 
 
             this.character = this.characterPresenter.save();
