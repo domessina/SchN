@@ -12,7 +12,7 @@ import javax.servlet.ServletRegistration;
 /**
  * Created by Dotista on 16-05-16.
  */
-public class AppInitializer  extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class ApiInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     protected Class<?>[] getRootConfigClasses() {

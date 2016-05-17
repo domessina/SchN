@@ -25,16 +25,17 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
 
     @Override
-    public int create(int chapterId, String tag, int place, String picture, String note) {
+    public int create(Scene s) {
         jdbcTemplate.update("insert into \"Scene\" (chapter_id,tag,place,picture,notes) values (?,?,?,?,?)"
-                ,chapterId,tag,place,picture,note);
+                ,s.getChapterId(),s.getTag(),s.getPlace(),s.getPicture(),s.getNote());
 
         return jdbcTemplate.queryForObject("select max(id) from \"Scene\" where chapter_id=?",
-                new Object[] {chapterId},Integer.class);
+                new Object[] {s.getChapterId()},Integer.class);
     }
 
     @Override
-    public void update(Object[] args) {
+    public void update(Scene s) {
+        Object[] args= new Object[]{s.getTag(),s.getPlace(),s.getPicture(),s.getNote()};
         jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, notes=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
                 Types.INTEGER,
@@ -55,6 +56,10 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
                 new Object[]{chapterId},new SceneMapper());
     }
 
+    @Override
+    public Scene getScene(int id) {
+      return null;
+    }
 
 
     @Override

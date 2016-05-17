@@ -22,17 +22,18 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
 
 
     @Override
-    public int create(int characterId, String name) {
+    public int create(Trait trait) {
         jdbcTemplate.update("insert into \"Trait\" (character_id,name) values (?,?)"
-                ,characterId,name);
+                ,trait.getCharacterId(),trait.getName());
 
         return jdbcTemplate.queryForObject("select max(id) from \"Trait\" where character_id=?",
-                new Object[] {characterId},Integer.class);
+                new Object[] {trait.getCharacterId()},Integer.class);
     }
 
     @Override
-    public void update(Object[] args)
+    public void update(Trait trait)
     {
+        Object[] args = new Object[]{trait.getCharacterId(),trait.getName(),trait.getId()};
         jdbcTemplate.update("UPDATE \"Trait\" SET character_id=?,name=? WHERE id=?",args,new int[]{
                 Types.INTEGER,
                 Types.VARCHAR,

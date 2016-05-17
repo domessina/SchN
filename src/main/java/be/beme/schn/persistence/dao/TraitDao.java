@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface TraitDao  extends Dao {
 
-    int create(int characterId, String name);
+    int create(Trait trait);
 
-    void update(Object[] args);
+    void update(Trait trait);
 
     void setScenes(int traitId, String[] scenesArray);
 

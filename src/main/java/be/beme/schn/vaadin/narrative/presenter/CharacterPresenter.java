@@ -43,22 +43,12 @@ public class CharacterPresenter implements WrapperPanelPresenter {
             int id;
             if(character.getId()==0)
             {
-                id=this.characterService.create(
-                        character.getDiagram_id(),
-                        character.getName(),
-                        character.getType(),
-                        character.getNote(),
-                        character.getPicture());
+                id=this.characterService.create(character);
                 this.character.setId(id);
             }
             else{
 
-                this.characterService.update(new Object[]{
-                        character.getName(),
-                        character.getType(),
-                        character.getNote(),
-                        character.getPicture(),
-                        character.getId()});
+                this.characterService.update(character);
             }
         }
         catch (Exception e)

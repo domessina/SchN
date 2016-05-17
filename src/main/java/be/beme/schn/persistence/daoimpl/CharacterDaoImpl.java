@@ -24,11 +24,12 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
 
 
     @Override
-    public int create(int diagramId, String name, String type, String note, String picture_url) {
-        jdbcTemplate.update("insert into public.\"Character\" (diagram_id,name,type,notes,picture_url) values (?,?,?,?,?)"
-                ,diagramId, name, type,note, picture_url);
+    public int create(Character c) {
+        jdbcTemplate.update("insert into public.\"Character\" (diagram_id,name,type,notes,picture_url) values (?,?,?,?,?)",
+                c.getDiagram_id(),c.getName(),c.getType(),c.getNote(),c.getPicture());
+
         return jdbcTemplate.queryForObject("select max(id) from public.\"Character\" where diagram_id=?",
-                new Object[] {diagramId},Integer.class);
+                new Object[] {c.getDiagram_id()},Integer.class);
 
     }
 
@@ -37,7 +38,8 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
      *              element in the array
      */
     @Override
-    public void update(Object[] args) {
+    public void update(Character c) {
+        Object[] args= new Object[]{c.getName(),c.getType(),c.getNote(),c.getPicture(),c.getId()};
         jdbcTemplate.update("UPDATE public.\"Character\" SET name=?,type=?,notes=?,picture_url=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
                 Types.VARCHAR,

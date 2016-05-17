@@ -11,15 +11,17 @@ import java.util.List;
  */
 public interface SceneDao extends Dao {
 
-    int create(int chapterId, String tag, int place, String picture, String note);
+    int create(Scene scene);
 
-    void update(Object[] args) ;
+    void update(Scene scene) ;
 
     void delete(int sceneId);
 
     void setPlace(int id, int place);
 
     List<Scene> getAllScenesByChapter(int chapterId);
+
+    Scene getScene(int id);
 
 
 }

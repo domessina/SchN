@@ -23,5 +23,7 @@ public interface ChapterDao extends Dao {
 
     List<Chapter> getAllChaptersByDiagram(int diagramId);
 
+    void setPosition(int pos, int id);
+
     void delete(int chapterId);
 }

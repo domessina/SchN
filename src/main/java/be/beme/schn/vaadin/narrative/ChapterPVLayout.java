@@ -8,6 +8,8 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class ChapterPVLayout extends VerticalLayout {
 
+    private int i=0;
+
     public void enableAllChildren(boolean enabled)
     {
         for(Component c: components)
@@ -16,18 +18,22 @@ public class ChapterPVLayout extends VerticalLayout {
         }
     }
 
-    public void removeChapter(int chapterId)
+    /**
+     * return index in layout of deleted chapter component
+     */
+    public int removeChapter(int chapterId)
     {
         removeComponent(getComponentByChapter(chapterId));
+        return i;
     }
-
 
 
 
 
     public Component getComponentByChapter(int chapterId)
     {
-        for(int i=0;i<getComponentCount();i++)
+        i=0;
+        for(i=0;i<getComponentCount();i++)
         {
             if(getComponent(i).getId().equals(String.valueOf(chapterId)))
             {

@@ -39,21 +39,11 @@ public class ScenePresenter implements WrapperPanelPresenter {
             int id;
             if(scene.getId()==0)
             {
-                id=this.dao.create(
-                        scene.getChapterId(),
-                        scene.getTag(),
-                        scene.getPlace(),
-                        scene.getPicture(),
-                        scene.getNote());
+                id=this.dao.create(scene);
                 this.scene.setId(id);
             }
             else{
-                this.dao.update(new Object[]{
-                        scene.getTag(),
-                        scene.getPlace(),
-                        scene.getPicture(),
-                        scene.getNote(),
-                        scene.getId()});
+                this.dao.update(scene);
             }
         }
         catch (Exception e)

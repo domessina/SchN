@@ -69,6 +69,11 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     }
 
     @Override
+    public void setPosition(int pos, int id) {
+        jdbcTemplate.update("UPDATE public.\"Chapter\" SET place=? WHERE id=?",pos,id);
+    }
+
+    @Override
     public List<Chapter> getAllChaptersByPhase(short phase, int diagramId)
     {
         return jdbcTemplate.query("select * from \"Chapter\" where phase=? and diagram_id=? order by place asc",
@@ -79,6 +84,8 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     public void delete(int chapterId) {
         jdbcTemplate.update("delete from \"Chapter\" where id=? ",chapterId);
     }
+
+
 
 
     private static final class ChapterMapper implements RowMapper<Chapter> {

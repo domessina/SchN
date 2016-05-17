@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface CharacterDao  extends Dao {
 
-    int create(int diagramId, String name, String type, String note, String picture_url) ;
+    int create(Character character) ;
 
     boolean exist(String characterName, int diagramId);
 
@@ -30,6 +30,6 @@ public interface CharacterDao  extends Dao {
 
     void removeCharacterFromScene(int charaterId, int sceneId);
 
-    void update( Object[] args); //J'aimerais remplacer par update(int characterId, Object[ args);
+    void update(Character character);
 
 }

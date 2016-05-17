@@ -83,4 +83,11 @@ public class ChapterPresenter implements WrapperPanelPresenter {
     public ChapterDao getDaoService() {
         return this.chapterService;
     }
+
+    public void reducePosition(int offset, int id)
+    {
+        int crrntPos=chapterService.getChapterById(id).getPosition();
+        crrntPos-=offset;
+        chapterService.setPosition(crrntPos,id);
+    }
 }

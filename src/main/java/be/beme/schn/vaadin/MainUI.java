@@ -4,10 +4,8 @@ import be.beme.schn.Constants;
 import be.beme.schn.CookieInitializer;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
-import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.dao.DiagramDao;
-import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
 import be.beme.schn.vaadin.dd.DDGridLayout;
 import be.beme.schn.vaadin.dd.GridLayoutDropEvent;
 import be.beme.schn.vaadin.dd.CustomDragAndDropWrapper;
@@ -18,7 +16,6 @@ import be.beme.schn.vaadin.narrative.view.*;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.FileResource;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
@@ -245,7 +242,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     private final class SceneUI implements  CrudListener<Scene>, Component.Listener
     {
-        private DDGridLayout gLayout;
+        private DDGridLayout DDGLayout;
 
         public void openScene(Scene scene)
         {
@@ -279,7 +276,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         {
             Scene scene = new Scene();
             scene.setChapterId(chapterId);
-            scene.setPlace(gLayout.getComponentCount());
+            scene.setPlace(DDGLayout.getLayout().getComponentCount());
             SceneView scV= new SceneView(scene);
             NWrapperPanel wrapper= new NWrapperPanel(scV);
             wrapper.setSizeFull();
@@ -303,21 +300,22 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             selectedChapterId=chapter.getId();
             Panel pstickers = new Panel();
             pstickers.setStyleName("background-grey");
-            gLayout= new DDGridLayout();
-            gLayout.addDropListener(this);
-            gLayout.layout.setSpacing(true);
-            gLayout.addStyleName("no-vertical-drag-hints");
-            gLayout.addStyleName("no-horizontal-drag-hints");
+            DDGLayout = new DDGridLayout();
+//            DDGLayout.setImmediate(true);                                                                                 //for DDGLayout.getComponentCount being up to date.
+            DDGLayout.addDropListener(this);
+            DDGLayout.getLayout().setSpacing(true);
+            DDGLayout.addStyleName("no-vertical-drag-hints");
+            DDGLayout.addStyleName("no-horizontal-drag-hints");
 
             try {
                 int rows = (int) Math.ceil(chapter.getScenes().size()/3);
-                gLayout.layout.removeAllComponents();
+                DDGLayout.getLayout().removeAllComponents();
 
                 if(rows==0)
                     rows=1;
 
-                gLayout.layout.setRows(rows);
-                gLayout.layout.setColumns(3);
+                DDGLayout.getLayout().setRows(rows);
+                DDGLayout.getLayout().setColumns(3);
 
                 for(Scene s : chapter.getScenes())
                 {
@@ -344,7 +342,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                     sticker.setHeight(18.5F,Unit.EM);
                     sticker.setStyleName("blue-hover",true);
                     sticker.setId(String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
-                    gLayout.addComponent(sticker);
+                    DDGLayout.addComponent(sticker);
 
                 }
 
@@ -354,10 +352,10 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 System.out.println("This chapter has no scenes");
             }
 
-            gLayout.layout.setWidth(100,Unit.PERCENTAGE);
+            DDGLayout.getLayout().setWidth(100,Unit.PERCENTAGE);
 
             pstickers.setSizeFull();
-            pstickers.setContent(gLayout);
+            pstickers.setContent(DDGLayout);
 
             return pstickers;
         }
@@ -388,7 +386,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             {
                 GridLayoutDropEvent e =(GridLayoutDropEvent) event;
 
-                CustomDragAndDropWrapper wrappedDrag=(CustomDragAndDropWrapper)gLayout.getLayout().getComponent(e.getX(),e.getY());
+                CustomDragAndDropWrapper wrappedDrag=(CustomDragAndDropWrapper) DDGLayout.getLayout().getComponent(e.getX(),e.getY());
                 Panel p=(Panel)wrappedDrag.getCompositionRoot();
                 scenePresenter.getDaoService().setPlace(Integer.valueOf(p.getId()),e.getIndex());
 
@@ -497,7 +495,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 panelSplitArray[i].setMinSplitPosition(20,Unit.PERCENTAGE);
                 panelSplitArray[i].setSplitPosition(20,Unit.PERCENTAGE);
             }
-            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
+//            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
 
         }
 
@@ -507,7 +505,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             Chapter chapter =new Chapter();
             chapter.setPhase(phaseSelected);
             chapter.setDiagramId(diagramId);
-            Integer position = (Integer) VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase");
+//            Integer position = (Integer) VaadinSession.getCurrent().getAttribute("chapterCountCrrntPhase");
+            Integer position = chapterLArray[phaseSelected].getComponentCount();
             chapter.setPosition(position.shortValue());
 
             ChapterView chapterView= new ChapterView(chapter);
@@ -570,7 +569,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             wrapper.addClickListener(event -> panelSplitArray[phaseSelected].setSecondComponent(sceneUI.loadSceneStickers(chapter)));
             chapterW.wrap(wrapper);
             chapterLArray[phaseSelected].addComponent(wrapper);
-            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
+//            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
             wrapper.setCaption("Chapter "+ chapterLArray[phaseSelected].getComponentCount());
 
         }
@@ -610,7 +609,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         @Override
         public void deleted(Chapter o) {
 
-            chapterLArray[(int)phaseSelected].removeChapter(o.getId());
+            ChapterPVLayout chapterLArray=this.chapterLArray[(int)phaseSelected];
+            int index=chapterLArray.removeChapter(o.getId());                                       //see doc of removeChapter of chapterLArray
 
             if(o.getScenes()!=null)
             {
@@ -644,6 +644,13 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             //value will be non negative again when loadStickers() is called
             //when no chapter is selected id =-1
             selectedChapterId=-1;
+
+            // position of following chapters reduced of 1
+            int count=chapterLArray.getComponentCount();
+            for(int i=index;i<count;i++)
+            {
+              chapterPresenter.reducePosition(1,Integer.valueOf(chapterLArray.getComponent(i).getId()));
+            }
 
         }
 

@@ -10,7 +10,7 @@ import com.vaadin.ui.GridLayout;
  * Created by Dotista on 23-04-16.
  */
 public class DDGridLayout extends CustomComponent {
-    public final GridLayout layout;
+    private final GridLayout layout;
     private final GridLayoutDropHandler dropHandler;
 
     public DDGridLayout() {

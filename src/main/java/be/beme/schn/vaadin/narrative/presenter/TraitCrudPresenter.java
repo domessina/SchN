@@ -22,7 +22,7 @@ public class TraitCrudPresenter implements CrudPresenter<Trait> {
     public boolean create(Trait trait) {
 
         try {
-            traitService.create(trait.getCharacterId(), trait.getName());
+            traitService.create(trait);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -34,7 +34,7 @@ public class TraitCrudPresenter implements CrudPresenter<Trait> {
     @Override
     public boolean update(Trait trait) {
         try {
-            traitService.update(new Object[]{trait.getCharacterId(), trait.getName(), trait.getId()});
+            traitService.update(trait);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
