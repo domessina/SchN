@@ -17,7 +17,9 @@ public interface SceneDao extends Dao {
 
     void delete(int sceneId);
 
-    void setPlace(int id, int place);
+    void setPlace(int place, int id);
+
+    int getNumberOfScenes(int chapterId);
 
     List<Scene> getAllScenesByChapter(int chapterId);
 

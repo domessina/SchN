@@ -276,7 +276,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         {
             Scene scene = new Scene();
             scene.setChapterId(chapterId);
-            scene.setPlace(ddGLayout.getLayout().getComponentCount());
+            scene.setPlace(scenePresenter.getDaoService().getNumberOfScenes(chapterId));
             SceneView scV= new SceneView(scene);
             NWrapperPanel wrapper= new NWrapperPanel(scV);
             wrapper.setSizeFull();
@@ -377,39 +377,42 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
         @Override
         public void deleted(Scene o) {
+
+            int index=o.getPlace();
+
+            //from deleted scene the position of following scenes are reduced of 1
+            List<Scene> scenes=scenePresenter.getDaoService().getAllScenesByChapter(o.getChapterId());
+
+            for(int i=index;i<scenes.size();i++)
+            {
+                scenePresenter.changePosition(-1,Integer.valueOf(scenes.get(i).getId()));
+            }
+
             tabSheet.removeTab(tabSheet.getTab(tabSheet.getSelectedTab()));
+
         }
 
         @Override
         public void componentEvent(Event event) {
             if(event instanceof GridLayoutDropEvent)
             {
+                //the stickers are already switched in the layout
                 GridLayoutDropEvent e =(GridLayoutDropEvent) event;
-                CustomDragAndDropWrapper wrappedDrag=(CustomDragAndDropWrapper) ddGLayout.getLayout().getComponent(e.getXdest(),e.getYdest());
-                Panel p=(Panel)wrappedDrag.getCompositionRoot();
 
                 //the scene id moved by the user
-                int idSceneDragged=Integer.valueOf(p.getId());
-                int newPos=e.getIndexdest();
-//                int oldPos=scenePresenter.getDaoService().getScene(idSceneDropped).getPlace();
-                int oldPos=e.getIndexsrc();
-
-
-
-
-
-               /* int oldPos=e.getIndex();
-                int count= ddGLayout.getComponentCount();*/
-                /*for(int i=index;i<count;i++)
-                {
-                    chapterPresenter.changePosition(-1,Integer.valueOf(chapterLArray.getComponent(i).getId()));
-                }*/
+                int idSceneDragged=Integer.valueOf(getSceneStickerId(e.getXdest(),e.getYdest()));
+                int idSceneMovedByForce=Integer.valueOf(getSceneStickerId(e.getXsrc(),e.getYsrc()));                    //the moved by force sticker is now at the place where the sticker dragged wa before to be dropped
+                                                                                                                        //the stickers dragged is the source of this event (which is in GridLayout)
+                scenePresenter.switchPosition(idSceneDragged,idSceneMovedByForce);
             }
 
-            //1. avoir le nouveau et ancienne place de la scene
-            //2. mettre la scène déplacée à la bonne pplace + update place
-            //3.trouver celui qui subit
-            //4. donner à celu iqui subit l'inversion l'ancienne position
+        }
+
+        private String getSceneStickerId(int x, int y)
+        {
+            CustomDragAndDropWrapper wrappedDrag=(CustomDragAndDropWrapper) ddGLayout.getLayout().getComponent(x,y);
+            Panel p=(Panel)wrappedDrag.getCompositionRoot();
+            return p.getId();
         }
     }
 
@@ -658,8 +661,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             panelSplitArray[phaseSelected].setSecondComponent(null);
             chapterList.remove(o);
 
-            //value will be non negative again when loadStickers() is called
             //when no chapter is selected id =-1
+            //value will be non negative again when calling loadStickers()
             selectedChapterId=-1;
 
             // position of following chapters reduced of 1

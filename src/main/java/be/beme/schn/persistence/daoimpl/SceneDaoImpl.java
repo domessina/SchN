@@ -62,9 +62,17 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
                 new Object[]{id},new SceneMapper());
     }
 
+    //method written here instead of chapterDaoImpl because we work on Scene table
+    @Override
+    public int getNumberOfScenes(int chapterId)
+    {
+        return jdbcTemplate.queryForObject("select count(*) from \"Scene\" where chapter_id=?",
+                new Object[] {chapterId},Integer.class);
+    }
+
 
     @Override
-    public void setPlace(int id, int place)
+    public void setPlace(int place, int id)
     {
         jdbcTemplate.update("update \"Scene\" SET place=? where id=?",place, id);
     }

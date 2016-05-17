@@ -53,7 +53,6 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     }
 
 
-
     @Override
     public Chapter getChapterById(int Id)
     {

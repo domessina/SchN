@@ -177,7 +177,6 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
 
         if(isNewScene)
         {
-
             notifyCreated(this.scene);
         }
         else
@@ -192,10 +191,11 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
     {
 //        imageUploadPanel.deleteImage();
         presenter.setView(this);
-
+        this.scene.setPlace(presenter.getPlace(scene.getId()));
         if(presenter.erase())
         {
             imageUploadPanel.deleteTmpDir();
+
             notifyDeleted(this.scene);
         }
         else
