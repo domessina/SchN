@@ -3,13 +3,11 @@ package be.beme.schn.vaadin.narrative.presenter;
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.dao.SceneDao;
-import be.beme.schn.persistence.daoimpl.SceneDaoImpl;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import be.beme.schn.vaadin.narrative.view.SceneView;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
@@ -23,7 +21,7 @@ import java.nio.file.Paths;
 public class ScenePresenter implements WrapperPanelPresenter {
 
     @Autowired
-    private SceneDao dao;
+    private SceneDao sceneService;
 
     private Scene scene;
 
@@ -39,11 +37,11 @@ public class ScenePresenter implements WrapperPanelPresenter {
             int id;
             if(scene.getId()==0)
             {
-                id=this.dao.create(scene);
+                id=this.sceneService.create(scene);
                 this.scene.setId(id);
             }
             else{
-                this.dao.update(scene);
+                this.sceneService.update(scene);
             }
         }
         catch (Exception e)
@@ -61,7 +59,7 @@ public class ScenePresenter implements WrapperPanelPresenter {
         {
 
             this.scene=this.view.getScene();
-            dao.delete(scene.getId());
+            sceneService.delete(scene.getId());
 
             if(scene.getPicture()!=null)
             {
@@ -87,8 +85,15 @@ public class ScenePresenter implements WrapperPanelPresenter {
 
     @Override
     public SceneDao getDaoService() {
-        return this.dao;
+        return this.sceneService;
     }
 
+    public void invertPosition(int id1,int id2)
+    {
+        int pos1 =sceneService.getScene(id1).getPlace();
+        int pos2 =sceneService.getScene(id2).getPlace();
+        sceneService.setPlace(id1,pos2);
+        sceneService.setPlace(id2,pos1);
+    }
 
 }

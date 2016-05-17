@@ -7,35 +7,34 @@ import com.vaadin.ui.Component;
  */
 public class GridLayoutDropEvent extends Component.Event {
 
-    private int column;
-    private int row;
-    private int index;
+    private int[] coordinates;
 
 
 
     /**
      * Constructs a new event with the specified source component.
      *
-     * @param source the source component of the event
-     * @param index the cell number of the source dropped
+     * @param source the GridLayout
+     * @param coordinates .
      */
-    public GridLayoutDropEvent(Component source, int column, int row, int index) {
+    public GridLayoutDropEvent(Component source,int[] coordinates) {
         super(source);
-        this.column=column;
-        this.row=row;
-        this.index=index;
+        this.coordinates=coordinates;
     }
 
+    public int getXdest() {return coordinates[0];}
 
-    public int getX() {
-        return column;
-    }
+    public int getYdest() {return coordinates[1];}
 
-    public int getIndex() {
-        return index;
-    }
+    /**
+     * @return index in the GridLayout where the component is dropped
+     */
+    public int getIndexdest() {return coordinates[2];}
 
-    public int getY() {
-        return row;
+    public int getXsrc() {return coordinates[3];}
+
+    public int getYsrc() {return coordinates[4];}
+
+    public int getIndexsrc() {return coordinates[5];
     }
 }

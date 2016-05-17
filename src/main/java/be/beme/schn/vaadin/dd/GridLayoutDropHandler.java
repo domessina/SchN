@@ -19,9 +19,12 @@ import java.util.ArrayList;
 public class GridLayoutDropHandler implements DropHandler {
 
     private final GridLayout layout;
+    private int indexdest=0;
     private int xdest;
     private int ydest;
-    private int indexdest;
+    private int indexsrc=0;
+    private int xsrc;
+    private int ysrc;
     private ArrayList<Component.Listener> listeners;
 
     public GridLayoutDropHandler(final GridLayout layout) {
@@ -42,17 +45,26 @@ public class GridLayoutDropHandler implements DropHandler {
         if (sourceComponent instanceof CustomDragAndDropWrapper)
         {
             final TargetDetails dropTargetData = dropEvent.getTargetDetails();
-            final DropTarget target = dropTargetData.getTarget();
-            findComponent(target);
+            final DropTarget target = dropTargetData.getTarget();                                                       //DropTarget extends Component
+            int[] results=findComponent(target);
+            indexdest=results[0];
+            xdest=results[1];
+            ydest=results[2];
+
+            results=findComponent(sourceComponent);
+            indexsrc=results[0];
+            xsrc=results[1];
+            ysrc=results[2];
+
             layout.replaceComponent(layout.getComponent(xdest,ydest),sourceComponent);
         }
 
         fireDropEvent();
     }
 
-    private void findComponent(DropTarget target)
+    private int[] findComponent(Component target)
     {
-        indexdest=0;
+        int index=0;
         for(int y=0;y<layout.getRows();y++)
         {
             for(int x=0;x<layout.getColumns();x++)
@@ -60,13 +72,12 @@ public class GridLayoutDropHandler implements DropHandler {
 
                 if(layout.getComponent(x,y)==target)
                 {
-                    xdest=x;
-                    ydest=y;
-                    return;
+                    return new int[]{index,x,y};
                 }
-                indexdest++;
+                index++;
             }
         }
+        return null;
     }
 
     public void addDropListener(Component.Listener listener)
@@ -78,7 +89,7 @@ public class GridLayoutDropHandler implements DropHandler {
     {
         for(Component.Listener l: listeners)
         {
-            l.componentEvent(new GridLayoutDropEvent(this.layout,xdest,ydest,indexdest));
+            l.componentEvent(new GridLayoutDropEvent(this.layout,new int[]{xdest,ydest,indexdest,xsrc,ysrc,indexsrc}));
         }
     }
 }

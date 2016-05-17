@@ -242,7 +242,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     private final class SceneUI implements  CrudListener<Scene>, Component.Listener
     {
-        private DDGridLayout DDGLayout;
+        private DDGridLayout ddGLayout;
 
         public void openScene(Scene scene)
         {
@@ -276,7 +276,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         {
             Scene scene = new Scene();
             scene.setChapterId(chapterId);
-            scene.setPlace(DDGLayout.getLayout().getComponentCount());
+            scene.setPlace(ddGLayout.getLayout().getComponentCount());
             SceneView scV= new SceneView(scene);
             NWrapperPanel wrapper= new NWrapperPanel(scV);
             wrapper.setSizeFull();
@@ -300,22 +300,22 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             selectedChapterId=chapter.getId();
             Panel pstickers = new Panel();
             pstickers.setStyleName("background-grey");
-            DDGLayout = new DDGridLayout();
-//            DDGLayout.setImmediate(true);                                                                                 //for DDGLayout.getComponentCount being up to date.
-            DDGLayout.addDropListener(this);
-            DDGLayout.getLayout().setSpacing(true);
-            DDGLayout.addStyleName("no-vertical-drag-hints");
-            DDGLayout.addStyleName("no-horizontal-drag-hints");
+            ddGLayout = new DDGridLayout();
+//            ddGLayout.setImmediate(true);                                                                                 //for ddGLayout.getComponentCount being up to date.
+            ddGLayout.addDropListener(this);
+            ddGLayout.getLayout().setSpacing(true);
+            ddGLayout.addStyleName("no-vertical-drag-hints");
+            ddGLayout.addStyleName("no-horizontal-drag-hints");
 
             try {
                 int rows = (int) Math.ceil(chapter.getScenes().size()/3);
-                DDGLayout.getLayout().removeAllComponents();
+                ddGLayout.getLayout().removeAllComponents();
 
                 if(rows==0)
                     rows=1;
 
-                DDGLayout.getLayout().setRows(rows);
-                DDGLayout.getLayout().setColumns(3);
+                ddGLayout.getLayout().setRows(rows);
+                ddGLayout.getLayout().setColumns(3);
 
                 for(Scene s : chapter.getScenes())
                 {
@@ -342,7 +342,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                     sticker.setHeight(18.5F,Unit.EM);
                     sticker.setStyleName("blue-hover",true);
                     sticker.setId(String.valueOf(s.getId()));        //rajotuer Sc devant parce que vaadin nomme déjà les id par défaut avec des nombres. Faut pas que l'id d'une scène soit égal à l'id d'un autre compoenent Vaadin
-                    DDGLayout.addComponent(sticker);
+                    ddGLayout.addComponent(sticker);
 
                 }
 
@@ -352,10 +352,10 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 System.out.println("This chapter has no scenes");
             }
 
-            DDGLayout.getLayout().setWidth(100,Unit.PERCENTAGE);
+            ddGLayout.getLayout().setWidth(100,Unit.PERCENTAGE);
 
             pstickers.setSizeFull();
-            pstickers.setContent(DDGLayout);
+            pstickers.setContent(ddGLayout);
 
             return pstickers;
         }
@@ -385,14 +385,31 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             if(event instanceof GridLayoutDropEvent)
             {
                 GridLayoutDropEvent e =(GridLayoutDropEvent) event;
-
-                CustomDragAndDropWrapper wrappedDrag=(CustomDragAndDropWrapper) DDGLayout.getLayout().getComponent(e.getX(),e.getY());
+                CustomDragAndDropWrapper wrappedDrag=(CustomDragAndDropWrapper) ddGLayout.getLayout().getComponent(e.getXdest(),e.getYdest());
                 Panel p=(Panel)wrappedDrag.getCompositionRoot();
-                scenePresenter.getDaoService().setPlace(Integer.valueOf(p.getId()),e.getIndex());
 
+                //the scene id moved by the user
+                int idSceneDragged=Integer.valueOf(p.getId());
+                int newPos=e.getIndexdest();
+//                int oldPos=scenePresenter.getDaoService().getScene(idSceneDropped).getPlace();
+                int oldPos=e.getIndexsrc();
+
+
+
+
+
+               /* int oldPos=e.getIndex();
+                int count= ddGLayout.getComponentCount();*/
+                /*for(int i=index;i<count;i++)
+                {
+                    chapterPresenter.changePosition(-1,Integer.valueOf(chapterLArray.getComponent(i).getId()));
+                }*/
             }
 
-
+            //1. avoir le nouveau et ancienne place de la scene
+            //2. mettre la scène déplacée à la bonne pplace + update place
+            //3.trouver celui qui subit
+            //4. donner à celu iqui subit l'inversion l'ancienne position
         }
     }
 
@@ -649,7 +666,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             int count=chapterLArray.getComponentCount();
             for(int i=index;i<count;i++)
             {
-              chapterPresenter.reducePosition(1,Integer.valueOf(chapterLArray.getComponent(i).getId()));
+              chapterPresenter.changePosition(-1,Integer.valueOf(chapterLArray.getComponent(i).getId()));
             }
 
         }

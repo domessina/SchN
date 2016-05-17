@@ -58,7 +58,8 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
     @Override
     public Scene getScene(int id) {
-      return null;
+        return jdbcTemplate.queryForObject("select * from \"Scene\" where id=?",
+                new Object[]{id},new SceneMapper());
     }
 
 

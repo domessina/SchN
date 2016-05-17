@@ -84,10 +84,10 @@ public class ChapterPresenter implements WrapperPanelPresenter {
         return this.chapterService;
     }
 
-    public void reducePosition(int offset, int id)
+    public void changePosition(int offset, int id)
     {
         int crrntPos=chapterService.getChapterById(id).getPosition();
-        crrntPos-=offset;
+        crrntPos+=offset;
         chapterService.setPosition(crrntPos,id);
     }
 }

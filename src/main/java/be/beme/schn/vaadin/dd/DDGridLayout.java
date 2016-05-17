@@ -35,6 +35,15 @@ public class DDGridLayout extends CustomComponent {
 
     }
 
+    public int findX(int index)
+    {
+        return index%layout.getColumns();
+    }
+    public int findY(int index, int x)
+    {
+        return (index-x)/layout.getRows();
+    }
+
     public GridLayout getLayout()
     {
         return this.layout;
