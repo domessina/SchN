@@ -90,20 +90,20 @@ public class ScenePresenter implements WrapperPanelPresenter {
 
     public int getPlace(int id)
     {
-        return sceneService.getScene(id).getPlace();
+        return sceneService.getNComponent(id).getPlace();
     }
 
     public void switchPosition(int id1,int id2)
     {
-        int pos1 =sceneService.getScene(id1).getPlace();
-        int pos2 =sceneService.getScene(id2).getPlace();
+        int pos1 =sceneService.getNComponent(id1).getPlace();
+        int pos2 =sceneService.getNComponent(id2).getPlace();
         sceneService.setPlace(pos2,id1);
         sceneService.setPlace(pos1,id2);
     }
 
     public void changePosition(int offset, int id)
     {
-        int crrntPos=sceneService.getScene(id).getPlace();
+        int crrntPos=sceneService.getNComponent(id).getPlace();
         crrntPos+=offset;
         sceneService.setPlace(crrntPos,id);
     }

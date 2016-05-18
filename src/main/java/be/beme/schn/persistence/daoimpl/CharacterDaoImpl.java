@@ -1,6 +1,7 @@
 package be.beme.schn.persistence.daoimpl;
 
 import be.beme.schn.narrative.component.Character;
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.CharacterDao;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,7 +25,8 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
 
 
     @Override
-    public int create(Character c) {
+    public int create(NarrativeComponent component) {
+        Character c=(Character)component;
         jdbcTemplate.update("insert into public.\"Character\" (diagram_id,name,type,notes,picture_url) values (?,?,?,?,?)",
                 c.getDiagram_id(),c.getName(),c.getType(),c.getNote(),c.getPicture());
 
@@ -33,12 +35,14 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
 
     }
 
-    /**
+/**
      * @param args  Must be ordered like the query, the characterId is <b>the last</b>
      *              element in the array
      */
+
     @Override
-    public void update(Character c) {
+    public void update(NarrativeComponent component) {
+        Character c=(Character)component;
         Object[] args= new Object[]{c.getName(),c.getType(),c.getNote(),c.getPicture(),c.getId()};
         jdbcTemplate.update("UPDATE public.\"Character\" SET name=?,type=?,notes=?,picture_url=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
@@ -46,6 +50,18 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
                 Types.VARCHAR,
                 Types.VARCHAR,
                 Types.INTEGER});//si probleme avec LONGVARCHAR pour TEXT, use VARCHAR
+    }
+
+      @Override
+    public void delete(int componentId)
+    {
+        jdbcTemplate.update("delete from public.\"Character\" where id=? ",componentId);
+    }
+
+    @Override
+    public Character getNComponent(int id)
+    {
+        return jdbcTemplate.queryForObject("select * from public.\"Character\" where id = ?",new Object[]{id}, new CharacterMapper());
     }
 
     @Override
@@ -67,11 +83,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
     }
 
 
-    @Override
-    public Character getCharacterById(int id)
-    {
-        return jdbcTemplate.queryForObject("select * from public.\"Character\" where id = ?",new Object[]{id}, new CharacterMapper());
-    }
+
 
     @Override
     public void setPicture(int characterId,String pictureURL) {
@@ -84,11 +96,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
                 new Object[]{diagramId},new CharacterMapper());
     }
 
-    @Override
-    public void delete(int characterId)
-    {
-        jdbcTemplate.update("delete from public.\"Character\" where id=? ",characterId);
-    }
+
 
 @Override
     public void addCharacterInScene(int characterId, int sceneId)

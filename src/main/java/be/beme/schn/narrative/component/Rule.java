@@ -3,20 +3,12 @@ package be.beme.schn.narrative.component;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Rule implements NarrativeComponent {
+public class Rule extends NarrativeComponent {
 
-    private int id;
+
     private String rule;
     private boolean enabled;
     private int diagramId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getRule() {
         return rule;

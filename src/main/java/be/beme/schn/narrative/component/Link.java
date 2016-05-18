@@ -5,22 +5,13 @@ package be.beme.schn.narrative.component;
  */
 
 /**This creates a relationship form characterA to characterB. But also a trait challenged*/
-public class Link implements NarrativeComponent  {                  //TODO renommer Link , lire pq dans la javadoc juste au dessus. Apopelle ça relation. Mais relation ET traitchallenged utilisent linkView
+public class Link extends NarrativeComponent  {                  //TODO renommer Link , lire pq dans la javadoc juste au dessus. Apopelle ça relation. Mais relation ET traitchallenged utilisent linkView
 
-    private int id;
     private String name;
     private int fromCharacterId;
     private int toCharacterId;
     private boolean rel;
     private int scene_Id;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

@@ -3,23 +3,13 @@ package be.beme.schn.narrative.component;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Scene implements NarrativeComponent {
+public class Scene extends NarrativeComponent {
 
-
-    private int id;
     private int chapterId;
     private String picture ;
     private int place;
     private String note;
     private String tag;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getPicture() {
         return picture;

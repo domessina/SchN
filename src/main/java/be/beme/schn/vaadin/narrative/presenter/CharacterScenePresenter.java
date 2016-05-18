@@ -4,6 +4,7 @@ package be.beme.schn.vaadin.narrative.presenter;
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.Dao;
 import be.beme.schn.persistence.dao.CharacterDao;
+import be.beme.schn.persistence.dao.CharacterSceneDao;
 import be.beme.schn.persistence.dao.TraitDao;
 import be.beme.schn.persistence.dao.TraitSceneDao;
 import be.beme.schn.persistence.daoimpl.TraitDaoImpl;
@@ -48,7 +49,7 @@ public class CharacterScenePresenter implements NarrativePresenter {
     }
 
     @Override
-    public Dao getDaoService() {
+    public CharacterSceneDao getDaoService() {
         return null;
     }
 

@@ -1,6 +1,7 @@
 package be.beme.schn.persistence.daoimpl;
 
 import be.beme.schn.narrative.component.Character;
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.CharacterSceneDao;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,6 +28,25 @@ public class CharacterSceneDaoImpl extends AbstractPersistenceService implements
                 new Object[]{sceneId},new CharacterMapper());
     }
 
+    @Override
+    public NarrativeComponent getNComponent(int componentId) {
+        return null;
+    }
+
+    @Override
+    public int create(NarrativeComponent component) {
+        return 0;
+    }
+
+    @Override
+    public void update(NarrativeComponent component) {
+
+    }
+
+    @Override
+    public void delete(int componentId) {
+
+    }
 
 
     private static final class CharacterMapper implements RowMapper<Character> {

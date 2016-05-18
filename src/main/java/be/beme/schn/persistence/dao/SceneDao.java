@@ -1,5 +1,6 @@
 package be.beme.schn.persistence.dao;
 
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.Dao;
 
@@ -9,13 +10,7 @@ import java.util.List;
 /**
  * Created by Dorito on 21-03-16.
  */
-public interface SceneDao extends Dao {
-
-    int create(Scene scene);
-
-    void update(Scene scene) ;
-
-    void delete(int sceneId);
+public interface SceneDao extends NarrativeComponentDao {
 
     void setPlace(int place, int id);
 
@@ -23,7 +18,7 @@ public interface SceneDao extends Dao {
 
     List<Scene> getAllScenesByChapter(int chapterId);
 
-    Scene getScene(int id);
-
+    @Override
+    Scene getNComponent(int id);
 
 }

@@ -1,6 +1,8 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.Dao;
+import be.beme.schn.persistence.dao.NarrativeComponentDao;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 
 /**
@@ -10,5 +12,5 @@ public interface NarrativePresenter  {                                      //TO
 
     void setView(NarrativeView narrativeView);
 
-    Dao getDaoService();
+    NarrativeComponentDao getDaoService();
 }

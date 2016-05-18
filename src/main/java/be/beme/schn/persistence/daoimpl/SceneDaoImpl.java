@@ -1,6 +1,6 @@
 package be.beme.schn.persistence.daoimpl;
 
-import be.beme.schn.Constants;
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.SceneDao;
@@ -8,9 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -25,7 +22,8 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
 
     @Override
-    public int create(Scene s) {
+    public int create(NarrativeComponent component) {
+        Scene s=(Scene)component;
         jdbcTemplate.update("insert into \"Scene\" (chapter_id,tag,place,picture,notes) values (?,?,?,?,?)"
                 ,s.getChapterId(),s.getTag(),s.getPlace(),s.getPicture(),s.getNote());
 
@@ -34,7 +32,8 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     }
 
     @Override
-    public void update(Scene s) {
+    public void update(NarrativeComponent component) {
+       Scene s=(Scene)component;
         Object[] args= new Object[]{s.getTag(),s.getPlace(),s.getPicture(),s.getNote(),s.getId()};
         jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, notes=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
@@ -44,6 +43,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
                 Types.INTEGER});//si probleme avec LONGVARCHAR pour TEXT, use VARCHAR
     }
 
+    @Override
     public void delete(int SceneId)
     {
         jdbcTemplate.update("delete from \"Scene\" where id=? ",SceneId);
@@ -57,7 +57,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     }
 
     @Override
-    public Scene getScene(int id) {
+    public Scene getNComponent(int id) {
         return jdbcTemplate.queryForObject("select * from \"Scene\" where id=?",
                 new Object[]{id},new SceneMapper());
     }

@@ -1,6 +1,8 @@
 package be.beme.schn.persistence.dao;
 
+import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.Dao;
 
 import java.util.List;
@@ -8,9 +10,12 @@ import java.util.List;
 /**
  * Created by Dorito on 21-03-16.
  */
-public interface CharacterDao  extends Dao {
+public interface CharacterDao  extends NarrativeComponentDao {
 
-    int create(Character character) ;
+
+
+    @Override
+    Character getNComponent(int id);
 
     boolean exist(String characterName, int diagramId);
 
@@ -22,14 +27,9 @@ public interface CharacterDao  extends Dao {
 
     List<Character> getAllCharactersByDiagram(int diagramId);
 
-    Character getCharacterById(int id);
-
-    void delete(int chapterId);
-
     void addCharacterInScene(int characterId, int sceneId);
 
     void removeCharacterFromScene(int charaterId, int sceneId);
 
-    void update(Character character);
 
 }

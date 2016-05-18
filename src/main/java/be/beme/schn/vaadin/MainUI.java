@@ -450,7 +450,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
         private void showCharacter(int id)
         {
-            Character character = characterPresenter.getDaoService().getCharacterById(id);
+            Character character = characterPresenter.getDaoService().getNComponent(id);
             CharacterView characterView = new CharacterView(character, traitPresenter);
             characterView.setHandler(characterPresenter);
             characterView.addCrudListener(MainUI.this);

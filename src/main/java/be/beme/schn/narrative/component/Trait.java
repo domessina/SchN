@@ -3,9 +3,8 @@ package be.beme.schn.narrative.component;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Trait implements NarrativeComponent {
+public class Trait extends NarrativeComponent {
 
-    private int id;
     private String name;
     private int[] scenes_id;
     private int characterId;
@@ -18,14 +17,6 @@ public class Trait implements NarrativeComponent {
         this.id=id;
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

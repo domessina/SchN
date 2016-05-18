@@ -1,12 +1,11 @@
 package be.beme.schn.persistence.daoimpl;
 
 import be.beme.schn.narrative.component.Chapter;
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.ChapterDao;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
@@ -24,7 +23,8 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
 
 
     @Override
-    public int create(Chapter chapter) {
+    public int create(NarrativeComponent component) {
+        Chapter chapter=(Chapter)component;
 
         jdbcTemplate.update("insert into \"Chapter\" (diagram_id,phase,title, place, notes) values (?,?,?,?,?)"
                 ,chapter.getDiagramId(), chapter.getPhase(), chapter.getTitle(), chapter.getPosition(),chapter.getNote());
@@ -34,8 +34,8 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     }
 
     @Override
-    public void update(Chapter chapter) {
-
+    public void update(NarrativeComponent component) {
+        Chapter chapter=(Chapter)component;
         Object[] args= new Object[]{chapter.getPhase(),chapter.getTitle(),chapter.getPosition(),chapter.getNote(),chapter.getId()};
         jdbcTemplate.update("UPDATE public.\"Chapter\" SET phase=?,title=?,place=?,notes=? WHERE id=?",args,new int[]{
                 Types.SMALLINT,
@@ -55,7 +55,7 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
 
 
     @Override
-    public Chapter getChapterById(int Id)
+    public Chapter getNComponent(int Id)
     {
 
         return jdbcTemplate.queryForObject("select * from \"Chapter\" where id=?",

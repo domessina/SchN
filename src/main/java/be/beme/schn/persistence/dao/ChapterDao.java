@@ -8,22 +8,16 @@ import java.util.List;
 /**
  * Created by Dorito on 21-03-16.
  */
-public interface ChapterDao extends Dao {
-
-    int create(Chapter chapter);
+public interface ChapterDao extends NarrativeComponentDao {
 
     void setNote(int chapterId, String note);
 
-    void update(Chapter chapter);
-
-    Chapter getChapterById(int chapterId);
-
+    @Override
+    Chapter getNComponent(int chapterId);
 
     List<Chapter> getAllChaptersByPhase(short phase, int diagramId);
 
     List<Chapter> getAllChaptersByDiagram(int diagramId);
 
     void setPosition(int pos, int id);
-
-    void delete(int chapterId);
 }

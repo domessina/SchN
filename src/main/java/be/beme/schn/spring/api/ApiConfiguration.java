@@ -58,5 +58,4 @@ public class ApiConfiguration extends WebMvcConfigurerAdapter {
         return new JsonViewResolver();
     }
 
-
 }

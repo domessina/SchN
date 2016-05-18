@@ -5,23 +5,14 @@ import java.util.List;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Character implements NarrativeComponent{
+public class Character extends NarrativeComponent{
 
-    private int id;
     private String name;
     private String type;
     private String picture;
     private String note;
     private List<UserProperty> userProperties;
     private int diagram_id;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

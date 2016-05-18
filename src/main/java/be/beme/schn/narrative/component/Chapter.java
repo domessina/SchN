@@ -5,10 +5,8 @@ import java.util.List;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Chapter implements NarrativeComponent {
+public class Chapter extends NarrativeComponent {
 
-
-    private int id;
     private short phase;
     private String title;
     private short position;
@@ -21,15 +19,6 @@ public class Chapter implements NarrativeComponent {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
-    @Override
-    public void setId(int id) {
-        this.id = id;
     }
 
     public short getPhase() {

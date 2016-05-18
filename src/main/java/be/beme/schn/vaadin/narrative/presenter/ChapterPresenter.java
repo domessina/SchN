@@ -77,7 +77,7 @@ public class ChapterPresenter implements WrapperPanelPresenter {
 
     public void changePosition(int offset, int id)
     {
-        int crrntPos=chapterService.getChapterById(id).getPosition();
+        int crrntPos=chapterService.getNComponent(id).getPosition();
         crrntPos+=offset;
         chapterService.setPosition(crrntPos,id);
     }

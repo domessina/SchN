@@ -3,9 +3,8 @@ package be.beme.schn.narrative.component;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class UserProperty implements NarrativeComponent{
+public class UserProperty extends NarrativeComponent{
 
-    private int id;
     private String name;
     private boolean typeList;
     private String value;
@@ -15,19 +14,12 @@ public class UserProperty implements NarrativeComponent{
     {
 
     }
-    public UserProperty(String name, String value)//TODO ne garder que constructeur par défaut en private poru tous les NarrativeCompoenent
+    public UserProperty(String name, String value)
     {
         this.name=name;
         this.value=value;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

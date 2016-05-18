@@ -3,21 +3,12 @@ package be.beme.schn.narrative.component;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Outline implements NarrativeComponent {
+public class Outline extends NarrativeComponent {
 
-    private int id;
     private int propertyId;
     private String type;
     private String value;
     private String color;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getPropertyId() {
         return propertyId;

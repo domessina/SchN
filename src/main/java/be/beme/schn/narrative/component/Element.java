@@ -3,20 +3,11 @@ package be.beme.schn.narrative.component;
 /**
  * Created by Dorito on 22-03-16.
  */
-public class Element implements NarrativeComponent {
+public class Element extends  NarrativeComponent {
 
-    private int id;
     private String note;
     private String name;
     private  int diagramId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNote() {
         return note;
