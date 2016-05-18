@@ -10,11 +10,11 @@ import java.util.List;
  */
 public interface ChapterDao extends Dao {
 
-    int create(int diagramId, short phase, String title, short place, String note);
+    int create(Chapter chapter);
 
     void setNote(int chapterId, String note);
 
-    void update(Object[] args);
+    void update(Chapter chapter);
 
     Chapter getChapterById(int chapterId);
 

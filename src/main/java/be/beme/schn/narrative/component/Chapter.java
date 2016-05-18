@@ -14,7 +14,6 @@ public class Chapter implements NarrativeComponent {
     private short position;
     private int diagramId;
     private String note;
-    private List<Scene> scenes;
 
     public String getNote() {
         return note;
@@ -65,11 +64,4 @@ public class Chapter implements NarrativeComponent {
         this.diagramId = diagramId;
     }
 
-    public List<Scene> getScenes() {
-        return scenes;
-    }
-
-    public void setScenes(List<Scene> scenes) {
-        this.scenes = scenes;
-    }
 }

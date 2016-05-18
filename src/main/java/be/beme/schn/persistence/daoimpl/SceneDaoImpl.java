@@ -35,7 +35,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
 
     @Override
     public void update(Scene s) {
-        Object[] args= new Object[]{s.getTag(),s.getPlace(),s.getPicture(),s.getNote()};
+        Object[] args= new Object[]{s.getTag(),s.getPlace(),s.getPicture(),s.getNote(),s.getId()};
         jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, notes=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
                 Types.INTEGER,

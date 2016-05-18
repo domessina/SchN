@@ -1,10 +1,8 @@
 package be.beme.schn.spring.api.controller;
 
 import be.beme.schn.narrative.component.Character;
-import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.dao.CharacterDao;
 import be.beme.schn.persistence.dao.TraitDao;
-import be.beme.schn.spring.api.AbstractController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,15 +22,11 @@ public class CharacterController extends AbstractController {
     @Autowired
     CharacterDao characterService;
 
-    @Autowired
-    TraitDao traitService;
-
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Character> getCharacter(@PathVariable int id)
     {
         Character character = characterService.getCharacterById(id);
-        character.setTraits(traitService.getTraitsByCharacter(id));
         return new ResponseEntity<>(character, HttpStatus.OK);
     }
 
@@ -56,7 +50,7 @@ public class CharacterController extends AbstractController {
                 .path("/{id}")
                 .buildAndExpand(id).toUri();
         responseHeaders.setLocation(newCharURI);
-        return new ResponseEntity<>(character, HttpStatus.CREATED);
+        return new ResponseEntity<>(character,responseHeaders, HttpStatus.CREATED);
     }
 
 

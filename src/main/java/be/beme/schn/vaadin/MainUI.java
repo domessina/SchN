@@ -308,7 +308,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             ddGLayout.addStyleName("no-horizontal-drag-hints");
 
             try {
-                int rows = (int) Math.ceil(chapter.getScenes().size()/3);
+                int nbScenes=scenePresenter.getDaoService().getNumberOfScenes(chapter.getId());
+                int rows = (int) Math.ceil(nbScenes/3);
                 ddGLayout.getLayout().removeAllComponents();
 
                 if(rows==0)
@@ -317,7 +318,9 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 ddGLayout.getLayout().setRows(rows);
                 ddGLayout.getLayout().setColumns(3);
 
-                for(Scene s : chapter.getScenes())
+                List<Scene> scenes =scenePresenter.getDaoService().getAllScenesByChapter(chapter.getId());
+
+                for(Scene s : scenes)
                 {
                     Panel sticker= new Panel(s.getTag());
 
@@ -552,8 +555,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             {
                 for(Chapter chapter:chapterList)
                 {
-
-                    chapter.setScenes(scenePresenter.getDaoService().getAllScenesByChapter(chapter.getId()));
+//                    chapter.setScenes(scenePresenter.getDaoService().getAllScenesByChapter(chapter.getId()));
                     addChapterView(chapter);
                 }
 
@@ -632,9 +634,11 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             ChapterPVLayout chapterLArray=this.chapterLArray[(int)phaseSelected];
             int index=chapterLArray.removeChapter(o.getId());                                       //see doc of removeChapter of chapterLArray
 
-            if(o.getScenes()!=null)
+            int nbScenes=scenePresenter.getDaoService().getNumberOfScenes(o.getId());
+            if(nbScenes!=0)
             {
-                for (Scene s : o.getScenes())
+                List<Scene> scenes =scenePresenter.getDaoService().getAllScenesByChapter(o.getId());
+                for (Scene s : scenes)
                 {
                     try{
 
