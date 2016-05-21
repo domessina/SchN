@@ -19,17 +19,12 @@ public interface CharacterDao  extends NarrativeComponentDao {
 
     boolean exist(String characterName, int diagramId);
 
-    List<Character> getAllCharactersByScene(int sceneId);
-
     void setNote(int characterId, String note);
 
     void setPicture(int characterId, String pictureURL);
 
     List<Character> getAllCharactersByDiagram(int diagramId);
 
-    void addCharacterInScene(int characterId, int sceneId);
-
-    void removeCharacterFromScene(int charaterId, int sceneId);
 
 
 }

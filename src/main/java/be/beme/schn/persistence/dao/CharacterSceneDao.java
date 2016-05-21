@@ -13,4 +13,9 @@ public interface CharacterSceneDao  extends NarrativeComponentDao{
 
     List<Character> getAllCharactersByScene(int sceneId);
 
+    void addCharacterInScene(int characterId, int sceneId);
+
+    void removeCharacterFromScene(int charaterId, int sceneId);
+
+
 }

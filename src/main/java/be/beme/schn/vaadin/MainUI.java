@@ -47,7 +47,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     CharacterPresenter characterPresenter;
 
     @Autowired
-    TraitCrudPresenter traitPresenter;
+    TraitCrudPresenter traitCrudPresenter;
 
     @Autowired
     ChapterPresenter chapterPresenter;
@@ -259,7 +259,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
             SceneViewExtended scvE= new SceneViewExtended(scene,characterPresenter.getDaoService().getAllCharactersByDiagram(diagramId));
 
-            List<Character> characterSc =characterPresenter.getDaoService().getAllCharactersByScene(scene.getId());
+            List<Character> characterSc =characterScenePresenter.getDaoService().getAllCharactersByScene(scene.getId());
             scvE.setChScenePresenter(characterScenePresenter);
             scvE.buildChScViews(characterSc);
 
@@ -430,7 +430,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             Character character= new Character();
             character.setDiagram_id(diagramId);
 
-            CharacterView characterView = new CharacterView(character, traitPresenter);
+            CharacterView characterView = new CharacterView(character, traitCrudPresenter);
             characterView.setHandler(characterPresenter);
             characterView.addCrudListener(MainUI.this);
             characterPresenter.setView(characterView);
@@ -451,7 +451,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         private void showCharacter(int id)
         {
             Character character = characterPresenter.getDaoService().getNComponent(id);
-            CharacterView characterView = new CharacterView(character, traitPresenter);
+            CharacterView characterView = new CharacterView(character, traitCrudPresenter);
             characterView.setHandler(characterPresenter);
             characterView.addCrudListener(MainUI.this);
             characterPresenter.setView(characterView);

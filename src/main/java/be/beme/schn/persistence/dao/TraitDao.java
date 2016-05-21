@@ -8,19 +8,13 @@ import java.util.List;
 /**
  * Created by Dorito on 21-03-16.
  */
-public interface TraitDao  extends Dao {
-
-    int create(Trait trait);
-
-    void update(Trait trait);
+public interface TraitDao  extends NarrativeComponentDao {
 
     void setScenes(int traitId, String[] scenesArray);
 
     List<Trait> getTraitsByCharacter(int characterId);
 
     void deleteAllTraitsByCharacter(int characterId);
-
-    void delete(int traitId);
 
 
 }

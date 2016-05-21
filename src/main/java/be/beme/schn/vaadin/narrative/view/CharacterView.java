@@ -46,7 +46,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     private ArrayList<Trait> deleteTraits;
     private  ImageUploadPanel imageUploadPanel;
     private CharacterPresenter characterPresenter;
-    private TraitCrudPresenter traitPresenter;
+    private TraitCrudPresenter traitCrudPresenter;
     private VerticalLayout vLayoutProperties;
     private NWrapperPanel wrapper;
     private Button buttonAddSc;
@@ -57,10 +57,10 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
 
 
-    public CharacterView(Character character, TraitCrudPresenter traitPresenter)
+    public CharacterView(Character character, TraitCrudPresenter traitCrudPresenter)
     {
         this.character= character;
-        this.traitPresenter = traitPresenter;
+        this.traitCrudPresenter = traitCrudPresenter;
         listeners=new ArrayList<>();
 
         setId("CharacterView");
@@ -157,7 +157,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
     private Component buildFormLayoutUserProperties()
     {
-        userPropertyList = character.getUserProperties();
+       /* userPropertyList = character.getUserProperties();
         FormLayout formLayout= new FormLayout();
         try{
             for(UserProperty userProperty : userPropertyList)
@@ -169,14 +169,15 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
             System.out.println("This character has no user properties");                 //TODO à bn'afficher que pou run certain niveau de debug
         }
 
-        return formLayout;
+        return formLayout;*/
+        return null;
     }
 
     private Table buildTraitTableCrud()
     {
         traitTableCrud = new TraitTableCrud("List of traits");
         traitTableCrud.addCrudListener(this);
-        traitTableCrud.fillTable(traitPresenter.getTraitService().getTraitsByCharacter(this.character.getId()));
+        traitTableCrud.fillTable(traitCrudPresenter.getTraitService().getTraitsByCharacter(this.character.getId()));
         createTraits=new ArrayList<>();
         updateTraits=new ArrayList<>();
         deleteTraits=new ArrayList<>();
@@ -310,7 +311,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         for(Trait t:createTraits)
         {
             t.setCharacterId(this.character.getId());
-            traitPresenter.create(t);
+            traitCrudPresenter.create(t);
         }
     }
 
@@ -323,7 +324,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     {
         for(Trait t:updateTraits)
         {
-            traitPresenter.update(t);
+            traitCrudPresenter.update(t);
         }
     }
 
@@ -336,7 +337,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     {
         for(Trait t:deleteTraits)
         {
-            traitPresenter.delete(t);
+            traitCrudPresenter.delete(t);
         }
     }
 

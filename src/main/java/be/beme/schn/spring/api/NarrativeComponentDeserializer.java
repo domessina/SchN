@@ -3,6 +3,7 @@ package be.beme.schn.spring.api;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
+import be.beme.schn.narrative.component.Trait;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -30,6 +31,7 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
                 case "phase":return isChapter(node);
                 case "chapterId":return isScene(node);
                 case "type":return  isCharacter(node);
+                case "characterId":return isTrait(node);
             }
         }
 
@@ -71,6 +73,15 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         character.setType(node.get("type").textValue());
 //        character.setUserProperties(node.get());
         return character;
+    }
+
+    private Trait isTrait(JsonNode node)
+    {
+        Trait trait= new Trait();
+        trait.setId(node.get("id").intValue());
+        trait.setName(node.get("name").textValue());
+        trait.setCharacterId(node.get("characterId").intValue());
+        return trait;
     }
 
 

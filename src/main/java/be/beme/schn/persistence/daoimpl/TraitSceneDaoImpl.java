@@ -1,6 +1,5 @@
 package be.beme.schn.persistence.daoimpl;
 
-import be.beme.schn.narrative.TraitScene;
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.TraitSceneDao;
@@ -18,7 +17,6 @@ import java.util.List;
 
 @Repository
 @Transactional
-
 public class TraitSceneDaoImpl extends AbstractPersistenceService implements TraitSceneDao {
 
     @Override
@@ -39,19 +37,6 @@ public class TraitSceneDaoImpl extends AbstractPersistenceService implements Tra
     }
 
 
-
-
-    private static final class TraitSceneMapper implements RowMapper<TraitScene> {
-
-        public TraitScene mapRow(ResultSet rs, int rowNum) throws SQLException {
-            TraitScene traitScene = new TraitScene();
-            traitScene.setTraitId(rs.getInt("trait_id"));
-            traitScene.setSceneId(rs.getInt("scene_id"));
-            traitScene.setDiagramId(rs.getInt("diagram_id"));
-
-            return traitScene;
-        }
-    }
     private static final class TraitMapper implements RowMapper<Trait> {
 
         public Trait mapRow(ResultSet rs, int rowNum) throws SQLException {

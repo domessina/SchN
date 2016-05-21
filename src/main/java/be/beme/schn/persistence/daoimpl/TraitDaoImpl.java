@@ -1,5 +1,6 @@
 package be.beme.schn.persistence.daoimpl;
 
+import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.TraitDao;
@@ -22,7 +23,8 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
 
 
     @Override
-    public int create(Trait trait) {
+    public int create(NarrativeComponent component) {
+        Trait trait=(Trait)component;
         jdbcTemplate.update("insert into \"Trait\" (character_id,name) values (?,?)"
                 ,trait.getCharacterId(),trait.getName());
 
@@ -31,8 +33,9 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
     }
 
     @Override
-    public void update(Trait trait)
+    public void update(NarrativeComponent component)
     {
+        Trait trait=(Trait)component;
         Object[] args = new Object[]{trait.getCharacterId(),trait.getName(),trait.getId()};
         jdbcTemplate.update("UPDATE \"Trait\" SET character_id=?,name=? WHERE id=?",args,new int[]{
                 Types.INTEGER,
@@ -41,16 +44,21 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
     }
 
     @Override
+    public void delete(int traitId)
+    {
+        jdbcTemplate.update("delete from public.\"Trait\" where id=? ",traitId);
+    }
+
+    @Override
+    public Trait getNComponent(int componentId) {
+        return jdbcTemplate.queryForObject("select * from \"Trait\" where id=?",new Object[]{componentId},new TraitMapper());
+    }
+
+    @Override
     public void setScenes(int traitId, String[] scenesArray) {
 
         jdbcTemplate.update("update Trait SET scenes_id=? where id=?",
                 scenesArray, traitId);
-    }
-
-    public Trait getTrait(int traitId)
-    {
-        return jdbcTemplate.queryForObject("select * from \"Trait\" where id=?",new TraitMapper());
-
     }
 
 
@@ -65,11 +73,9 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
         jdbcTemplate.update("delete from public.\"Trait\" where character_id=? ",characterId);
     }
 
-    @Override
-    public void delete(int traitId)
-    {
-        jdbcTemplate.update("delete from public.\"Trait\" where id=? ",traitId);
-    }
+
+
+
 
     private static final class TraitMapper implements RowMapper<Trait> {
 

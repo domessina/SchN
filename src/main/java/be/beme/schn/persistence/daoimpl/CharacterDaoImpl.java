@@ -98,29 +98,6 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
 
 
 
-@Override
-    public void addCharacterInScene(int characterId, int sceneId)
-    {
-        jdbcTemplate.update("insert into public.\"CharacterScene\" (character_id,scene_id) values (?,?)"
-                ,characterId,sceneId);
-    }
-
-    @Override
-    public void removeCharacterFromScene(int characterId, int sceneId)
-    {
-        jdbcTemplate.update("delete from \"CharacterScene\" where character_id=? and scene_id=?",
-                characterId,sceneId);
-    }
-
-
-
-    @Override
-    public List<Character> getAllCharactersByScene(int sceneId)
-    {
-        return jdbcTemplate.query("select * from \"Character\" inner join \"CharacterScene\" on \"Character\".id=\"CharacterScene\".character_id where \"CharacterScene\".scene_id=?",
-                new Object[]{sceneId},new CharacterMapper());
-    }
-
 
 
     private static final class CharacterMapper implements RowMapper<Character> {

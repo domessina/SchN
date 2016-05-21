@@ -1,8 +1,13 @@
 package be.beme.schn.narrative.component;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Created by Dorito on 22-03-16.
  */
+@Getter
+@Setter
 public class UserProperty extends NarrativeComponent{
 
     private String name;
@@ -10,46 +15,4 @@ public class UserProperty extends NarrativeComponent{
     private String value;
     private int element_id;
 
-    public UserProperty()
-    {
-
-    }
-    public UserProperty(String name, String value)
-    {
-        this.name=name;
-        this.value=value;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(boolean typeList) {
-        this.typeList = typeList;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public int getElement_id() {
-        return element_id;
-    }
-
-    public void setElement_id(int element_id) {
-        this.element_id = element_id;
-    }
 }

@@ -4,8 +4,10 @@ import com.vaadin.spring.annotation.EnableVaadin;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -42,5 +44,12 @@ public  class AppConfiguration {
         dataSource.setUser(environment.getProperty("jdbc.username",String.class));
         dataSource.setPassword(environment.getProperty("jdbc.password",String.class));
         return dataSource;
+    }
+
+    @Bean
+    public MessageSource messageSource(){
+        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("i18n/messages");
+        return messageSource;
     }
 }

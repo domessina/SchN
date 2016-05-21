@@ -1,9 +1,6 @@
 package be.beme.schn.spring.api;
 
-import be.beme.schn.persistence.dao.ChapterDao;
-import be.beme.schn.persistence.dao.CharacterDao;
-import be.beme.schn.persistence.dao.NarrativeComponentDao;
-import be.beme.schn.persistence.dao.SceneDao;
+import be.beme.schn.persistence.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +15,16 @@ public class NarrativeComponentDaoRegistry {
     private HashMap<String,NarrativeComponentDao> registry;
 
     @Autowired
-    public NarrativeComponentDaoRegistry(ChapterDao chapterDao,CharacterDao characterDao,SceneDao sceneDao)
+    public NarrativeComponentDaoRegistry(ChapterDao chapterDao,
+                                         CharacterDao characterDao,
+                                         SceneDao sceneDao,
+                                         TraitDao traitDao)
     {
         registry=new HashMap(3);
         registry.put("chapter",  chapterDao);
         registry.put("scene",  sceneDao);
         registry.put("character",  characterDao);
+        registry.put("trait",  traitDao);
     }
 
     public NarrativeComponentDao getDao(String type)

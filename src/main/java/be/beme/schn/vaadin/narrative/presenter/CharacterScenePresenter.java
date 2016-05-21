@@ -7,6 +7,7 @@ import be.beme.schn.persistence.dao.CharacterDao;
 import be.beme.schn.persistence.dao.CharacterSceneDao;
 import be.beme.schn.persistence.dao.TraitDao;
 import be.beme.schn.persistence.dao.TraitSceneDao;
+import be.beme.schn.persistence.daoimpl.CharacterSceneDaoImpl;
 import be.beme.schn.persistence.daoimpl.TraitDaoImpl;
 import be.beme.schn.vaadin.narrative.view.CharacterSceneView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
@@ -26,15 +27,14 @@ public class CharacterScenePresenter implements NarrativePresenter {
 
 
 
-
     @Autowired
-    public CharacterDao characterDao;
-
-    @Autowired
-    private TraitDao traitDao;
+    private CharacterSceneDao chScDao;
 
     @Autowired
     private TraitSceneDao traitSceneDao;
+
+    @Autowired
+    private TraitDao traitService;
 
 /*    @Autowired
     private LinkDao linkDao;*/
@@ -50,7 +50,7 @@ public class CharacterScenePresenter implements NarrativePresenter {
 
     @Override
     public CharacterSceneDao getDaoService() {
-        return null;
+        return chScDao;
     }
 
     public boolean save(){
@@ -153,25 +153,17 @@ public class CharacterScenePresenter implements NarrativePresenter {
         return linkDao.getLinksBy(characterId,sceneId);
     }*/
 
-    public List<Trait> getTraitsByCharacter(int id)
-    {
-      return    traitDao.getTraitsByCharacter(id);
-    }
 
     public List<Trait> getTraitsByScene(int sceneId)
     {
         return traitSceneDao.getTraitByScene(sceneId);
     }
 
-    public TraitDao getTraitDao()
-    {
-        return this.traitDao;
-    }
 
     public void addCharacterInScene(int characterId, int sceneId)
     {
        try{
-           characterDao.addCharacterInScene(characterId,sceneId);
+           chScDao.addCharacterInScene(characterId,sceneId);
        }
        catch (DuplicateKeyException e)
        {
@@ -186,7 +178,7 @@ public class CharacterScenePresenter implements NarrativePresenter {
     public boolean removeCharacterFromScene(int characterId, int sceneId)
     {
         try{
-            characterDao.removeCharacterFromScene(characterId,sceneId);
+            chScDao.removeCharacterFromScene(characterId,sceneId);
         }
                 catch(Exception e)
         {
@@ -195,5 +187,11 @@ public class CharacterScenePresenter implements NarrativePresenter {
         }
         return true;
     }
+
+    public List<Trait> getTraitsByCharacter(int id)
+    {
+        return    traitService.getTraitsByCharacter(id);
+    }
+
 
 }
