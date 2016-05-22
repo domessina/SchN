@@ -9,9 +9,15 @@ public interface NarrativeComponentDao {
 
     NarrativeComponent getNComponent(int componentId);
 
+    /**
+     * return the id of the new component
+     * */
     int create(NarrativeComponent component);
 
-    void update(NarrativeComponent component) ;
+    /**
+     * returns the number of rows affected
+     * **/
+    int update(NarrativeComponent component) ;
 
-    void delete(int componentId);
+    int delete(int componentId);
 }

@@ -32,10 +32,10 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     }
 
     @Override
-    public void update(NarrativeComponent component) {
+    public int update(NarrativeComponent component) {
        Scene s=(Scene)component;
         Object[] args= new Object[]{s.getTag(),s.getPlace(),s.getPicture(),s.getNote(),s.getId()};
-        jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, notes=? WHERE id=?",args,new int[]{
+        return jdbcTemplate.update("UPDATE public.\"Scene\" SET tag=?,place=?,picture=?, notes=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
                 Types.INTEGER,
                 Types.VARCHAR,
@@ -44,9 +44,9 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     }
 
     @Override
-    public void delete(int SceneId)
+    public int delete(int SceneId)
     {
-        jdbcTemplate.update("delete from \"Scene\" where id=? ",SceneId);
+      return jdbcTemplate.update("delete from \"Scene\" where id=? ",SceneId);
     }
 
 

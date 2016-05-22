@@ -34,13 +34,13 @@ public class CharacterSceneDaoImpl extends AbstractPersistenceService implements
     }
 
     @Override
-    public void update(NarrativeComponent component) {
-
+    public int update(NarrativeComponent component) {
+        return 0;
     }
 
     @Override
-    public void delete(int componentId) {
-
+    public int delete(int componentId) {
+        return 0;
     }
 
 

@@ -1,5 +1,7 @@
 package be.beme.schn.spring.api;
 
+import be.beme.schn.spring.api.exception.BadIdException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -27,6 +29,7 @@ import java.util.Locale;
  *
  */
 
+
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
@@ -34,17 +37,18 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     @Autowired
     MessageSource messageSource;
 
-    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ExceptionHandler(BadIdException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody ErrorResponse handleResultDataAccessException(EmptyResultDataAccessException e, HttpServletRequest request)
+    public @ResponseBody ErrorResponse handleResultDataAccessException(BadIdException e, HttpServletRequest request)
     {
         ErrorResponse response=new ErrorResponse();
         response.setTimestamp(new Date().getTime());//oui c'est bien un timestamp car depuis 1970
         response.setStatus(HttpStatus.NOT_FOUND.value());
-        response.setError(messageSource.getMessage("notfound", null, Locale.ENGLISH));
-        response.setMessage(messageSource.getMessage("resource.notfound", null, Locale.ENGLISH));
+        response.setError(messageSource.getMessage("bad.id.error", null, Locale.ENGLISH));
+        response.setMessage(e.getMessage());                                                                             
         response.setPath(request.getRequestURI());
         return response;
     }
+
 
 }

@@ -5,7 +5,9 @@ import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.dao.NarrativeComponentDao;
 import be.beme.schn.spring.api.NarrativeComponentDaoRegistry;
+import be.beme.schn.spring.api.exception.BadIdException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Locale;
 
 /**
  * Created by Dotista on 18-05-16.
@@ -28,7 +31,14 @@ public class NarrativeComponentController extends AbstractController{
     public ResponseEntity<NarrativeComponent> getCharacter(@PathVariable String type,@PathVariable int id)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
-        NarrativeComponent component=service.getNComponent(id);
+        NarrativeComponent component;
+        try {
+           component = service.getNComponent(id);
+        }
+        catch(EmptyResultDataAccessException e)
+        {
+            throw new BadIdException(messageSource.getMessage("bad.id.message",new Object[]{id}, Locale.ENGLISH));
+        }
 
         return new ResponseEntity<>(component, HttpStatus.OK);
     }
@@ -38,9 +48,12 @@ public class NarrativeComponentController extends AbstractController{
     public ResponseEntity<?> updateCharacter(@PathVariable String type,@RequestBody NarrativeComponent component)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
-        service.update(component);
+        if(service.update(component)==0)
+        {
+            throw new BadIdException(messageSource.getMessage("bad.id.message",new Object[]{component.getId()}, Locale.ENGLISH));
+        }
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    }//TODO tous le snarrative compoenent doivent avoir un diagramId variable pour qu'ainsi via l'api qqn ne peut aps put un trait ) un perso qui n'es pas dans on diagram
 
 
     @RequestMapping(method = RequestMethod.POST)//dire si existe deja
@@ -62,7 +75,10 @@ public class NarrativeComponentController extends AbstractController{
     public ResponseEntity<?> updateCharacter(@PathVariable String type,@PathVariable int id)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
-        service.delete(id);
+        if(service.delete(id)==0)
+        {
+            throw new BadIdException(messageSource.getMessage("bad.id.message",new Object[]{id}, Locale.ENGLISH));
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

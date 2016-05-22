@@ -34,10 +34,10 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     }
 
     @Override
-    public void update(NarrativeComponent component) {
+    public int update(NarrativeComponent component) {
         Chapter chapter=(Chapter)component;
         Object[] args= new Object[]{chapter.getPhase(),chapter.getTitle(),chapter.getPosition(),chapter.getNote(),chapter.getId()};
-        jdbcTemplate.update("UPDATE public.\"Chapter\" SET phase=?,title=?,place=?,notes=? WHERE id=?",args,new int[]{
+        return jdbcTemplate.update("UPDATE public.\"Chapter\" SET phase=?,title=?,place=?,notes=? WHERE id=?",args,new int[]{
                 Types.SMALLINT,
                 Types.VARCHAR,
                 Types.SMALLINT,
@@ -81,8 +81,8 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     }
 
     @Override
-    public void delete(int chapterId) {
-        jdbcTemplate.update("delete from \"Chapter\" where id=? ",chapterId);
+    public int delete(int chapterId) {
+        return jdbcTemplate.update("delete from \"Chapter\" where id=? ",chapterId);
     }
 
 

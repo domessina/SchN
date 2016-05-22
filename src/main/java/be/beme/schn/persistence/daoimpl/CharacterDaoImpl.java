@@ -41,10 +41,10 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
      */
 
     @Override
-    public void update(NarrativeComponent component) {
+    public int update(NarrativeComponent component) {
         Character c=(Character)component;
         Object[] args= new Object[]{c.getName(),c.getType(),c.getNote(),c.getPicture(),c.getId()};
-        jdbcTemplate.update("UPDATE public.\"Character\" SET name=?,type=?,notes=?,picture_url=? WHERE id=?",args,new int[]{
+        return jdbcTemplate.update("UPDATE public.\"Character\" SET name=?,type=?,notes=?,picture_url=? WHERE id=?",args,new int[]{
                 Types.VARCHAR,
                 Types.VARCHAR,
                 Types.VARCHAR,
@@ -53,9 +53,9 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
     }
 
       @Override
-    public void delete(int componentId)
+    public int delete(int componentId)
     {
-        jdbcTemplate.update("delete from public.\"Character\" where id=? ",componentId);
+       return jdbcTemplate.update("delete from public.\"Character\" where id=? ",componentId);
     }
 
     @Override

@@ -33,20 +33,20 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
     }
 
     @Override
-    public void update(NarrativeComponent component)
+    public int update(NarrativeComponent component)
     {
         Trait trait=(Trait)component;
         Object[] args = new Object[]{trait.getCharacterId(),trait.getName(),trait.getId()};
-        jdbcTemplate.update("UPDATE \"Trait\" SET character_id=?,name=? WHERE id=?",args,new int[]{
+        return jdbcTemplate.update("UPDATE \"Trait\" SET character_id=?,name=? WHERE id=?",args,new int[]{
                 Types.INTEGER,
                 Types.VARCHAR,
                 Types.INTEGER});
     }
 
     @Override
-    public void delete(int traitId)
+    public int delete(int traitId)
     {
-        jdbcTemplate.update("delete from public.\"Trait\" where id=? ",traitId);
+        return jdbcTemplate.update("delete from public.\"Trait\" where id=? ",traitId);
     }
 
     @Override
