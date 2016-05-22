@@ -28,7 +28,7 @@ public class NarrativeComponentController extends AbstractController{
     private NarrativeComponentDaoRegistry daoRegistry;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<NarrativeComponent> getCharacter(@PathVariable String type,@PathVariable int id)
+    public ResponseEntity<NarrativeComponent> get(@PathVariable String type,@PathVariable int id)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
         NarrativeComponent component;
@@ -45,7 +45,7 @@ public class NarrativeComponentController extends AbstractController{
 
 
     @RequestMapping(method = RequestMethod.PUT) //empecher de changer l'id, le diagramId
-    public ResponseEntity<?> updateCharacter(@PathVariable String type,@RequestBody NarrativeComponent component)
+    public ResponseEntity<?> update(@PathVariable String type,@RequestBody NarrativeComponent component)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
         if(service.update(component)==0)
@@ -57,7 +57,7 @@ public class NarrativeComponentController extends AbstractController{
 
 
     @RequestMapping(method = RequestMethod.POST)//dire si existe deja
-    public ResponseEntity<NarrativeComponent> createCharacter(@PathVariable String type,@RequestBody NarrativeComponent component)
+    public ResponseEntity<NarrativeComponent> create(@PathVariable String type,@RequestBody NarrativeComponent component)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
         int id=service.create(component);
@@ -72,7 +72,7 @@ public class NarrativeComponentController extends AbstractController{
 
 
     @RequestMapping(value ="/{id}",method = RequestMethod.DELETE)  //catcher l'excpetion de si il existe pas
-    public ResponseEntity<?> updateCharacter(@PathVariable String type,@PathVariable int id)
+    public ResponseEntity<?> delete(@PathVariable String type,@PathVariable int id)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
         if(service.delete(id)==0)

@@ -8,6 +8,7 @@ import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.accept.FixedContentNegotiationStrategy;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
@@ -56,6 +57,16 @@ public class ApiConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public ViewResolver jsonViewResolver() {
         return new JsonViewResolver();
+    }
+
+
+    /*
+    * Enables cors specification for swagger-ui requests
+    * */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/v2/api-docs");
+        registry.addMapping("/api/**");
     }
 
 }

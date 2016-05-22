@@ -1,11 +1,13 @@
-package be.beme.schn.spring.api;
+package be.beme.schn.spring.api.exception;
 
+import be.beme.schn.spring.api.ErrorResponse;
 import be.beme.schn.spring.api.exception.BadIdException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,7 +31,7 @@ import java.util.Locale;
  *
  */
 
-
+@Slf4j
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
@@ -45,10 +47,24 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         response.setTimestamp(new Date().getTime());//oui c'est bien un timestamp car depuis 1970
         response.setStatus(HttpStatus.NOT_FOUND.value());
         response.setError(messageSource.getMessage("bad.id.error", null, Locale.ENGLISH));
-        response.setMessage(e.getMessage());                                                                             
+        response.setMessage(e.getMessage());
         response.setPath(request.getRequestURI());
         return response;
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public @ResponseBody ErrorResponse handleException(Exception e, HttpServletRequest request) {
+        if (log.isErrorEnabled()) {
+            log.error("Error in API controller", e);
+        }
+        ErrorResponse response=new ErrorResponse();
+        response.setTimestamp(new Date().getTime());
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.setError(e.getClass().getName());
+        response.setMessage(e.getMessage());
+        response.setPath(request.getRequestURI());
+        return response;
+    }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/trait")
-public class TraitController extends AbstractController {
+public class TraitSpecificController extends AbstractController {
 
     @Autowired
     TraitDao traitService;

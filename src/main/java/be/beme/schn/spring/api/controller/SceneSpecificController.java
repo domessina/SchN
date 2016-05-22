@@ -17,9 +17,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/scene")
-public class SceneController extends AbstractController {
+public class SceneSpecificController extends AbstractController {
 
-    //TODO regarder si liens code commun avec les autres narrativecompoenents pour factoriser le code
 
 
     @Autowired
