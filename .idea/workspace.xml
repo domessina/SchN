@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5199bbba-0134-46e0-be35-20439c1c9236" name="Default" comment="bad narrative component type&#10;idResponse&#10;moved GET method to XyzSpecificController&#10;POST returns no longer the component , but only new id">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SchN" afterPath="$PROJECT_DIR$/SchN" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+    <list default="true" id="5199bbba-0134-46e0-be35-20439c1c9236" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SchN.iws" />
@@ -1669,7 +1667,7 @@
       <workItem from="1470941359828" duration="10485000" />
       <workItem from="1470990081885" duration="5008000" />
       <workItem from="1470995167861" duration="5551000" />
-      <workItem from="1471003020923" duration="5453000" />
+      <workItem from="1471003020923" duration="5465000" />
     </task>
     <task id="LOCAL-00001" summary="Test intelliJ VCS">
       <created>1460558781407</created>
@@ -1695,11 +1693,17 @@
       <option name="project" value="LOCAL" />
       <updated>1471008046168</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="clean git">
+      <created>1471008505076</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1471008505076</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="633677000" />
+    <option name="totallyTimeSpent" value="633689000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1759,7 +1763,8 @@
     </ignored-roots>
     <MESSAGE value="Test intelliJ VCS" />
     <MESSAGE value="bad narrative component type&#10;idResponse&#10;moved GET method to XyzSpecificController&#10;POST returns no longer the component , but only new id" />
-    <option name="LAST_COMMIT_MESSAGE" value="bad narrative component type&#10;idResponse&#10;moved GET method to XyzSpecificController&#10;POST returns no longer the component , but only new id" />
+    <MESSAGE value="clean git" />
+    <option name="LAST_COMMIT_MESSAGE" value="clean git" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
