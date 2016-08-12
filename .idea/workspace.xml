@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5199bbba-0134-46e0-be35-20439c1c9236" name="Default" comment="bad narrative component type&#10;idResponse&#10;moved GET method to XyzSpecificController&#10;POST returns no longer the component , but only new id">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SchN" afterPath="$PROJECT_DIR$/SchN" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SchN.iws" />
@@ -155,7 +156,7 @@
       </list>
     </option>
     <option name="ROOT_SYNC" value="DONT_SYNC" />
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/SchN" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
@@ -1066,9 +1067,14 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="settings.github" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="SearchEverywhereHistoryKey" value="EnableSwagger&#9;PSI&#9;JAVA://springfox.documentation.swagger2.annotations.EnableSwagger2" />
+  </component>
+  <component name="Push.Settings">
+    <excluded-roots>
+      <path value="$PROJECT_DIR$/SchN" />
+    </excluded-roots>
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -1663,7 +1669,7 @@
       <workItem from="1470941359828" duration="10485000" />
       <workItem from="1470990081885" duration="5008000" />
       <workItem from="1470995167861" duration="5551000" />
-      <workItem from="1471003020923" duration="4933000" />
+      <workItem from="1471003020923" duration="5453000" />
     </task>
     <task id="LOCAL-00001" summary="Test intelliJ VCS">
       <created>1460558781407</created>
@@ -1683,11 +1689,17 @@
       <option name="project" value="LOCAL" />
       <updated>1460559055899</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="bad narrative component type&#10;idResponse&#10;moved GET method to XyzSpecificController&#10;POST returns no longer the component , but only new id">
+      <created>1471008046168</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1471008046168</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="633157000" />
+    <option name="totallyTimeSpent" value="633677000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1746,7 +1758,8 @@
       <path value="$PROJECT_DIR$/SchN" />
     </ignored-roots>
     <MESSAGE value="Test intelliJ VCS" />
-    <option name="LAST_COMMIT_MESSAGE" value="Test intelliJ VCS" />
+    <MESSAGE value="bad narrative component type&#10;idResponse&#10;moved GET method to XyzSpecificController&#10;POST returns no longer the component , but only new id" />
+    <option name="LAST_COMMIT_MESSAGE" value="bad narrative component type&#10;idResponse&#10;moved GET method to XyzSpecificController&#10;POST returns no longer the component , but only new id" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
