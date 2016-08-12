@@ -13,7 +13,7 @@ public class JsonViewResolver implements ViewResolver{
     @Override
     public View resolveViewName(String viewName, Locale locale) throws Exception {
         MappingJackson2JsonView view = new MappingJackson2JsonView();
-        view.setPrettyPrint(true);
+        view.setPrettyPrint(true);          //TODO if production mode , set it to false to economise number of packets sent
         return view;
     }
 
