@@ -57,14 +57,14 @@ public class ApiConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/v2/api-docs");
-        registry.addMapping("/api/**");
+        registry.addMapping("/api*");
     }
 
 
     @Override
     public void addInterceptors(InterceptorRegistry registry)
     {
-        registry.addInterceptor(new NComponentBadTypeInterceptor()).addPathPatterns("/v2/api/nc/**");
+        registry.addInterceptor(new NComponentBadTypeInterceptor()).addPathPatterns("/v1/api/nc/**");
     }
 
 }

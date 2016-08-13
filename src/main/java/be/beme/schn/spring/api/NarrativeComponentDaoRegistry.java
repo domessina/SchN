@@ -32,9 +32,6 @@ public final class NarrativeComponentDaoRegistry {
 
     public NarrativeComponentDao getDao(String type)
     {
-       if(registry.get(type)==null){
-           throw new BadParamException("Bad narrative component type");
-       }
         return registry.get(type);
     }
 }

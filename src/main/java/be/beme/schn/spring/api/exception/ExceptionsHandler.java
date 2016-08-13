@@ -31,11 +31,10 @@ import java.util.Locale;
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
     //par convention les noms de méthode commencent par handle
-    @Autowired
-    MessageSource messageSource;
+
 
     @ExceptionHandler(BadParamException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse handleResultDataAccessException(BadParamException e, HttpServletRequest request)
     {
         if (log.isErrorEnabled()) {
@@ -50,21 +49,6 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         return response;
     }
 
-
-    @ExceptionHandler(DuplicateKeyException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody ErrorResponse handleException(DuplicateKeyException e, HttpServletRequest request) {
-        if (log.isErrorEnabled()) {
-            log.info("Minor exception handled in API", e);
-        }
-        ErrorResponse response=new ErrorResponse();
-        response.setTimestamp(new Date().getTime());
-        response.setStatus(HttpStatus.CONFLICT.value());
-        response.setError(e.getClass().getName());
-        response.setMessage(messageSource.getMessage("duplicate.id.message",null,Locale.ENGLISH));
-        response.setPath(request.getRequestURI());
-        return response;
-    }
 
 
     @ExceptionHandler(Exception.class)
@@ -81,5 +65,22 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         response.setPath(request.getRequestURI());
         return response;
     }
+
+       /*@ExceptionHandler(DuplicateKeyException.class) c'est sensé ne jamais arriver
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public @ResponseBody ErrorResponse handleException(DuplicateKeyException e, HttpServletRequest request) {
+        if (log.isErrorEnabled()) {
+            log.info("Minor exception handled in API", e);
+        }
+        ErrorResponse response=new ErrorResponse();
+        response.setTimestamp(new Date().getTime());
+        response.setStatus(HttpStatus.CONFLICT.value());
+        response.setError(e.getClass().getName());
+        response.setMessage(messageSource.getMessage("duplicate.id.message",null,Locale.ENGLISH));
+        response.setPath(request.getRequestURI());
+        return response;
+    }*/
+
+
 
 }

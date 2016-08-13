@@ -41,7 +41,7 @@ public class SpringFoxConfig {
     private ApiInfo apiInfo() {
         ApiInfo apiInfo = new ApiInfo(
                 "Narrative Scheme API",
-                "This is a part of \"Narrative Applications Set\" project",
+                "This is a part of \"Set of applications for writer's apprentice\" project",
                 "Version 0.1",
                 "Terms of service",
                 "dmessina@outlook.be",
