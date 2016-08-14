@@ -46,8 +46,8 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
     }
 
 
-    @Override
-    public OutputStream receiveUpload(String filename, String mimeType)             //C'est chiant car Vaadin ne donne pas accès au fichier qui est upload. Il le rajoute au fos que tu retournes après
+
+    public OutputStream receiveUpload(String filename, String mimeType)
     {
         if(!mimeType.contains("image"))
         {

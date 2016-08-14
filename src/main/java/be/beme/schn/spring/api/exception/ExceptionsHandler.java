@@ -1,11 +1,15 @@
 package be.beme.schn.spring.api.exception;
 
-import be.beme.schn.spring.api.response.ErrorResponse;
+import be.beme.schn.spring.api.ErrorResponse;
+import be.beme.schn.spring.api.exception.BadIdException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Locale;
 
@@ -31,25 +36,21 @@ import java.util.Locale;
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
     //par convention les noms de méthode commencent par handle
+    @Autowired
+    MessageSource messageSource;
 
-
-    @ExceptionHandler(BadParamException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody ErrorResponse handleResultDataAccessException(BadParamException e, HttpServletRequest request)
+    @ExceptionHandler(BadIdException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public @ResponseBody ErrorResponse handleResultDataAccessException(BadIdException e, HttpServletRequest request)
     {
-        if (log.isErrorEnabled()) {
-            log.info("Minor exception handled in API", e);
-        }
         ErrorResponse response=new ErrorResponse();
         response.setTimestamp(new Date().getTime());//oui c'est bien un timestamp car depuis 1970
         response.setStatus(HttpStatus.NOT_FOUND.value());
-        response.setError(e.getClass().getName());
+        response.setError(messageSource.getMessage("bad.id.error", null, Locale.ENGLISH));
         response.setMessage(e.getMessage());
         response.setPath(request.getRequestURI());
         return response;
     }
-
-
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -65,22 +66,5 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         response.setPath(request.getRequestURI());
         return response;
     }
-
-       /*@ExceptionHandler(DuplicateKeyException.class) c'est sensé ne jamais arriver
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public @ResponseBody ErrorResponse handleException(DuplicateKeyException e, HttpServletRequest request) {
-        if (log.isErrorEnabled()) {
-            log.info("Minor exception handled in API", e);
-        }
-        ErrorResponse response=new ErrorResponse();
-        response.setTimestamp(new Date().getTime());
-        response.setStatus(HttpStatus.CONFLICT.value());
-        response.setError(e.getClass().getName());
-        response.setMessage(messageSource.getMessage("duplicate.id.message",null,Locale.ENGLISH));
-        response.setPath(request.getRequestURI());
-        return response;
-    }*/
-
-
 
 }

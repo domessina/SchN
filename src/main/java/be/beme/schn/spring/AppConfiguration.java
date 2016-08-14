@@ -31,7 +31,7 @@ public  class AppConfiguration {
 
 
 
-    @Bean                                                                                                                //seen by breakpoint=> spring creates first dataSource, because jdbcTemplate need it
+    @Bean                                                                                                                //seen by breakpoint; spring creates first dataSource, because jdbcTemplate need it
     public JdbcTemplate jdbcTemplate()
     {
         return new JdbcTemplate(dataSource);

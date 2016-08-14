@@ -132,7 +132,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         return vLayoutProperties;
     }
 
-    private Component buildFormLayout()                                                                                    //TODO redimmensionner toutes les images pour économie de place
+    private Component buildFormLayout()
     {
         FormLayout formLayout = new FormLayout();
         formLayout.setSizeFull();
@@ -155,7 +155,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         return formLayout;
     }
 
-    private Component buildFormLayoutUserProperties()                                                                   //TODO activer le bouton save que quand modification pour ne pas faire du traffic pour rien, si l'user au lieu de cliquer sur croix clique tjrs sur save
+    private Component buildFormLayoutUserProperties()
     {
        /* userPropertyList = character.getUserProperties();
         FormLayout formLayout= new FormLayout();
@@ -170,7 +170,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         }
 
         return formLayout;*/
-        return new FormLayout();
+        return null;
     }
 
     private Table buildTraitTableCrud()

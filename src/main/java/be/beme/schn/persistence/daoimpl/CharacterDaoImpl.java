@@ -18,6 +18,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
+
 public class CharacterDaoImpl extends AbstractPersistenceService implements CharacterDao{
 
 
@@ -38,6 +39,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
      * @param args  Must be ordered like the query, the characterId is <b>the last</b>
      *              element in the array
      */
+
     @Override
     public int update(NarrativeComponent component) {
         Character c=(Character)component;
