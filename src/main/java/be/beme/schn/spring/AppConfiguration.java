@@ -19,36 +19,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @PropertySource("classpath:application.properties")
 public  class AppConfiguration {
 
-                                                                                                                         //envr is used by dataSource, so it have to be defined before it
-    @Autowired
-    private Environment environment;
-
-    @Autowired
-    private PGSimpleDataSource dataSource;
-
-  /*  @Value("${jdbc.username}")                                                                                        fonctionne que si pas dans une classe de configuration
+   /*  @Value("${jdbc.username}")                                                                                        fonctionne que si pas dans une classe de configuration
     private String user;*/
 
 
-
-    @Bean                                                                                                                //seen by breakpoint; spring creates first dataSource, because jdbcTemplate need it
-    public JdbcTemplate jdbcTemplate()
-    {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    public PGSimpleDataSource getDataSource(){
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl(environment.getProperty("jdbc.url",String.class));
-        dataSource.setUser(environment.getProperty("jdbc.username",String.class));
-        dataSource.setPassword(environment.getProperty("jdbc.password",String.class));
-        return dataSource;
-    }
-
     @Bean
     public MessageSource messageSource(){
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource(); //TODO créer un bean conflict checker, pour la scynch, il gère en fait le passage dans la chaine...
         messageSource.setBasename("i18n/messages");
         return messageSource;
     }

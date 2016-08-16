@@ -46,12 +46,12 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
     }
 
 
-
-    public OutputStream receiveUpload(String filename, String mimeType)
+    @Override
+    public OutputStream receiveUpload(String filename, String mimeType)             //C'est chiant car Vaadin ne donne pas accès au fichier qui est upload. Il le rajoute au fos que tu retournes après
     {
-        if(!mimeType.contains("image"))
+        if(!(mimeType.contains("jpeg")||mimeType.contains("png")))
         {
-            new Notification("The mimetype must be an image", Notification.Type.HUMANIZED_MESSAGE).show(Page.getCurrent());
+            new Notification("The accepted formats are JPEG and PNG", Notification.Type.HUMANIZED_MESSAGE).show(Page.getCurrent());  //TODO fair le redimentionnement si>850px voir rapport
             return null;
         }
 

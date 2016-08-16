@@ -14,5 +14,4 @@ public class Diagram extends NarrativeComponent {
     private int user_id;
     private String title;
 
-
 }

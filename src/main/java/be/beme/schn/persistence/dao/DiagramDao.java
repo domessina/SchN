@@ -8,12 +8,13 @@ import java.util.List;
 /**
  * Created by Dorito on 17-03-16.
  */
-public interface DiagramDao  extends Dao {
+public interface DiagramDao  extends NarrativeComponentDao {
 
 
+    @Override
+    Diagram getNComponent(int id);
 
 
-    int createDiagram(int userId, String title);
 
     String setTitle(int diagramId, String title);
 
@@ -23,7 +24,6 @@ public interface DiagramDao  extends Dao {
 
     Diagram getDiagramById( int diagramId);
 
-    void deleteDiagram(int diagramId);
 
     String getTitle(int diagramId);
 

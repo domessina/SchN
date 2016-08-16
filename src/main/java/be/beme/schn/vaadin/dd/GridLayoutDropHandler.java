@@ -70,7 +70,7 @@ public class GridLayoutDropHandler implements DropHandler {
             for(int x=0;x<layout.getColumns();x++)
             {
 
-                if(layout.getComponent(x,y)==target)
+                if(layout.getComponent(x,y)==target) //should I use .equals()?
                 {
                     return new int[]{index,x,y};
                 }

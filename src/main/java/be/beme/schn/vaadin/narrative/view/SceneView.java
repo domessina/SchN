@@ -2,8 +2,8 @@ package be.beme.schn.vaadin.narrative.view;
 
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Scene;
-import be.beme.schn.vaadin.CrudListener;
-import be.beme.schn.vaadin.CrudNotifier;
+import be.beme.schn.vaadin.crud.CrudListener;
+import be.beme.schn.vaadin.crud.CrudNotifier;
 import be.beme.schn.vaadin.ImageUploadPanel;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;

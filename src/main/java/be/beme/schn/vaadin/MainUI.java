@@ -1,11 +1,11 @@
 package be.beme.schn.vaadin;
 
 import be.beme.schn.Constants;
-import be.beme.schn.CookieInitializer;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.persistence.dao.DiagramDao;
+import be.beme.schn.vaadin.crud.CrudListener;
 import be.beme.schn.vaadin.dd.DDGridLayout;
 import be.beme.schn.vaadin.dd.GridLayoutDropEvent;
 import be.beme.schn.vaadin.dd.CustomDragAndDropWrapper;
@@ -38,7 +38,7 @@ import java.util.List;
 //@PreserveOnRefresh  //Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
 @SpringUI                                                                                                               //TODO rajouter une grande scrollbar verticale pour quand on rapetissie la page
-public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Character>{                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
+public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Character> {                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
 
     @Autowired
     DiagramDao diagramService;
@@ -47,7 +47,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     CharacterPresenter characterPresenter;
 
     @Autowired
-    TraitCrudPresenter traitCrudPresenter;
+    TraitCrudAction traitCrudPresenter;
 
     @Autowired
     ChapterPresenter chapterPresenter;
@@ -95,7 +95,6 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         chapterUI.initTabSheet();
 
         tabSheet.setSelectedTab(0);
-
 
         setContent(buildContent());
     }
@@ -179,7 +178,16 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             charsItem.addItem(c.getName(),command).setDescription(Integer.toString(c.getId()));
         }
 
-        MenuBar.MenuItem options=menuBar.addItem("Settings",null,null);
+        MenuBar.MenuItem options=menuBar.addItem("Settings",null);
+        MenuBar.MenuItem blank=menuBar.addItem("            ",null);
+        blank.setEnabled(false);
+        //Don't invalidade de session because it stops all background vaadin process. it's better to let him do it himself
+        MenuBar.MenuItem quit=menuBar.addItem("Quit",selectedItem -> {
+            MainUI.this.close();
+            this.getPage().setLocation("www.google.be");});
+        //get it via param ent by social platform
+        MenuBar.MenuItem user=menuBar.addItem("Sylvie 24",null);
+        user.setEnabled(false);
 
         return menuBar;
     }
@@ -518,7 +526,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 panelSplitArray[i].setMinSplitPosition(20,Unit.PERCENTAGE);
                 panelSplitArray[i].setSplitPosition(20,Unit.PERCENTAGE);
             }
-//            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
+            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
 
         }
 
@@ -591,7 +599,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             wrapper.addClickListener(event -> panelSplitArray[phaseSelected].setSecondComponent(sceneUI.loadSceneStickers(chapter)));
             chapterW.wrap(wrapper);
             chapterLArray[phaseSelected].addComponent(wrapper);
-//            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
+            VaadinSession.getCurrent().setAttribute("chapterCountCrrntPhase",chapterLArray[phaseSelected].getComponentCount());
             wrapper.setCaption("Chapter "+ chapterLArray[phaseSelected].getComponentCount());
 
         }

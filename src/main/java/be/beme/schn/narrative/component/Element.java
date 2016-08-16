@@ -13,6 +13,8 @@ public class Element extends  NarrativeComponent {
     private String note;
     private String name;
     private int diagramId;
+
+
 }
 
 

@@ -4,16 +4,16 @@ import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Trait;
 import be.beme.schn.narrative.component.UserProperty;
-import be.beme.schn.vaadin.CrudListener;
-import be.beme.schn.vaadin.CrudNotifier;
+import be.beme.schn.vaadin.crud.CrudListener;
+import be.beme.schn.vaadin.crud.CrudNotifier;
 import be.beme.schn.vaadin.ImageUploadPanel;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
-import be.beme.schn.vaadin.narrative.TraitTableCrud;
+import be.beme.schn.vaadin.crud.TraitTableCrud;
 import be.beme.schn.vaadin.narrative.presenter.CharacterPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
-import be.beme.schn.vaadin.narrative.presenter.TraitCrudPresenter;
+import be.beme.schn.vaadin.narrative.presenter.TraitCrudAction;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
@@ -46,7 +46,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     private ArrayList<Trait> deleteTraits;
     private  ImageUploadPanel imageUploadPanel;
     private CharacterPresenter characterPresenter;
-    private TraitCrudPresenter traitCrudPresenter;
+    private TraitCrudAction traitCrudPresenter;
     private VerticalLayout vLayoutProperties;
     private NWrapperPanel wrapper;
     private Button buttonAddSc;
@@ -57,7 +57,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
 
 
-    public CharacterView(Character character, TraitCrudPresenter traitCrudPresenter)
+    public CharacterView(Character character, TraitCrudAction traitCrudPresenter)
     {
         this.character= character;
         this.traitCrudPresenter = traitCrudPresenter;
@@ -132,7 +132,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         return vLayoutProperties;
     }
 
-    private Component buildFormLayout()
+    private Component buildFormLayout()                                                                                    //TODO redimmensionner toutes les images pour économie de place
     {
         FormLayout formLayout = new FormLayout();
         formLayout.setSizeFull();
@@ -155,7 +155,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         return formLayout;
     }
 
-    private Component buildFormLayoutUserProperties()
+    private Component buildFormLayoutUserProperties()                                                                   //TODO activer le bouton save que quand modification pour ne pas faire du traffic pour rien, si l'user au lieu de cliquer sur croix clique tjrs sur save
     {
        /* userPropertyList = character.getUserProperties();
         FormLayout formLayout= new FormLayout();
@@ -170,7 +170,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         }
 
         return formLayout;*/
-        return null;
+        return new FormLayout();
     }
 
     private Table buildTraitTableCrud()

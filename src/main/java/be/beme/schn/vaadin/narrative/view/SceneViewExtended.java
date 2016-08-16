@@ -3,12 +3,11 @@ package be.beme.schn.vaadin.narrative.view;
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Scene;
-import be.beme.schn.vaadin.CrudListener;
+import be.beme.schn.vaadin.crud.CrudListener;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.CharacterScenePresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
 import be.beme.schn.vaadin.narrative.presenter.ScenePresenter;
-import com.vaadin.data.Property;
 import com.vaadin.ui.*;
 
 import java.util.ArrayList;
