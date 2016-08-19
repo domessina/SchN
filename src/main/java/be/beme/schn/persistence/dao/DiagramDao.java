@@ -1,7 +1,6 @@
 package be.beme.schn.persistence.dao;
 
 import be.beme.schn.narrative.component.Diagram;
-import be.beme.schn.persistence.Dao;
 
 import java.util.List;
 
@@ -26,5 +25,6 @@ public interface DiagramDao  extends NarrativeComponentDao {
 
 
     String getTitle(int diagramId);
+
 
 }

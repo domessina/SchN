@@ -93,7 +93,9 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
         return null;
     }
 
-    private static final class DiagramMapper implements RowMapper<Diagram> {
+
+
+    public static final class DiagramMapper implements RowMapper<Diagram> {
 
         public Diagram mapRow(ResultSet rs, int rowNum) throws SQLException {
             Diagram diagram = new Diagram();

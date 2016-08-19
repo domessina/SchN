@@ -98,7 +98,7 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
 
 
 
-    private static final class CharacterMapper implements RowMapper<Character> {
+    public static final class CharacterMapper implements RowMapper<Character> {
 
         public Character mapRow(ResultSet rs, int rowNum) throws SQLException {
             Character character = new Character();
