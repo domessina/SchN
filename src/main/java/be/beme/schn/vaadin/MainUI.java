@@ -3,8 +3,8 @@ package be.beme.schn.vaadin;
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
+import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.Scene;
-import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.vaadin.crud.CrudListener;
 import be.beme.schn.vaadin.dd.DDGridLayout;
 import be.beme.schn.vaadin.dd.GridLayoutDropEvent;
@@ -16,10 +16,12 @@ import be.beme.schn.vaadin.narrative.view.*;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import de.steinwedel.messagebox.MessageBox;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.Cookie;
@@ -41,7 +43,10 @@ import java.util.List;
 public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Character> {                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
 
     @Autowired
-    DiagramDao diagramService;
+    DiagramPresenter diagramPresenter;
+
+    @Autowired
+    UserPresenter userPresenter;
 
     @Autowired
     CharacterPresenter characterPresenter;
@@ -60,13 +65,14 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     public short phaseSelected;
     public int diagramId;
+    public int userId;
     public int selectedChapterId;
     private final TabSheet tabSheet;
     private final ChapterUI chapterUI;
     private final CharacterUI characterUI;
     private final SceneUI sceneUI;
     private MenuBar.MenuItem charsItem;
-    private MenuBar.Command command;
+    private MenuBar.Command commandOpenChar;
 
 
     public MainUI()
@@ -82,57 +88,102 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
-//        manageCookies();
+        boolean presetOk;
+        if(Constants.WORKING_WITH_SOCIAL) {
+            userId = Integer.valueOf(vaadinRequest.getParameter(Constants.HTTP_PARAM_USER_ID));
+           presetOk= preset();
+        }else{
+            userId=1;
+            presetOk=preset();
+        }
+        if(presetOk) {
+            tabSheet.setSizeFull();
+            tabSheet.setImmediate(true);
+            tabSheet.setStyleName("margins");
+            tabSheet.addSelectedTabChangeListener(this);    //must be set before
+            chapterUI.init();
+            chapterUI.initTabSheet();
 
-        initAttributes();
+            tabSheet.setSelectedTab(0);
 
-
-        tabSheet.setSizeFull();
-        tabSheet.setImmediate(true);
-        tabSheet.setStyleName("margins");
-        tabSheet.addSelectedTabChangeListener(this);    //must be set before
-        chapterUI.init();
-        chapterUI.initTabSheet();
-
-        tabSheet.setSelectedTab(0);
-
-        setContent(buildContent());
+            setContent(buildContent());
+        }
     }
 
-    private void manageCookies()
+    /**
+     * If tests are passed, return true
+     * Otherwise preset decides what to display
+     *
+     * return true if the presets run well
+     * **/
+    private boolean preset()
     {
+        userPresenter.setUserId(userId);
+        checkUserCookie(userId);
+        int diagramId =userPresenter.getActualDiagram();
+        List<Diagram> diagrams=diagramPresenter.getDaoService().getAllDiagramsByUser(userId);
+        if(diagrams.size()==0){
+           showDiagramEditionWindow(new Diagram(userId),true);
+        }
+        else if(diagramId==-1){
+            DiagramChoiceView dCV=new DiagramChoiceView(diagrams);
+            dCV.addCloseListener(event -> diagramChoiceClosed(dCV));
+            MainUI.this.addWindow(dCV);
+        }
+        else{
+            this.diagramId=diagramId;
+            initSessionAttributes(userId,diagramId,Constants.BASE_DIR+"Users\\"+userId+"\\Diagrams\\"+diagramId+"\\Characters\\");
+            return true;
+        }
+        return false;
+    }
 
-        CookieInitializer.initUserCookie("1");
+    private int checkUserCookie(int userId){
+
         Cookie cookie=VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID);
-        if(cookie==null)
-        {
-            DiagramView dv= new DiagramView(diagramService.getAllDiagramsByUser(1));
-            dv.addCloseListener(e -> {
-                int didi=dv.getDiagramId();
-                CookieInitializer.initDiagramCookie(Integer.toString(didi));
-            });
-            this.addWindow(dv);
+        //if does not exist, no problem, because userId is given by socialPlatform via HttpRequest
+        if(cookie==null){
+            CookieManager.addCookieUserId(String.valueOf(userId));//cookie scope is session
+            return 1;
+        }else{
+            return Integer.valueOf(cookie.getValue());
         }
     }
 
 
-
-    private void initAttributes()
+    private void initSessionAttributes(int userId, int diagramId, String characterDirectory)
     {
-
-//        diagramId=
-     /*           Integer inte=Integer.valueOf(VaadinUtils.getCookieByName(Constants.CK_DIAGRAM_ID).getValue());
-        diagramId=inte;
         VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
-        VaadinSession.getCurrent().setAttribute("userId",VaadinUtils.getCookieByName(Constants.CK_USER_ID).getValue());
-        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\"+ VaadinSession.getCurrent().getAttribute("userId")+"\\Diagrams\\"+diagramId+"\\Characters\\");
-        System.out.println(VaadinSession.getCurrent().getCsrfToken());*/
-        diagramId=2;
-        VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
-        VaadinSession.getCurrent().setAttribute("userId",1);
-        VaadinSession.getCurrent().setAttribute("characterDirectory",Constants.BASE_DIR+"Users\\1\\Diagrams\\2\\Characters\\");
-
+        VaadinSession.getCurrent().setAttribute("userId",userId);
+        VaadinSession.getCurrent().setAttribute("characterDirectory",characterDirectory);
     }
+
+    private void showDiagramEditionWindow(Diagram d,final boolean isNew){
+
+        DiagramEditionView dV = new DiagramEditionView(d);
+        dV.isNewDiagram=isNew;
+        dV.setHandler(diagramPresenter);
+        diagramPresenter.setView(dV);
+
+        NWrapperPanel wrapper= new NWrapperPanel(dV);
+        wrapper.setSizeFull();
+        dV.wrap(wrapper);
+
+        Window window = new Window("New Diagram",wrapper);
+        window.setModal(true);
+        window.setResizable(false);
+        window.setHeight(99,Unit.PERCENTAGE);
+//        window.addCloseListener(dV);
+        window.setWidth( 31,Unit.EM);
+        window.addCloseListener(e->{
+            diagramEditClosed(dV);
+            if(isNew)
+                Page.getCurrent().reload();
+        });
+        MainUI.this.addWindow(window);
+    }
+
+
 
     private Component buildContent()               //TODO dire au forums que mettre un command dans un sous menu ne marche pas
 
@@ -153,12 +204,14 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     private MenuBar buildMenu()
     {
-        command=selectedItem2 ->characterUI.showCharacter(Integer.valueOf(selectedItem2.getDescription()));
+        commandOpenChar = selectedItem2 ->characterUI.showCharacter(Integer.valueOf(selectedItem2.getDescription()));
 
         MenuBar menuBar=new MenuBar();
         menuBar.setWidth(100,Unit.PERCENTAGE);
 
+        //NEW
         MenuBar.MenuItem newz = menuBar.addItem("New...",null, null);
+        newz.addItem("Diagram",selectedItem2 -> openNewDiagram());
         newz.addItem("Chapter",selectedItem ->chapterUI.newChapter());
         newz.addItem("Scene",selectedItem1 -> {
             if(selectedChapterId!=-1)
@@ -169,29 +222,70 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         });
         newz.addItem("Character",selectedItem ->  characterUI.newCharacter());
 
+        //OPEN
         MenuBar.MenuItem open= menuBar.addItem("Open...",null,null);
-        open.addItem("Diagram",null);
+
+        open.addItem("Diagram...",selectedItem1 -> {
+            DiagramChoiceView dCV= new DiagramChoiceView(diagramPresenter.getDaoService().getAllDiagramsByUser(userId));
+            dCV.addCloseListener(e -> {
+                diagramChoiceClosed(dCV);
+            });
+            MainUI.this.addWindow(dCV);
+        });
 
         charsItem=open.addItem("Character",null);
         for(Character c:characterPresenter.getDaoService().getAllCharactersByDiagram(diagramId))
         {
-            charsItem.addItem(c.getName(),command).setDescription(Integer.toString(c.getId()));
+            charsItem.addItem(c.getName(), commandOpenChar).setDescription(Integer.toString(c.getId()));
         }
 
-        MenuBar.MenuItem options=menuBar.addItem("Settings",null);
+        //SETTINGS
+        MenuBar.MenuItem settings=menuBar.addItem("Settings",null);
+        settings.addItem("Edit diagram",selectedItem -> showDiagramEditionWindow(diagramPresenter.getDaoService().getDiagramById(diagramId),false));
         MenuBar.MenuItem blank=menuBar.addItem("            ",null);
         blank.setEnabled(false);
+
+        //QUIT
         //Don't invalidade de session because it stops all background vaadin process. it's better to let him do it himself
-        MenuBar.MenuItem quit=menuBar.addItem("Quit",selectedItem -> {
-            MainUI.this.close();
-            this.getPage().setLocation("www.google.be");});
+        MenuBar.MenuItem quit=menuBar.addItem("Quit",selectedItem -> quitToSocialPlatform());
         //get it via param ent by social platform
-        MenuBar.MenuItem user=menuBar.addItem("Sylvie 24",null);
+        MenuBar.MenuItem user=menuBar.addItem(userPresenter.getUserPseudo(),null);
         user.setEnabled(false);
+
 
         return menuBar;
     }
 
+    private void diagramChoiceClosed(DiagramChoiceView dCV){
+        dCV.setEnabled(false);
+        int didi = dCV.getDiagramId();
+        userPresenter.setActualDiagram(didi);
+        Page.getCurrent().reload();
+    }
+
+    private void diagramEditClosed(DiagramEditionView dEV){
+        int diid=dEV.getDiagram().getId();
+        userPresenter.setActualDiagram(diid);
+    }
+
+
+    private void openNewDiagram(){
+        MessageBox.createQuestion().withCaption("Important")
+                .withMessage(Constants.WINDOW_SAVE_CONTENT_BEFORE)
+                .withYesButton(()-> showDiagramEditionWindow(new Diagram(userId),true))
+                .withCancelButton()
+                .open();
+    }
+
+    private void quitToSocialPlatform(){
+        MessageBox.createQuestion().withCaption("Important")
+                .withMessage(Constants.WINDOW_SAVE_CONTENT_BEFORE)
+                .withYesButton(()-> {
+                    MainUI.this.close();
+                    this.getPage().setLocation(Constants.SOCIAL_URL);})
+                .withCancelButton()
+                .open();
+    }
 
 
     @Override
@@ -212,7 +306,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     @Override
     public void created(Character o) {
 
-       charsItem.addItem(o.getName(),command).setDescription(Integer.toString(o.getId()));
+       charsItem.addItem(o.getName(), commandOpenChar).setDescription(Integer.toString(o.getId()));
     }
 
     @Override

@@ -66,10 +66,6 @@
     color:white;
   }
 
-  .username-caption{
-    color:dodgerblue;
-  }
-
   .v-menubar-menuitem {
     background: #404040;
   }
@@ -77,6 +73,12 @@
   .v-panel-caption {
     background: #404040;
     color:white;
+  }
+
+  .v-window-header {
+    color:white;
+    background-color: #404040;
+    border-radius: 0px 10px 10px 0px;
   }
 
 
@@ -115,5 +117,6 @@
   {
     background-color: lightgrey;
   }
+
 
 }

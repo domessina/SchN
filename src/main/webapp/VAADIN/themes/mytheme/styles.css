@@ -12972,6 +12972,12 @@ div.v-layout.v-horizontal.v-widget {
 	color: white;
 }
 
+.mytheme .v-window-header {
+	color: white;
+	background-color: #404040;
+	border-radius: 0px 10px 10px 0px;
+}
+
 .mytheme .blue-hover:hover .v-panel-caption {
 	background-color: dodgerblue;
 }

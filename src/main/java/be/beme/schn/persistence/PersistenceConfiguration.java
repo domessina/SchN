@@ -35,4 +35,5 @@ public class PersistenceConfiguration {
         dataSource.setPassword(environment.getProperty("jdbc.password",String.class));
         return dataSource;
     }
+
 }

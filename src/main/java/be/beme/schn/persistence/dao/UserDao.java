@@ -11,4 +11,12 @@ public interface UserDao  extends Dao {
 
     int getNbDiagrams(int userId);
 
+    void setActualDiagram(int userId, int diagramId);
+
+    int getActualDiagram(int userId);
+
+   void increaseNumberOfDiagrams(int userId);
+
+    void reduceNumberOfDiagrams(int userId);
+
 }

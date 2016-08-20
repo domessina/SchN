@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * Created by Dorito on 25-03-16.
  */
-public class DiagramView extends Window implements Button.ClickListener{
+public class DiagramChoiceView extends Window implements Button.ClickListener{
 
 
     private List<Diagram> diagramList;
     private GridLayout gridLayout;
     private int diagramId;
 
-    public DiagramView(List<Diagram> diagramList)
+    public DiagramChoiceView(List<Diagram> diagramList)
     {
         super("Choose a narrative diagram");
         setModal(true);

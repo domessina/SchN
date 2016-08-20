@@ -17,6 +17,7 @@ import be.beme.schn.vaadin.narrative.presenter.TraitCrudAction;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
@@ -98,8 +99,8 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         VerticalLayout verticalLayout = new VerticalLayout();
 //        verticalLayout.setSizeFull();
 
-        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
-
+//        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
+        imageUploadPanel= new ImageUploadPanel((String)VaadinSession.getCurrent().getAttribute("characterDirectory"),this.character.getPicture());
 
 
         verticalLayout.addComponent(imageUploadPanel);
