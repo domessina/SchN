@@ -1,5 +1,6 @@
 package be.beme.schn.vaadin.narrative.presenter;
 
+import be.beme.schn.FileUtil;
 import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.dao.DiagramDao;
@@ -30,6 +31,7 @@ public class DiagramPresenter implements WrapperPanelPresenter {
     public Diagram save() {
         Diagram d = view.getDiagram();
         d.setId(diagramdao.create(view.getDiagram()));
+        FileUtil.createDiagramTree(d.getUser_id(),d.getId());
         userDao.increaseNumberOfDiagrams(d.getUser_id());
         return d;
     }
@@ -42,6 +44,7 @@ public class DiagramPresenter implements WrapperPanelPresenter {
     public boolean erase() {
         Diagram d = view.getDiagram();
         diagramdao.delete(d.getId());
+        FileUtil.deleteDiagramTree(d.getUser_id(),d.getId());
         userDao.reduceNumberOfDiagrams(d.getUser_id());
         userDao.setActualDiagram(d.getUser_id(), -1);
         return true;

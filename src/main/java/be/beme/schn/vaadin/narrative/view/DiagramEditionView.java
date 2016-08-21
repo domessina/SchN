@@ -2,15 +2,13 @@ package be.beme.schn.vaadin.narrative.view;
 
 import be.beme.schn.Constants;
 import be.beme.schn.narrative.component.Diagram;
+import be.beme.schn.vaadin.ImageUploadPanel;
 import be.beme.schn.vaadin.narrative.NWrapped;
 import be.beme.schn.vaadin.narrative.NWrapper;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.DiagramPresenter;
 import be.beme.schn.vaadin.narrative.presenter.NarrativePresenter;
-import com.vaadin.server.AbstractErrorMessage;
-import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.Page;
-import com.vaadin.server.UserError;
+import com.vaadin.server.*;
 import com.vaadin.ui.*;
 import de.steinwedel.messagebox.MessageBox;
 import lombok.Getter;
@@ -19,7 +17,7 @@ import lombok.Getter;
 /**
  * Created by Dotista on 20-08-16.
  */
-public class DiagramEditionView extends CustomComponent implements NarrativeView,NWrapped {
+public class DiagramEditionView extends CustomComponent implements NarrativeView,NWrapped{
 
     private NWrapperPanel wrapper;
     private DiagramPresenter presenter;
@@ -28,6 +26,7 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
     private Button buttonErase;
     private Button buttonSave;
     private TextField titleF;
+    private ImageUploadPanel imageUploadPanel;
     public boolean isNewDiagram=false;
 
 
@@ -38,11 +37,17 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
 
     private Component buildContent(){
         VerticalLayout layout= new VerticalLayout();
+
         titleF=new TextField("Title");
         if(diagram.getTitle()!=null)
             titleF.setValue(diagram.getTitle());
+
+        imageUploadPanel = new ImageUploadPanel((String) VaadinSession.getCurrent().getAttribute("diagramDirectory"),diagram.getPictureId());
         layout.addComponent(titleF);
+        layout.addComponent(imageUploadPanel);
         layout.setMargin(true);
+        layout.setSpacing(true);
+        layout.setSizeFull();
         return layout;
     }
 
@@ -69,16 +74,26 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
         if(event.getButton().getCaption().equals("Save")){
 
             if(saveCheck()){
-                if(isNewDiagram)
-                   diagram=presenter.save();
-                else
-                    presenter.update();
+                diagram.setPictureId(imageUploadPanel.getFileName());
+                if(isNewDiagram){
+                    diagram=presenter.save();
+
+                    //DiagramEditView always set to imageupload the diagram folder with the id of the
+                    //diagram currently displayed. When we want to create a new diagram, we know the id
+                    //of the new diagram only when save is pressed. So we must to change the path , for to
+                    //indicate the good id
+                    imageUploadPanel.setPath(Constants.BASE_DIR+"Users\\"+ diagram.getUser_id()+"\\Diagrams\\"+ diagram.getId()+"\\");
+                }
+                else{ presenter.update();}
+
+                imageUploadPanel.commit();
+                wrapper.closeIfWindow();
             }
         }
         else if(event.getButton().getCaption().equals("Erase")){
             showDeleteDialog();
+            wrapper.closeIfWindow();
         }
-        wrapper.closeIfWindow();
     }
 
     public boolean saveCheck(){
@@ -96,7 +111,8 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
         MessageBox.createQuestion().withCaption("WARNING")
                 .withMessage(Constants.WINDOW_DELETE_DIAGRAM_MSG)
                 .withYesButton(()->{
-                    presenter.erase();
+                    if(presenter.erase())
+                        imageUploadPanel.deleteImage();
                     Page.getCurrent().reload();
                 })
                 .withCancelButton()
@@ -114,4 +130,7 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
         this.presenter=(DiagramPresenter)narrativePresenter;
     }
 
+    public void wrapperClosed() {
+        imageUploadPanel.deleteTmpDir();
+    }
 }

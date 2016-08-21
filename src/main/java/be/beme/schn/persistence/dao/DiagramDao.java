@@ -13,18 +13,8 @@ public interface DiagramDao  extends NarrativeComponentDao {
     @Override
     Diagram getNComponent(int id);
 
-
-
-    String setTitle(int diagramId, String title);
-
-    Integer[] getAllDiagramsIdByUser(int userId);
-
     List<Diagram> getAllDiagramsByUser(int userId);
 
     Diagram getDiagramById( int diagramId);
-
-
-    String getTitle(int diagramId);
-
 
 }

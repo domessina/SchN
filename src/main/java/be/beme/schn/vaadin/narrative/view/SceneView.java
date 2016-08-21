@@ -81,7 +81,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         notes.setWidth(100,Unit.PERCENTAGE);
 
 
-        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+ VaadinSession.getCurrent().getAttribute("diagramId")+"\\Scenes\\" ,this.scene.getPicture());
+        imageUploadPanel= new ImageUploadPanel(VaadinSession.getCurrent().getAttribute("sceneDirectory").toString() ,this.scene.getPicture());
 
 
         verticalLayout.addComponent(imageUploadPanel);
@@ -116,8 +116,8 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>", ContentMode.HTML));
         verticalLayout.addComponent(fLayout);
         verticalLayout.addComponent(notes);
-        verticalLayout.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
-        verticalLayout.addComponent(buildUserProperties());
+       /* verticalLayout.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
+        verticalLayout.addComponent(buildUserProperties());*/
         propertiesPanel.setContent(verticalLayout);
         propertiesPanel.setSizeFull();
         return propertiesPanel;

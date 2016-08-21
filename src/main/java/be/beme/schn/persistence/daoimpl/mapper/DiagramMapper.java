@@ -18,6 +18,7 @@ public  final class DiagramMapper implements RowMapper<Diagram> {
         diagram.setId(rs.getInt("id"));
         diagram.setUser_id(rs.getInt("user_id"));
         diagram.setTitle(rs.getString("title"));
+        diagram.setPictureId(rs.getString(("picture_id")));
         return diagram;
     }
 }

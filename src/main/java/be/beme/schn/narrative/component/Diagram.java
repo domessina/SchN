@@ -13,6 +13,7 @@ public class Diagram extends NarrativeComponent {
 
     private int user_id;
     private String title;
+    private String pictureId;
 
     public Diagram(int userId){
         this.user_id=userId;

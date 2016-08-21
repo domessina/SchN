@@ -179,7 +179,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         return this.fileName;
     }
 
-    public void deleteOrigImage()
+    private void deleteOrigImage()
     {
         try{
             this.origImage.delete();
@@ -188,6 +188,10 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         {
             System.out.println("Failed to delete image---Image doesn't exist");
         }
+    }
+
+    public void setPath(String path){
+        this.path=path;
     }
 
     public boolean isImageEmpty() {

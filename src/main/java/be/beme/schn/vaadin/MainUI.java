@@ -132,7 +132,11 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         }
         else{
             this.diagramId=diagramId;
-            initSessionAttributes(userId,diagramId,Constants.BASE_DIR+"Users\\"+userId+"\\Diagrams\\"+diagramId+"\\Characters\\");
+            String diagramBaseDir= Constants.BASE_DIR+"Users\\"+userId+"\\Diagrams\\"+diagramId+"\\";
+            initSessionAttributes(userId,diagramId,
+                    diagramBaseDir+"Characters\\",
+                    diagramBaseDir,
+                    diagramBaseDir+"Scenes\\");
             return true;
         }
         return false;
@@ -151,11 +155,14 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     }
 
 
-    private void initSessionAttributes(int userId, int diagramId, String characterDirectory)
+    private void initSessionAttributes(int userId, int diagramId, String characterDirectory,
+                                       String diagramDirectory,String sceneDirectory)
     {
         VaadinSession.getCurrent().setAttribute("diagramId",diagramId);
         VaadinSession.getCurrent().setAttribute("userId",userId);
         VaadinSession.getCurrent().setAttribute("characterDirectory",characterDirectory);
+        VaadinSession.getCurrent().setAttribute("diagramDirectory",diagramDirectory);
+        VaadinSession.getCurrent().setAttribute("sceneDirectory",sceneDirectory);
     }
 
     private void showDiagramEditionWindow(Diagram d,final boolean isNew){
@@ -264,6 +271,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     }
 
     private void diagramEditClosed(DiagramEditionView dEV){
+        dEV.wrapperClosed();
         int diid=dEV.getDiagram().getId();
         userPresenter.setActualDiagram(diid);
     }

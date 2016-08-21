@@ -30,7 +30,7 @@ public class NWrapperPanel extends Panel implements NWrapper {
         this.rootLayout.setMargin(true);
         this.buttonSave = new Button("Save");
         this.buttonErase = new Button("Erase");
-        this.buttonSet= new Button(FontAwesome.GEAR);
+        this.buttonSet= new Button(FontAwesome.EDIT);
     }
 
     public NWrapperPanel(Component component)

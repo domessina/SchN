@@ -126,8 +126,8 @@ public class ChapterView extends CustomComponent implements NarrativeView, Mouse
         verticalLayout.addComponent(new Label("<h3>Simple Properties</h3>", ContentMode.HTML));
         verticalLayout.addComponent(fLayout);
         verticalLayout.addComponent(notes);
-        verticalLayout.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
-        verticalLayout.addComponent(buildUserProperties());
+        /*verticalLayout.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
+        verticalLayout.addComponent(buildUserProperties());*/
         propertiesPanel.setContent(verticalLayout);
         propertiesPanel.setSizeFull();
         propertiesPanel.setEnabled(false);

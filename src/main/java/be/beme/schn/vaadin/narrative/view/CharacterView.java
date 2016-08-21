@@ -30,9 +30,9 @@ import java.util.List;
  */
 
 //TODO un URI pour chaque Window?
-    //TODO mettre tous les view et presenter en final rien ue parce que dans ton esprit elles n'ont pas été concues pour etre héritées, de plus que c'est un projet interne, pas un projet ver sl'exteiruer comme un framework.
+//TODO mettre tous les view et presenter en final rien ue parce que dans ton esprit elles n'ont pas été concues pour etre héritées, de plus que c'est un projet interne, pas un projet ver sl'exteiruer comme un framework.
 
-public final class CharacterView extends CustomComponent implements NarrativeView, NWrapped,CrudListener<Trait>, Window.CloseListener ,CrudNotifier<Character>{
+public final class CharacterView extends CustomComponent implements NarrativeView, NWrapped, CrudListener<Trait>, Window.CloseListener, CrudNotifier<Character> {
 
     private Panel rootPanel;
     private TraitTableCrud traitTableCrud;
@@ -45,7 +45,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     private ArrayList<Trait> createTraits;
     private ArrayList<Trait> updateTraits;
     private ArrayList<Trait> deleteTraits;
-    private  ImageUploadPanel imageUploadPanel;
+    private ImageUploadPanel imageUploadPanel;
     private CharacterPresenter characterPresenter;
     private TraitCrudAction traitCrudPresenter;
     private VerticalLayout vLayoutProperties;
@@ -57,12 +57,10 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     private ArrayList<CrudListener<Character>> listeners;
 
 
-
-    public CharacterView(Character character, TraitCrudAction traitCrudPresenter)
-    {
-        this.character= character;
+    public CharacterView(Character character, TraitCrudAction traitCrudPresenter) {
+        this.character = character;
         this.traitCrudPresenter = traitCrudPresenter;
-        listeners=new ArrayList<>();
+        listeners = new ArrayList<>();
 
         setId("CharacterView");
         setHeight(99, Unit.PERCENTAGE);
@@ -72,63 +70,55 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     }
 
     @Override
-    public void wrap(NWrapper wrapper)
-    {
-        this.wrapper=(NWrapperPanel)wrapper;
+    public void wrap(NWrapper wrapper) {
+        this.wrapper = (NWrapperPanel) wrapper;
         confWrapperBtns();
-        if(this.character.getId()==0)
-        {
+        if (this.character.getId() == 0) {
             buttonErase.setVisible(false);
             buttonSet.setVisible(false);
         }
     }
 
-    private void confWrapperBtns()
-    {
-        buttonErase=wrapper.getButtonErase();
-        buttonSave=wrapper.getButtonSave();
-        buttonSet=wrapper.getButtonSet();
+    private void confWrapperBtns() {
+        buttonErase = wrapper.getButtonErase();
+        buttonSave = wrapper.getButtonSave();
+        buttonSet = wrapper.getButtonSet();
         buttonErase.addClickListener(this);
         buttonSave.addClickListener(this);
         buttonSet.addClickListener(this);
         buttonSet.setVisible(false);
     }
 
-    private Component buildContent()
-    {
+    private Component buildContent() {
         VerticalLayout verticalLayout = new VerticalLayout();
-//        verticalLayout.setSizeFull();
 
-//        imageUploadPanel= new ImageUploadPanel(Constants.BASE_DIR+"Users\\1"+"\\Diagrams\\"+this.character.getDiagram_id()+"\\Characters\\",this.character.getPicture());
-        imageUploadPanel= new ImageUploadPanel((String)VaadinSession.getCurrent().getAttribute("characterDirectory"),this.character.getPicture());
-
+        imageUploadPanel = new ImageUploadPanel((String) VaadinSession.getCurrent().getAttribute("characterDirectory"), this.character.getPicture());
 
         verticalLayout.addComponent(imageUploadPanel);
-        verticalLayout.setExpandRatio(imageUploadPanel,4);
+        verticalLayout.setExpandRatio(imageUploadPanel, 4);
         verticalLayout.addComponent(buildPropertiesPanel());
-        verticalLayout.setExpandRatio(vLayoutProperties,6);
+        verticalLayout.setExpandRatio(vLayoutProperties, 6);
 
-        rootPanel= new Panel();
+        rootPanel = new Panel();
         rootPanel.setSizeFull();
         rootPanel.setContent(verticalLayout);
 
         return rootPanel;
     }
 
-    private Layout  buildPropertiesPanel()
-    {
+    private Layout buildPropertiesPanel() {
         vLayoutProperties = new VerticalLayout();
         vLayoutProperties.setSizeFull();
         vLayoutProperties.setMargin(true);
-        vLayoutProperties.addComponent(new Label("<h3>Simple Properties</h3>",ContentMode.HTML));
+        vLayoutProperties.addComponent(new Label("<h3>Simple Properties</h3>", ContentMode.HTML));
         vLayoutProperties.addComponent(buildFormLayout());
-        textArea= new TextArea("Notes");
+        textArea = new TextArea("Notes");
         textArea.setValue(character.getNote());
         textArea.setNullRepresentation("");
-        textArea.setWidth(100,Unit.PERCENTAGE);
+        textArea.setWidth(100, Unit.PERCENTAGE);
         vLayoutProperties.addComponent(textArea);
-        vLayoutProperties.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
-        vLayoutProperties.addComponent(buildFormLayoutUserProperties());
+       /* vLayoutProperties.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
+        vLayoutProperties.addComponent(buildFormLayoutUserProperties());*/
 
         return vLayoutProperties;
     }
@@ -141,9 +131,9 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         name.setRequired(true);
         name.setNullRepresentation("");
         name.setValue(this.character.getName());
-        type= new ComboBox("Type");
+        type = new ComboBox("Type");
         type.setRequired(true);
-        type.addItems(new Object[]{"Principal","Secondary","Hero","Auxiliary","Opponent","Group"});
+        type.addItems(new Object[]{"Principal", "Secondary", "Hero", "Auxiliary", "Opponent", "Group"});
         type.setFilteringMode(FilteringMode.OFF);
         //type.setReadOnly(true); disable Editing?
         type.setValue(this.character.getType());//If the type set is not known , blanc is displayed
@@ -174,18 +164,15 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         return new FormLayout();
     }
 
-    private Table buildTraitTableCrud()
-    {
+    private Table buildTraitTableCrud() {
         traitTableCrud = new TraitTableCrud("List of traits");
         traitTableCrud.addCrudListener(this);
         traitTableCrud.fillTable(traitCrudPresenter.getTraitService().getTraitsByCharacter(this.character.getId()));
-        createTraits=new ArrayList<>();
-        updateTraits=new ArrayList<>();
-        deleteTraits=new ArrayList<>();
+        createTraits = new ArrayList<>();
+        updateTraits = new ArrayList<>();
+        deleteTraits = new ArrayList<>();
         return traitTableCrud;
     }
-
-
 
 
     @Override
@@ -213,14 +200,12 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
     }
 
-    private void save()
-    {
-        boolean isNew=true;
+    private void save() {
+        boolean isNew = true;
 
-        if(saveCheck())
-        {
-            if(this.character.getId()!=0)
-                isNew=false;
+        if (saveCheck()) {
+            if (this.character.getId() != 0)
+                isNew = false;
 
             this.character.setType(type.getValue().toString());
             this.character.setNote(textArea.getValue());
@@ -230,14 +215,13 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
             this.character = this.characterPresenter.save();
 
-            //TODO gérer si exception durant crud Traits
             if (this.character != null) {
                 createTraits();
                 updateTraits();
                 deleteTraits();
                 imageUploadPanel.commit();
 
-                if(isNew)
+                if (isNew)
                     notifyCreated(this.character);
                 else
                     notifyUpdated(this.character);
@@ -246,47 +230,39 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
 
             } else {
-                Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                Notification.show(Constants.SYS_ERR, Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
                 return;
             }
         }
 
 
-
     }
 
-    private boolean saveCheck()
-    {
+    private boolean saveCheck() {
         name.setComponentError(null);
         type.setComponentError(null);
         this.character.setName(name.getValue());
-        if(name.isEmpty()||type.isEmpty())
-        {
+        if (name.isEmpty() || type.isEmpty()) {
             name.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
             type.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
             return false;
-        }
-        else if(characterPresenter.checkExist()&&(this.character.getId()==0))
-        {
+        } else if (characterPresenter.checkExist() && (this.character.getId() == 0)) {
             name.setComponentError(new UserError("This name character already exists", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
             return false;
         }
         return true;
     }
 
-    private void erase()
-    {
-        boolean eraseCok=false;
+    private void erase() {
+        boolean eraseCok = false;
         // eraseTsok = traitPresenter.deleteAllTraitsByCharacter(this.character.getId());
         eraseCok = this.characterPresenter.erase();
-        if (eraseCok)
-        {
+        if (eraseCok) {
             imageUploadPanel.deleteImage();
             notifyDeleted(this.character);
             wrapper.closeIfWindow();
-        }
-        else {
-            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+        } else {
+            Notification.show(Constants.SYS_ERR, Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
             return;
         }
     }
@@ -297,7 +273,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
     @Override
     public void setHandler(NarrativePresenter narrativePresenter) {
-        this.characterPresenter =(CharacterPresenter)narrativePresenter;
+        this.characterPresenter = (CharacterPresenter) narrativePresenter;
     }
 
     @Override
@@ -307,10 +283,8 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
     }
 
-    private void createTraits()
-    {
-        for(Trait t:createTraits)
-        {
+    private void createTraits() {
+        for (Trait t : createTraits) {
             t.setCharacterId(this.character.getId());
             traitCrudPresenter.create(t);
         }
@@ -321,10 +295,8 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         updateTraits.add(o);
     }
 
-    private void updateTraits()
-    {
-        for(Trait t:updateTraits)
-        {
+    private void updateTraits() {
+        for (Trait t : updateTraits) {
             traitCrudPresenter.update(t);
         }
     }
@@ -334,14 +306,11 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         deleteTraits.add(o);
     }
 
-    private void deleteTraits()
-    {
-        for(Trait t:deleteTraits)
-        {
+    private void deleteTraits() {
+        for (Trait t : deleteTraits) {
             traitCrudPresenter.delete(t);
         }
     }
-
 
 
     @Override
@@ -363,24 +332,21 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
     @Override
     public void notifyCreated(Character target) {
-        for(CrudListener l:listeners)
-        {
-          l.created(target);
+        for (CrudListener l : listeners) {
+            l.created(target);
         }
     }
 
     @Override
     public void notifyUpdated(Character target) {
-        for(CrudListener l:listeners)
-        {
+        for (CrudListener l : listeners) {
             l.updated(target);
         }
     }
 
     @Override
     public void notifyDeleted(Character target) {
-        for(CrudListener l:listeners)
-        {
+        for (CrudListener l : listeners) {
             l.deleted(target);
         }
     }
