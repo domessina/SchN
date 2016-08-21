@@ -39,7 +39,8 @@ import java.util.List;
 @Title("Narrative Diagram")
 //@PreserveOnRefresh  //Attention est ce que les trucs qui sont reliés à l'url comme URI, query parameters seront gardés?
 //Push renseigne toi y  https://blog.oio.de/2014/01/13/overview-vaadin-7-annotations/
-@SpringUI                                                                                                               //TODO rajouter une grande scrollbar verticale pour quand on rapetissie la page
+@SpringUI
+//TODO rajouter une grande scrollbar verticale pour quand on rapetissie la page
 public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, CrudListener<Character> {                                       //TODO lock le ui à chaque fois que l'on sauvegarde ou erase , car accès à la Db peut etre lent
 
     @Autowired
@@ -82,6 +83,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         characterUI= new CharacterUI();
         sceneUI= new SceneUI();
         tabSheet= new TabSheet();
+        setErrorHandler(new CustomErrorHandler());
     }
 
 
@@ -227,19 +229,17 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         newz.addItem("Chapter",selectedItem ->chapterUI.newChapter());
         newz.addItem("Scene",selectedItem1 -> {
             if(selectedChapterId!=-1)
-            {
                 sceneUI.newScene(selectedChapterId);
-            }
-
         });
         newz.addItem("Character",selectedItem ->  characterUI.newCharacter());
 
         //OPEN
         MenuBar.MenuItem open= menuBar.addItem("Open...",null,null);
-
+        final Integer s=null;
         open.addItem("Diagram...",selectedItem1 -> {
             DiagramChoiceView dCV= new DiagramChoiceView(diagramPresenter.getDaoService().getAllDiagramsByUser(userId));
             dCV.setDiagramSelectListener(diaId -> {
+                s.toString();
                 userPresenter.setActualDiagram(diaId);
                 Page.getCurrent().reload();
             });

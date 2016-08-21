@@ -1,6 +1,7 @@
 package be.beme.schn;
 
 import be.beme.schn.narrative.component.Diagram;
+import com.vaadin.server.VaadinSession;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
