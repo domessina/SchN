@@ -223,7 +223,7 @@ public final class SceneViewExtended extends CustomComponent implements Narrativ
         {
             if(!chScenePresenter.removeCharacterFromScene(c.getId(),scene.getId()))
             {
-                Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                Notification.show(Constants.MSG_SYS_ERR,Constants.MSG_REPORT_SENT, Notification.Type.ERROR_MESSAGE);
             }
         }
     }

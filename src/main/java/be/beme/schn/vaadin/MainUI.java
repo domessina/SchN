@@ -89,8 +89,8 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
     protected void init(VaadinRequest vaadinRequest) {
 
         boolean presetOk;
-        if(Constants.WORKING_WITH_SOCIAL) {
-            userId = Integer.valueOf(vaadinRequest.getParameter(Constants.HTTP_PARAM_USER_ID));
+        if(Constants.SOCIAL_COMPATIBILITY) {
+            userId = Integer.valueOf(vaadinRequest.getParameter(Constants.SOCIAL_HTTP_PARAM_USER_ID));
            presetOk= preset();
         }else{
             userId=1;
@@ -127,7 +127,11 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         }
         else if(diagramId==-1){
             DiagramChoiceView dCV=new DiagramChoiceView(diagrams);
-            dCV.addCloseListener(event -> diagramChoiceClosed(dCV));
+            dCV.setClosable(false);
+            dCV.setDiagramSelectListener(diaId -> {
+                userPresenter.setActualDiagram(diaId);
+                Page.getCurrent().reload();
+            });
             MainUI.this.addWindow(dCV);
         }
         else{
@@ -180,8 +184,9 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         window.setModal(true);
         window.setResizable(false);
         window.setHeight(99,Unit.PERCENTAGE);
-//        window.addCloseListener(dV);
         window.setWidth( 31,Unit.EM);
+        if(isNew)
+            window.setClosable(false);
         window.addCloseListener(e->{
             diagramEditClosed(dV);
             if(isNew)
@@ -234,8 +239,9 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
         open.addItem("Diagram...",selectedItem1 -> {
             DiagramChoiceView dCV= new DiagramChoiceView(diagramPresenter.getDaoService().getAllDiagramsByUser(userId));
-            dCV.addCloseListener(e -> {
-                diagramChoiceClosed(dCV);
+            dCV.setDiagramSelectListener(diaId -> {
+                userPresenter.setActualDiagram(diaId);
+                Page.getCurrent().reload();
             });
             MainUI.this.addWindow(dCV);
         });
@@ -254,20 +260,13 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
         //QUIT
         //Don't invalidade de session because it stops all background vaadin process. it's better to let him do it himself
-        MenuBar.MenuItem quit=menuBar.addItem("Quit",selectedItem -> quitToSocialPlatform());
+        menuBar.addItem("Quit",selectedItem -> quitToSocialPlatform());
         //get it via param ent by social platform
         MenuBar.MenuItem user=menuBar.addItem(userPresenter.getUserPseudo(),null);
         user.setEnabled(false);
 
 
         return menuBar;
-    }
-
-    private void diagramChoiceClosed(DiagramChoiceView dCV){
-        dCV.setEnabled(false);
-        int didi = dCV.getDiagramId();
-        userPresenter.setActualDiagram(didi);
-        Page.getCurrent().reload();
     }
 
     private void diagramEditClosed(DiagramEditionView dEV){
@@ -279,7 +278,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     private void openNewDiagram(){
         MessageBox.createQuestion().withCaption("Important")
-                .withMessage(Constants.WINDOW_SAVE_CONTENT_BEFORE)
+                .withMessage(Constants.MSG_SAVE_CONTENT_BEFORE)
                 .withYesButton(()-> showDiagramEditionWindow(new Diagram(userId),true))
                 .withCancelButton()
                 .open();
@@ -287,7 +286,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     private void quitToSocialPlatform(){
         MessageBox.createQuestion().withCaption("Important")
-                .withMessage(Constants.WINDOW_SAVE_CONTENT_BEFORE)
+                .withMessage(Constants.MSG_SAVE_CONTENT_BEFORE)
                 .withYesButton(()-> {
                     MainUI.this.close();
                     this.getPage().setLocation(Constants.SOCIAL_URL);})
@@ -652,6 +651,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             window.setId("New Chapter");
             window.setModal(true);
             window.setResizable(false);
+            window.setWidth(40,Unit.PERCENTAGE);
 
             MainUI.this.addWindow(window);
         }

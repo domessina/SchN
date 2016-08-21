@@ -41,7 +41,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     private Button buttonReferences;
     private TextField name;
     private ComboBox type;
-    private TextArea textArea;
+    private TextArea notesTa;
     private ArrayList<Trait> createTraits;
     private ArrayList<Trait> updateTraits;
     private ArrayList<Trait> deleteTraits;
@@ -112,11 +112,12 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
         vLayoutProperties.setMargin(true);
         vLayoutProperties.addComponent(new Label("<h3>Simple Properties</h3>", ContentMode.HTML));
         vLayoutProperties.addComponent(buildFormLayout());
-        textArea = new TextArea("Notes");
-        textArea.setValue(character.getNote());
-        textArea.setNullRepresentation("");
-        textArea.setWidth(100, Unit.PERCENTAGE);
-        vLayoutProperties.addComponent(textArea);
+        notesTa = new TextArea("Notes");
+        notesTa.setValue(character.getNote());
+        notesTa.setNullRepresentation("");
+        notesTa.setWidth(100, Unit.PERCENTAGE);
+        notesTa.setRows(Constants.TEXTAREA_ROWS_CHARACTER);
+        vLayoutProperties.addComponent(notesTa);
        /* vLayoutProperties.addComponent(new Label("<h3>User Properties</h3>", ContentMode.HTML));
         vLayoutProperties.addComponent(buildFormLayoutUserProperties());*/
 
@@ -208,7 +209,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
                 isNew = false;
 
             this.character.setType(type.getValue().toString());
-            this.character.setNote(textArea.getValue());
+            this.character.setNote(notesTa.getValue());
             this.character.setPicture(imageUploadPanel.getFileName());
 //            this.character.setTraits(traitTableCrud.getTraits());                          //reinit Character's list of traits
 
@@ -230,7 +231,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
 
 
             } else {
-                Notification.show(Constants.SYS_ERR, Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                Notification.show(Constants.MSG_SYS_ERR, Constants.MSG_REPORT_SENT, Notification.Type.ERROR_MESSAGE);
                 return;
             }
         }
@@ -262,7 +263,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
             notifyDeleted(this.character);
             wrapper.closeIfWindow();
         } else {
-            Notification.show(Constants.SYS_ERR, Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            Notification.show(Constants.MSG_SYS_ERR, Constants.MSG_REPORT_SENT, Notification.Type.ERROR_MESSAGE);
             return;
         }
     }

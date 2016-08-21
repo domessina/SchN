@@ -27,7 +27,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
     private String fileName;
     private File tmpdir;
     private HorizontalLayout btnLayout;
-    private boolean imageEmpty;
+    private boolean imageEmpty=true;
 
     public ImageUploadPanel(String path, String fileName)
     {
@@ -46,6 +46,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
     }
 
 
+    //Vaadin stuff
     @Override
     public OutputStream receiveUpload(String filename, String mimeType)             //C'est chiant car Vaadin ne donne pas accès au fichier qui est upload. Il le rajoute au fos que tu retournes après
     {
@@ -75,28 +76,11 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
             new Notification("Could not upload", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
             return null;
         }
-
         return fos;
     }
 
-    private Layout buildBtnLayout()
-    {
-        btnLayout = new HorizontalLayout();
-        Button erase = new Button(FontAwesome.ERASER);
-        erase.addClickListener(event -> {
-            this.file=null;
-                image.setSource(null);
-            this.fileName=null;
-            this.imageEmpty=true;
-        });
-        btnLayout.addComponent(buildUpload());
-        btnLayout.addComponent(erase);
-        btnLayout.setWidth(100,Unit.PERCENTAGE);
-        btnLayout.setComponentAlignment(upload,Alignment.BOTTOM_LEFT);
-        btnLayout.setComponentAlignment(erase,Alignment.TOP_RIGHT);
-        return btnLayout;
-    }
 
+    //Vaadin stuff
     private Upload buildUpload()
     {
         upload= new Upload("",this);
@@ -106,8 +90,28 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
 
             //changing the imageSource refresh the image in the browser
            this.image.setSource(new FileResource(this.file));
+            imageEmpty=false;
         });
         return upload;
+    }
+
+
+    private Layout buildBtnLayout()
+    {
+        btnLayout = new HorizontalLayout();
+        Button erase = new Button(FontAwesome.ERASER);
+        erase.addClickListener(event -> {
+            this.file=null;
+            image.setSource(null);
+            this.fileName=null;
+            this.imageEmpty=true;
+        });
+        btnLayout.addComponent(buildUpload());
+        btnLayout.addComponent(erase);
+        btnLayout.setWidth(100,Unit.PERCENTAGE);
+        btnLayout.setComponentAlignment(upload,Alignment.BOTTOM_LEFT);
+        btnLayout.setComponentAlignment(erase,Alignment.TOP_RIGHT);
+        return btnLayout;
     }
 
     private Image buildImagePanel()
@@ -140,10 +144,10 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         catch(NullPointerException e)
         {
             System.out.println("No image to save");
+            imageEmpty=true;
 
         }
-        if(isImageEmpty())
-        {
+        if(imageEmpty) {
             deleteOrigImage();
         }
 
@@ -186,7 +190,7 @@ public class ImageUploadPanel extends CustomComponent implements Upload.Receiver
         }
         catch(NullPointerException e)
         {
-            System.out.println("Failed to delete image---Image doesn't exist");
+//            System.out.println("Failed to delete image---Image doesn't exist");
         }
     }
 

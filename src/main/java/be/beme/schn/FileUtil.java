@@ -1,5 +1,6 @@
 package be.beme.schn;
 
+import be.beme.schn.narrative.component.Diagram;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -18,15 +19,7 @@ public final class FileUtil  {
         FileUtils.deleteQuietly(file);
     }
 
-    //must to be done by the social platform
-    public static void createUserTree(int userId){
-      /*  File file = new File(Constants.BASE_DIR+"Users\\"+userId);
-        try {
-            org.apache.commons.io.FileUtils.forceMkdir(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-    }
+
 
     public static void createDiagramTree(int userId, int diagramId){
         String baseDiagram=Constants.BASE_DIR+"Users\\"+userId+"\\Diagrams\\"+diagramId;
@@ -46,4 +39,18 @@ public final class FileUtil  {
         }
     }
 
+    public static File getDiagramPicture(Diagram d){
+        return FileUtils.getFile(Constants.BASE_DIR+"Users\\"+d.getUser_id()+"\\Diagrams\\"+d.getId()+"\\"+d.getPictureId());
+    }
+
+
+    //must to be done by the social platform
+    public static void createUserTree(int userId){
+      /*  File file = new File(Constants.BASE_DIR+"Users\\"+userId);
+        try {
+            org.apache.commons.io.FileUtils.forceMkdir(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+    }
 }

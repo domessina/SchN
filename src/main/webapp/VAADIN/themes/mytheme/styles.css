@@ -12982,6 +12982,16 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: dodgerblue;
 }
 
+.mytheme .enlarge-hover:hover {
+	-webkit-transform: scale(0.8);
+	transform: scale(0.8);
+}
+
+.mytheme .enlarge-hover {
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
 .mytheme .red-shadow {
 	box-shadow: 0 0 18px red;
 }

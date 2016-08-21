@@ -139,7 +139,7 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
                 presenter.setView(this);
                 if(!presenter.save()||!presenter.delete())
                 {
-                    Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                    Notification.show(Constants.MSG_SYS_ERR,Constants.MSG_REPORT_SENT, Notification.Type.ERROR_MESSAGE);
                 }
                selectTrait.isVisible();
 
@@ -202,7 +202,7 @@ public class CharacterSceneView extends CustomComponent implements NarrativeView
                 presenter.setView(this);
                 if(!presenter.saveLink()||!presenter.deleteLink())
                 {
-                    Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+                    Notification.show(Constants.MSG_SYS_ERR,Constants.MSG_REPORT_SENT, Notification.Type.ERROR_MESSAGE);
                 }
                 selectTrait2.isVisible();
 */

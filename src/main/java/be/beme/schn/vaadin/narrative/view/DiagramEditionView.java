@@ -100,7 +100,11 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
         titleF.setComponentError(null);
         diagram.setTitle(titleF.getValue());
         if(titleF.isEmpty()){
-            titleF.setComponentError(new UserError("Required fields not filled", AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
+            titleF.setComponentError(new UserError(Constants.MSG_REQUIRED_FIELD_INFO, AbstractErrorMessage.ContentMode.TEXT, ErrorMessage.ErrorLevel.INFORMATION));
+            return false;
+        }
+        if(imageUploadPanel.isImageEmpty()){
+            imageUploadPanel.setComponentError(new UserError(Constants.MSG_REQUIRED_FIELD_INFO,AbstractErrorMessage.ContentMode.TEXT,ErrorMessage.ErrorLevel.INFORMATION));
             return false;
         }
         return true;
@@ -109,7 +113,7 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
 
     private void showDeleteDialog(){
         MessageBox.createQuestion().withCaption("WARNING")
-                .withMessage(Constants.WINDOW_DELETE_DIAGRAM_MSG)
+                .withMessage(Constants.MSG_DELETE_DIAGRAM)
                 .withYesButton(()->{
                     if(presenter.erase())
                         imageUploadPanel.deleteImage();

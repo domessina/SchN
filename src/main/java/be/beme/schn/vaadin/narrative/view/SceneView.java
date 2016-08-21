@@ -76,11 +76,6 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
     {
         VerticalLayout verticalLayout= new VerticalLayout();
 
-        notes = new TextArea("Notes",this.scene.getNote());
-        notes.setNullRepresentation("");
-        notes.setWidth(100,Unit.PERCENTAGE);
-
-
         imageUploadPanel= new ImageUploadPanel(VaadinSession.getCurrent().getAttribute("sceneDirectory").toString() ,this.scene.getPicture());
 
 
@@ -110,6 +105,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         tagField.setNullRepresentation("");
         notes.setNullRepresentation("");
         notes.setWidth(100,Unit.PERCENTAGE);
+        notes.setRows(Constants.TEXTAREA_ROWS_SCENE);
         fLayout.addComponent(tagField);
         fLayout.setComponentAlignment(tagField,Alignment.MIDDLE_CENTER);
 
@@ -171,7 +167,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         }
         else
         {
-            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            Notification.show(Constants.MSG_SYS_ERR,Constants.MSG_REPORT_SENT, Notification.Type.ERROR_MESSAGE);
             return;
         }
 
@@ -200,7 +196,7 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         }
         else
         {
-            Notification.show(Constants.SYS_ERR,Constants.REPORT_SENT, Notification.Type.ERROR_MESSAGE);
+            Notification.show(Constants.MSG_SYS_ERR,Constants.MSG_REPORT_SENT, Notification.Type.ERROR_MESSAGE);
             return ;
         }
     }
