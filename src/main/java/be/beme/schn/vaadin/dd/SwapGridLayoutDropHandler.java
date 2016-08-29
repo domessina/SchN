@@ -14,9 +14,9 @@ import com.vaadin.ui.GridLayout;
 import java.util.ArrayList;
 
 /**
- * Created by Dotista on 23-04-16.
+ * Created by D.Messina on 23-04-16.
  */
-public class GridLayoutDropHandler implements DropHandler {
+public class SwapGridLayoutDropHandler implements DropHandler {
 
     private final GridLayout layout;
     private int indexdest=0;
@@ -27,7 +27,7 @@ public class GridLayoutDropHandler implements DropHandler {
     private int ysrc;
     private ArrayList<Component.Listener> listeners;
 
-    public GridLayoutDropHandler(final GridLayout layout) {
+    public SwapGridLayoutDropHandler(final GridLayout layout) {
         this.layout = layout;
         listeners=new ArrayList<>();
     }
@@ -42,7 +42,7 @@ public class GridLayoutDropHandler implements DropHandler {
         final Transferable transferable = dropEvent.getTransferable();
         final Component sourceComponent = transferable.getSourceComponent();
 
-        if (sourceComponent instanceof CustomDragAndDropWrapper)
+        if (sourceComponent instanceof SwapDragAndDropWrapper)
         {
             final TargetDetails dropTargetData = dropEvent.getTargetDetails();
             final DropTarget target = dropTargetData.getTarget();                                                       //DropTarget extends Component
@@ -89,7 +89,7 @@ public class GridLayoutDropHandler implements DropHandler {
     {
         for(Component.Listener l: listeners)
         {
-            l.componentEvent(new GridLayoutDropEvent(this.layout,new int[]{xdest,ydest,indexdest,xsrc,ysrc,indexsrc}));
+            l.componentEvent(new SwapGridLayoutDropEvent(this.layout,new int[]{xdest,ydest,indexdest,xsrc,ysrc,indexsrc}));
         }
     }
 }

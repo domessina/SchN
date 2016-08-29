@@ -6,9 +6,9 @@ import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.Scene;
 import be.beme.schn.vaadin.crud.CrudListener;
-import be.beme.schn.vaadin.dd.DDGridLayout;
-import be.beme.schn.vaadin.dd.GridLayoutDropEvent;
-import be.beme.schn.vaadin.dd.CustomDragAndDropWrapper;
+import be.beme.schn.vaadin.dd.SwapDDGridLayout;
+import be.beme.schn.vaadin.dd.SwapGridLayoutDropEvent;
+import be.beme.schn.vaadin.dd.SwapDragAndDropWrapper;
 import be.beme.schn.vaadin.narrative.ChapterPVLayout;
 import be.beme.schn.vaadin.narrative.NWrapperPanel;
 import be.beme.schn.vaadin.narrative.presenter.*;
@@ -351,7 +351,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
     private final class SceneUI implements  CrudListener<Scene>, Component.Listener
     {
-        private DDGridLayout ddGLayout;
+        private SwapDDGridLayout ddGLayout;
 
         public void openScene(Scene scene)
         {
@@ -409,23 +409,23 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
             selectedChapterId=chapter.getId();
             Panel pstickers = new Panel();
             pstickers.setStyleName("background-grey");
-            ddGLayout = new DDGridLayout();
+            ddGLayout = new SwapDDGridLayout();
 //            ddGLayout.setImmediate(true);                                                                                 //for ddGLayout.getComponentCount being up to date.
             ddGLayout.addDropListener(this);
-            ddGLayout.getLayout().setSpacing(true);
+            ddGLayout.getGridLayout().setSpacing(true);
             ddGLayout.addStyleName("no-vertical-drag-hints");
             ddGLayout.addStyleName("no-horizontal-drag-hints");
 
             try {
                 int nbScenes=scenePresenter.getDaoService().getNumberOfScenes(chapter.getId());
                 int rows = (int) Math.ceil(nbScenes/3);
-                ddGLayout.getLayout().removeAllComponents();
+                ddGLayout.getGridLayout().removeAllComponents();
 
                 if(rows==0)
                     rows=1;
 
-                ddGLayout.getLayout().setRows(rows);
-                ddGLayout.getLayout().setColumns(3);
+                ddGLayout.getGridLayout().setRows(rows);
+                ddGLayout.getGridLayout().setColumns(3);
 
                 List<Scene> scenes =scenePresenter.getDaoService().getAllScenesByChapter(chapter.getId());
 
@@ -464,7 +464,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                 System.out.println("This chapter has no scenes");
             }
 
-            ddGLayout.getLayout().setWidth(100,Unit.PERCENTAGE);
+            ddGLayout.getGridLayout().setWidth(100,Unit.PERCENTAGE);
 
             pstickers.setSizeFull();
             pstickers.setContent(ddGLayout);
@@ -506,10 +506,10 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
         @Override
         public void componentEvent(Event event) {
-            if(event instanceof GridLayoutDropEvent)
+            if(event instanceof SwapGridLayoutDropEvent)
             {
                 //the stickers are already switched in the layout
-                GridLayoutDropEvent e =(GridLayoutDropEvent) event;
+                SwapGridLayoutDropEvent e =(SwapGridLayoutDropEvent) event;
 
                 //the scene id moved by the user
                 int idSceneDragged=Integer.valueOf(getSceneStickerId(e.getXdest(),e.getYdest()));
@@ -522,7 +522,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
 
         private String getSceneStickerId(int x, int y)
         {
-            CustomDragAndDropWrapper wrappedDrag=(CustomDragAndDropWrapper) ddGLayout.getLayout().getComponent(x,y);
+            SwapDragAndDropWrapper wrappedDrag=(SwapDragAndDropWrapper) ddGLayout.getGridLayout().getComponent(x,y);
             Panel p=(Panel)wrappedDrag.getCompositionRoot();
             return p.getId();
         }

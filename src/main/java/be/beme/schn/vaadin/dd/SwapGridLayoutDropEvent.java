@@ -1,11 +1,14 @@
 package be.beme.schn.vaadin.dd;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.GridLayout;
 
 /**
- * Created by Dotista on 23-04-16.
+ * Event fired when an item is dropped from a cell to another
+ * in a {@link SwapDDGridLayout}
+ * Created by D.Messina on 23-04-16.
  */
-public class GridLayoutDropEvent extends Component.Event {
+public class SwapGridLayoutDropEvent extends Component.Event {
 
     private int[] coordinates;
 
@@ -17,13 +20,18 @@ public class GridLayoutDropEvent extends Component.Event {
      * @param source the GridLayout
      * @param coordinates .
      */
-    public GridLayoutDropEvent(Component source,int[] coordinates) {
+    public SwapGridLayoutDropEvent(GridLayout source, int[] coordinates) {
         super(source);
         this.coordinates=coordinates;
     }
 
+    /**
+     * @return the abscissa/column to where the item is dropped
+     * **/
     public int getXdest() {return coordinates[0];}
-
+    /**
+     * @return the ordinate/row to where the item is dropped
+     * **/
     public int getYdest() {return coordinates[1];}
 
     /**
@@ -31,10 +39,18 @@ public class GridLayoutDropEvent extends Component.Event {
      */
     public int getIndexdest() {return coordinates[2];}
 
+    /**
+     * @return the abscissa/column from where the item was dragged
+     * **/
     public int getXsrc() {return coordinates[3];}
-
+    /**
+     * @return the ordinate/row from where the item was dragged
+     * **/
     public int getYsrc() {return coordinates[4];}
 
+    /**
+     * @return index int the GridLayout from where the item was dragged
+     * **/
     public int getIndexsrc() {return coordinates[5];
     }
 }

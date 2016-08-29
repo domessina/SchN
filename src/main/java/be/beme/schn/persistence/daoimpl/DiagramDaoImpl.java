@@ -48,7 +48,7 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
     @Override
     public int delete(int diagramId) {
         int userId = getDiagramById(diagramId).getUser_id();
-        return jdbcTemplate.update("delete from public.\"Diagram\" where id=? ", diagramId);
+        return jdbcTemplate.update("delete from public.\"Diagram\" where id=?", diagramId);
     }
 
 
@@ -58,6 +58,11 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
 
     }
 
+    @Override
+    public Diagram getDiagramByClientId(int diagramIdClient) {
+        return jdbcTemplate.queryForObject("select * from \"Diagram\" where client_id=?",
+                new Object[]{diagramIdClient},mapper);
+    }
 
     @Override
     public Diagram getDiagramById(int diagramId)
@@ -67,8 +72,20 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
     }
 
     @Override
+    public int getIdFromClientId(int clientId) {
+        return jdbcTemplate.queryForObject("select id from \"Diagram\" where client_id=?",
+                new Object[]{clientId},Integer.class);
+    }
+
+    @Override
+    public void setDiagramEnabled(int diagramId, boolean isEnabled) {
+        jdbcTemplate.update("UPDATE public.\"Diagram\" SET enabled=? WHERE id=?",new Object[]{isEnabled},new int[]{
+                Types.BOOLEAN});
+    }
+
+    @Override
     public List<Diagram> getAllDiagramsByUser(int userId) {
-        return jdbcTemplate.query("select * from \"Diagram\" where user_id=?",
+        return jdbcTemplate.query("select * from \"Diagram\" where user_id=? and enabled=true",
                 new Object[]{userId},mapper);
     }
 

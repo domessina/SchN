@@ -11,4 +11,10 @@ public interface DiagramSynchDao  {
 
     void setIdClientServer(int diagramIdClient, int diagramIdServer);
     List<Diagram> newFromServer(int userId);
+
+    boolean isDiagramToSynch(int diagramIdClient);
+
+    String getServerAction(int diagramIdClient);
+
+    void setLastSelectedAction(String clientAction);
 }

@@ -1,18 +1,18 @@
 package be.beme.schn.spring.api.v1.controller;
 
 import be.beme.schn.narrative.component.Diagram;
-import be.beme.schn.narrative.component.NarrativeComponentType;
 import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.persistence.dao.synch.DiagramSynchDao;
 import be.beme.schn.spring.api.v1.exception.BadParamException;
-import be.beme.schn.spring.api.v1.response.IdResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -44,7 +44,7 @@ public class DiagramSpecificController extends AbstractController {
     }
 
 
-    @RequestMapping(method = RequestMethod.POST)
+    /*@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<IdResponse> newFromClient(@RequestParam Diagram diagramClient){
 
         IdResponse idSrv =new IdResponse(dao.create(diagramClient), NarrativeComponentType.NC_Diagram.toString());
@@ -56,5 +56,5 @@ public class DiagramSpecificController extends AbstractController {
     public ResponseEntity<List<Diagram>> newFromServer(@RequestParam int userId){
         List<Diagram> diagrams=synchDao.newFromServer(userId);
         return new ResponseEntity<>(diagrams, HttpStatus.OK);
-    }
+    }*/
 }

@@ -17,4 +17,10 @@ public interface DiagramDao  extends NarrativeComponentDao {
 
     Diagram getDiagramById( int diagramId);
 
+    Diagram getDiagramByClientId(int diagramIdClient);
+
+    void setDiagramEnabled(int diagramId,boolean isEnabled);
+
+    int getIdFromClientId(int clientId);
+
 }
