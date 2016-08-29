@@ -24,7 +24,7 @@ public class ClientChoicePerformer {
     }
 
     public Diagram perform(){
-        synchDao.setLastSelectedAction(selectedAction);
+        synchDao.setLastSelectedAction(selectedAction,diagramIdClient);
         switch (selectedAction){
             case "S-DELETE":  sDelete();     break;
             case "C-DELETE":  cDelete();      break;

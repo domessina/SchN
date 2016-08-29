@@ -25,19 +25,7 @@ public class NarrativeComponentController extends AbstractController {
     @Autowired
     private NarrativeComponentDaoRegistry daoRegistry;
 
-
-    @RequestMapping(method = RequestMethod.PUT) //empecher de changer l'id, le diagramId
-    public ResponseEntity<?> update(@PathVariable String type,@RequestBody NarrativeComponent component)
-    {
-        NarrativeComponentDao service=daoRegistry.getDao(type);
-        if(service.update(component)==0)
-        {
-            throw new BadParamException(messageSource.getMessage("bad.id.message",new Object[]{component.getId()}, Locale.ENGLISH));
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }//TODO tous le snarrative compoenent doivent avoir un diagramId variable pour qu'ainsi via l'api qqn ne peut aps put un trait ) un perso qui n'es pas dans on diagram
-
-    @RequestMapping(method = RequestMethod.POST)
+@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<IdResponse> create(@PathVariable String type, @RequestBody NarrativeComponent component)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
@@ -53,6 +41,20 @@ public class NarrativeComponentController extends AbstractController {
     }
 
 
+    @RequestMapping(method = RequestMethod.PUT) //empecher de changer l'id, le diagramId
+    public ResponseEntity<?> update(@PathVariable String type,@RequestBody NarrativeComponent component)
+    {
+        NarrativeComponentDao service=daoRegistry.getDao(type);
+        if(service.update(component)==0)
+        {
+            throw new BadParamException(messageSource.getMessage("bad.id.message",new Object[]{component.getId()}, Locale.ENGLISH));
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //TODO tous le snarrative compoenent doivent avoir un diagramId variable pour qu'ainsi via l'api qqn ne peut aps put un trait ) un perso qui n'es pas dans on diagram
+
+    //THE DELETE METHOD IS UNUSED
     @RequestMapping(value ="/{id}",method = RequestMethod.DELETE)  //catcher l'excpetion de si il existe pas
     public ResponseEntity<?> delete(@PathVariable String type,@PathVariable int id)
     {

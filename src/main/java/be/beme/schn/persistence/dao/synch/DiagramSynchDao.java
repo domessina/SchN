@@ -16,5 +16,5 @@ public interface DiagramSynchDao  {
 
     String getServerAction(int diagramIdClient);
 
-    void setLastSelectedAction(String clientAction);
+    void setLastSelectedAction(String clientAction, int clientId);
 }

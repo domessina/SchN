@@ -20,4 +20,5 @@ public interface NarrativeComponentDao {
     int update(NarrativeComponent component) ;
 
     int delete(int componentId);
+
 }
