@@ -25,8 +25,8 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
     @Override
     public int create(NarrativeComponent component) {
         Trait trait=(Trait)component;
-        jdbcTemplate.update("insert into \"Trait\" (character_id,name) values (?,?)"
-                ,trait.getCharacterId(),trait.getName());
+        jdbcTemplate.update("insert into \"Trait\" (character_id,name,diagram_id) values (?,?,?)"
+                ,trait.getCharacterId(),trait.getName(), trait.getDiagramId());
 
         return jdbcTemplate.queryForObject("select max(id) from \"Trait\" where character_id=?",
                 new Object[] {trait.getCharacterId()},Integer.class);
@@ -84,6 +84,7 @@ public class TraitDaoImpl extends AbstractPersistenceService implements TraitDao
             trait.setId(rs.getInt("id"));
             trait.setName(rs.getString("name"));
             trait.setCharacterId(rs.getInt("character_id"));
+            trait.setDiagramId(rs.getInt("diagram_id"));
             return trait;
         }
     }

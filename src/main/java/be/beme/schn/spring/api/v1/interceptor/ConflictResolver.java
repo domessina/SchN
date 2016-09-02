@@ -18,10 +18,7 @@ public class ConflictResolver {
     public String choices;
     private NarrativeComponent nc;
     private DiagramSynchDaoImpl diagramSynchDao;
-    private ChapterSynchDaoImpl chapterSynchDao;
-    private SceneSynchDaoImpl sceneDynchDao;
-    private CharacterSynchDaoImpl characterSynchDao;
-    private TraitSynchDaoImpl traitSynchDao;
+
     private NarrativeComponent responsenc;//atention pour ça faudra remettre le deserialisation json pour narrative compoenent
 
     @Autowired
@@ -47,11 +44,14 @@ public class ConflictResolver {
 
         NarrativeComponentDao service=daoRegistry.getDao(type);
 
-        type=capitalize(type);
-        if(diagramSynchDao.isComponentToSynch(type,nc.getId()))
+        String typeCap=capitalize(type);
+        int dId=diagramSynchDao.getDiagramId(typeCap,nc.getId());
+
+//        if(diagramSynchDao.isComponentToSynch(typeCap,type,nc.getId()))
+        if(diagramSynchDao.isDiagramToSynch(dId))
         {
             //serverid
-            int dId=diagramSynchDao.getDiagramId(type,nc.getId());
+
             String lastAction=diagramSynchDao.getLastSelectedAction(dId);
             switch (lastAction){
                 case "S-DELETE":  {
@@ -67,10 +67,14 @@ public class ConflictResolver {
                     break;
                 }
                 case "S-UPDATE": {
-                    service.getNComponent(nc.getId());//attention c id serveur qu on a besoin, du coup faut tout faire avec id serveur
+                    service.getNComponent(nc.getId());
                     break;
                 }
             }
+            resolution=lastAction;
+        }
+        else{
+            resolution=clientAction;
         }
     }
 
@@ -84,6 +88,10 @@ public class ConflictResolver {
             resolution="CLIENT-CHOICE";
             choices="C-"+clientAction+"|"+"S-"+serverAction;
 
+            if(serverAction.equals("DELETE")&&serverAction.equals(clientAction)){
+                resolution="DELETE";
+            }
+
         }
         else{
             resolution=clientAction;
@@ -92,28 +100,6 @@ public class ConflictResolver {
     }
 
 
-
-    private void cDelete(String type){
-        NarrativeComponentDao service=daoRegistry.getDao(type);
-
-        int srvId=dao.getIdFromClientId(diagramClient.getId());
-        dao.delete(srvId);
-        diagramResponse=null;
-
-    }
-
-    private void cUpdate(String type){
-        NarrativeComponentDao service=daoRegistry.getDao(type);
-
-        dao.update(diagramClient);
-        diagramResponse=null;
-    }
-
-    private void sUpdate(String typz){
-        NarrativeComponentDao service=daoRegistry.getDao(type);
-
-        diagramResponse =dao.getDiagramByClientId(diagramClient.getId());
-    }
 
 
     private String capitalize(final String line) {

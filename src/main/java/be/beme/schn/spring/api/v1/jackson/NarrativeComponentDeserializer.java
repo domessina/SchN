@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 /**
  * Created by Dotista on 18-05-16.
+ * From Json to Java
  */
 public class NarrativeComponentDeserializer extends JsonDeserializer {
     @Override
@@ -59,6 +60,7 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         scene.setTag(node.get("tag").textValue());
         scene.setPicture(node.get("picture").textValue());
         scene.setNote(node.get("note").textValue());
+        scene.setDiagramId(node.get("diagramId").intValue());
         return scene;
     }
 
@@ -71,7 +73,6 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         character.setPicture(node.get("picture").textValue());
         character.setDiagram_id(node.get("diagram_id").intValue());
         character.setType(node.get("type").textValue());
-//        character.setUserProperties(node.get());
         return character;
     }
 
@@ -81,6 +82,7 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         trait.setId(node.get("id").intValue());
         trait.setName(node.get("name").textValue());
         trait.setCharacterId(node.get("characterId").intValue());
+        trait.setDiagramId(node.get("diagramId").intValue());
         return trait;
     }
 

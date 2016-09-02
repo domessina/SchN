@@ -9,7 +9,7 @@ import be.beme.schn.persistence.daoimpl.synch.DiagramSynchDaoImpl;
  */
 public class ClientChoicePerformer {
 
-    private int diagramIdClient;
+
     private String selectedAction;
     private DiagramDaoImpl dao;
     private DiagramSynchDaoImpl synchDao;
@@ -19,12 +19,12 @@ public class ClientChoicePerformer {
     public ClientChoicePerformer(Diagram dClient, String selectedAction){
         dao=new DiagramDaoImpl();
         synchDao=new DiagramSynchDaoImpl();
-        this.diagramIdClient=dClient.getId();
+        this.diagramClient=dClient;
         this.selectedAction=selectedAction;
     }
 
     public Diagram perform(){
-        synchDao.setLastSelectedAction(selectedAction,diagramIdClient);
+        synchDao.setLastSelectedAction(selectedAction,diagramClient.getId());
         switch (selectedAction){
             case "S-DELETE":  sDelete();     break;
             case "C-DELETE":  cDelete();      break;
@@ -36,15 +36,13 @@ public class ClientChoicePerformer {
 
 
     private void sDelete(){
-       int srvId= dao.getIdFromClientId(diagramClient.getId());
-        dao.delete(srvId);
+        dao.delete(diagramClient.getId());
         diagramResponse=null;
     }
 
 
     private void cDelete(){
-        int srvId=dao.getIdFromClientId(diagramClient.getId());
-        dao.delete(srvId);
+        dao.delete(diagramClient.getId());
         diagramResponse=null;
 
     }
@@ -55,7 +53,7 @@ public class ClientChoicePerformer {
     }
 
     private void sUpdate(){
-        diagramResponse =dao.getDiagramByClientId(diagramClient.getId());
+        diagramResponse =dao.getDiagramById(diagramClient.getId());
     }
 
 

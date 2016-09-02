@@ -157,6 +157,11 @@ public final class SceneView extends CustomComponent implements NWrapped, Narrat
         this.scene.setTag(tagField.getValue());
         this.scene.setPicture(imageUploadPanel.getFileName());
         this.scene.setNote(notes.getValue());
+
+        if(isNewScene){
+            this.scene.setDiagramId((int)VaadinSession.getCurrent().getAttribute("diagramId"));
+        }
+
         presenter.setView(this);
         this.scene=presenter.save();
 

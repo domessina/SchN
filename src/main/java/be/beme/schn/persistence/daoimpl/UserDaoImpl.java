@@ -31,6 +31,7 @@ public class UserDaoImpl extends AbstractPersistenceService implements UserDao {
     @Override
     public void setActualDiagram(int userId, int diagramId) {
         jdbcTemplate.update("update \"User\" SET actual_diagram_id=? where id=?",diagramId, userId);
+
     }
 
     @Override

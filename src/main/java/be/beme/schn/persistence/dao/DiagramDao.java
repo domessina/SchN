@@ -15,12 +15,17 @@ public interface DiagramDao  extends NarrativeComponentDao {
 
     List<Diagram> getAllDiagramsByUser(int userId);
 
-    Diagram getDiagramById( int diagramId);
+    Diagram getDiagramById(int diagramId);
 
     Diagram getDiagramByClientId(int diagramIdClient);
 
-    void setDiagramEnabled(int diagramId,boolean isEnabled);
+    void setDiagramEnabled(int diagramId, boolean isEnabled);
 
     int getIdFromClientId(int clientId);
 
+    void setActionDiagramToSynch(String action, int diagramId);
+
+    void setNeedSynch(boolean needed, int diagramId);
+
+    void createDiagramToSynch(int userId, int diagramId);
 }

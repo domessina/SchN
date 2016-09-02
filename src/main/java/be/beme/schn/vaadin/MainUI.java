@@ -143,6 +143,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
                     diagramBaseDir+"Characters\\",
                     diagramBaseDir,
                     diagramBaseDir+"Scenes\\");
+            diagramPresenter.setActionDiagramToSynch("UPDATE",diagramId);        //each time the session is opened on a diagram, we suppose the user wil modify it. So it is a diagram to synch with the mobile version
             return true;
         }
         return false;

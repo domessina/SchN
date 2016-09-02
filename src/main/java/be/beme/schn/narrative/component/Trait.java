@@ -12,6 +12,7 @@ public class Trait extends NarrativeComponent {
 
     private String name;
     private int characterId;
+    private int diagramId;
 
     public Trait(){}
 

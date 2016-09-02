@@ -31,11 +31,15 @@ public class DiagramPresenter implements WrapperPanelPresenter {
         d.setId(diagramdao.create(view.getDiagram()));
         FileUtil.createDiagramTree(d.getUser_id(),d.getId());
         userDao.increaseNumberOfDiagrams(d.getUser_id());
+        diagramdao.createDiagramToSynch(d.getUser_id(),d.getId());
+        diagramdao.setActionDiagramToSynch("CREATE",d.getId());
+        diagramdao.setNeedSynch(true,d.getId());
         return d;
     }
 
     public void update() {
         diagramdao.update(view.getDiagram());
+        diagramdao.setNeedSynch(true,view.getDiagram().getId());
     }
 
     @Override
@@ -45,7 +49,13 @@ public class DiagramPresenter implements WrapperPanelPresenter {
         FileUtil.deleteDiagramTree(d.getUser_id(),d.getId());
         userDao.reduceNumberOfDiagrams(d.getUser_id());
         userDao.setActualDiagram(d.getUser_id(), -1);
+        diagramdao.setActionDiagramToSynch("DELETE",d.getId());
+        diagramdao.setNeedSynch(true,d.getId());
         return true;
+    }
+
+    public void setActionDiagramToSynch(String action, int diagramId){
+        diagramdao.setActionDiagramToSynch("UPDATE",diagramId);
     }
 
     @Override

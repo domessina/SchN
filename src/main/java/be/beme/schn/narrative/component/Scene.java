@@ -11,6 +11,7 @@ import lombok.Setter;
 public class Scene extends NarrativeComponent {
 
     private int chapterId;
+    private int diagramId;
     private String picture ;
     private int place;
     private String note;

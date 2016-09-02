@@ -280,6 +280,7 @@ public final class CharacterView extends CustomComponent implements NarrativeVie
     @Override
     public void created(Trait o) {
 
+        o.setDiagramId((int)VaadinSession.getCurrent().getAttribute("diagramId"));
         createTraits.add(o);
 
     }

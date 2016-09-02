@@ -79,6 +79,7 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
 
     @Override
     public void setDiagramEnabled(int diagramId, boolean isEnabled) {
+
         jdbcTemplate.update("UPDATE public.\"Diagram\" SET enabled=? WHERE id=?",new Object[]{isEnabled},new int[]{
                 Types.BOOLEAN});
     }
@@ -87,6 +88,27 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
     public List<Diagram> getAllDiagramsByUser(int userId) {
         return jdbcTemplate.query("select * from \"Diagram\" where user_id=? and enabled=true",
                 new Object[]{userId},mapper);
+    }
+
+    @Override
+    public void setNeedSynch(boolean needed,int diagramId){
+        jdbcTemplate.update("update public.\"DiagramToSynch\" set need_synch=? where diagram_id=?",new Object[]{needed,diagramId},new int[]{
+                Types.BOOLEAN,
+                Types.INTEGER});
+    }
+
+    @Override
+    public void createDiagramToSynch(int userId, int diagramId){
+        jdbcTemplate.update("insert into \"DiagramToSynch\" (user_id, diagram_id) values (?,?)",userId,diagramId);
+    }
+
+    @Override
+    public void setActionDiagramToSynch(String action , int diagramIdSrv){
+
+        jdbcTemplate.update("UPDATE public.\"DiagramToSynch\" set action=? where diagram_id=?", new Object[]{action, diagramIdSrv}, new int[]{
+                Types.VARCHAR,
+                Types.INTEGER});
+
     }
 
 
