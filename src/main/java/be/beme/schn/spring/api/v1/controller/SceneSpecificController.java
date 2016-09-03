@@ -48,4 +48,21 @@ public class SceneSpecificController extends AbstractController {
         return new ResponseEntity<>(scenes, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public ResponseEntity<List<Scene>> getAllScenesByDiagram(@RequestParam int diagramId)
+    {
+
+        List<Scene> scenes;
+        try {
+            scenes = dao.getAllScenesByDiagram(diagramId);
+        }
+        catch(EmptyResultDataAccessException e)
+        {
+            throw new BadParamException(messageSource.getMessage("bad.id.message",new Object[]{diagramId}, Locale.ENGLISH));
+        }
+
+        return new ResponseEntity<>(scenes, HttpStatus.OK);
+    }
+
+
 }

@@ -3,7 +3,6 @@ package be.beme.schn.spring.api.v1.controller;
 import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.dao.DiagramDao;
-import be.beme.schn.persistence.dao.NarrativeComponentDao;
 import be.beme.schn.spring.api.v1.interceptor.ClientChoicePerformer;
 import be.beme.schn.spring.api.v1.interceptor.ConflictResolver;
 import be.beme.schn.spring.api.v1.response.ActionDoneResponse;
@@ -42,6 +41,7 @@ public class SynchronisationController extends AbstractController {
             ConflictResolver filter= new ConflictResolver();
             filter.resolve(diagram,"diagram",action);
             response.action=filter.resolution;
+            response.serverId= diagram.getId();
 
             //user-choice on renvoie les choix
             if(response.action.equals("CLIENT-CHOICE")){
@@ -63,7 +63,7 @@ public class SynchronisationController extends AbstractController {
     }
 
 
-    @RequestMapping(value="/performUserChoice", method = RequestMethod.POST)
+    @RequestMapping(value="/pushUserChoice", method = RequestMethod.POST)
     public ResponseEntity<Diagram> performUserChoice(@RequestBody Diagram diagram, @RequestParam String clientAction){
 
         Diagram dResponse=new ClientChoicePerformer(diagram,clientAction).perform();
@@ -72,12 +72,16 @@ public class SynchronisationController extends AbstractController {
     }
 
     @RequestMapping(value="/pullDiagrams",method = RequestMethod.GET)
-    public ResponseEntity<?> pullDiagrams(@RequestParam int userId){
+    public ResponseEntity<List<Diagram>> pullDiagrams(@RequestParam int userId, @RequestParam String action){
+
+
         //chercher ceux au need synch = true  et action = create en stipulant l'userid. pou rça créer une méthode dans diagramDao
         //cherche ceux au need synch = ture et action = update...etc
         //cgercge need synch true et acitn= dlete
         //rnvoyer ce trois listes
         //mais comme je ne sais pas comment je désérialiserait ça en java coté andro, je le ferai plus tard
+
+        return null;
     }
 
 

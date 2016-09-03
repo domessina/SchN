@@ -57,6 +57,12 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     }
 
     @Override
+    public List<Scene> getAllScenesByDiagram(int diagramid) {
+        return jdbcTemplate.query("select * from \"Scene\" where diagram_id=? order by place asc",
+                new Object[]{diagramid}, new SceneMapper());
+    }
+
+    @Override
     public Scene getNComponent(int id) {
         return jdbcTemplate.queryForObject("select * from \"Scene\" where id=?",
                 new Object[]{id},new SceneMapper());

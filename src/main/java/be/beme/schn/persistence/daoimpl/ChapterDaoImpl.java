@@ -62,9 +62,9 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
                 new Object[]{Id},new ChapterMapper());
     }
 
-    @Override
+    @Override//si il y a un probmeme c'est parce que tu as ajouté order by. pour le web service
     public List<Chapter> getAllChaptersByDiagram(int diagramId) {
-        return jdbcTemplate.query("select * from \"Chapter\" where diagram_id=?",
+        return jdbcTemplate.query("select * from \"Chapter\" where diagram_id=? order by place asc",
                 new Object[]{diagramId},new ChapterMapper());
     }
 

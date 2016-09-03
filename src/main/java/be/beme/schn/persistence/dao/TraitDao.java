@@ -1,8 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.component.Character;
 import be.beme.schn.narrative.component.Trait;
-import be.beme.schn.persistence.Dao;
 
 import java.util.List;
 
@@ -20,6 +18,8 @@ public interface TraitDao  extends NarrativeComponentDao {
     List<Trait> getTraitsByCharacter(int characterId);
 
     void deleteAllTraitsByCharacter(int characterId);
+
+    List<Trait> getAllTraitsByDiagram(int diagramId);
 
 
 }

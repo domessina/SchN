@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -35,6 +36,22 @@ public class ChapterSpecificController extends AbstractController {
         }
 
         return new ResponseEntity<>(component, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public ResponseEntity<List<Chapter>> getAllChaptersByDiagram(@RequestParam int diagramId)
+    {
+
+        List<Chapter> chapters;
+        try {
+            chapters = chapterService.getAllChaptersByDiagram(diagramId);
+        }
+        catch(EmptyResultDataAccessException e)
+        {
+            throw new BadParamException(messageSource.getMessage("bad.id.message",new Object[]{diagramId}, Locale.ENGLISH));
+        }
+
+        return new ResponseEntity<>(chapters, HttpStatus.OK);
     }
 
 

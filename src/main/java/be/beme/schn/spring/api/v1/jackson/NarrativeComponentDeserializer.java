@@ -1,9 +1,7 @@
 package be.beme.schn.spring.api.v1.jackson;
 
-import be.beme.schn.narrative.component.Chapter;
+import be.beme.schn.narrative.component.*;
 import be.beme.schn.narrative.component.Character;
-import be.beme.schn.narrative.component.Scene;
-import be.beme.schn.narrative.component.Trait;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -29,6 +27,7 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
             next=iterator.next();
             switch (next)                                                                                               //pas de break car on fait directement un return
             {
+                case "userId":return isDiagram(node);
                 case "phase":return isChapter(node);
                 case "chapterId":return isScene(node);
                 case "type":return  isCharacter(node);
@@ -37,6 +36,15 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         }
 
         return null;
+    }
+
+    private Diagram isDiagram(JsonNode node){
+        Diagram d = new Diagram();
+        d.setId(node.get("id").intValue());
+        d.setTitle(node.get("title").textValue());
+        d.setPictureId(node.get("pictureId").textValue());
+        d.setUser_id(node.get("userId").intValue());
+        return d;
     }
 
     private Chapter isChapter(JsonNode node)

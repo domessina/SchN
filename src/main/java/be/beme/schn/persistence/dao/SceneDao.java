@@ -1,10 +1,7 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.narrative.component.Scene;
-import be.beme.schn.persistence.Dao;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -17,6 +14,8 @@ public interface SceneDao extends NarrativeComponentDao {
     int getNumberOfScenes(int chapterId);
 
     List<Scene> getAllScenesByChapter(int chapterId);
+
+    List<Scene> getAllScenesByDiagram(int diagramid);
 
     @Override
     Scene getNComponent(int id);
