@@ -47,7 +47,7 @@ public class DiagramPresenter implements WrapperPanelPresenter {
         Diagram d = view.getDiagram();
         diagramdao.setDiagramEnabled(save().getId(),false);
         FileUtil.deleteDiagramTree(d.getUser_id(),d.getId());
-        userDao.reduceNumberOfDiagrams(d.getUser_id());
+        userDao.decreaseNumberOfDiagrams(d.getUser_id());
         userDao.setActualDiagram(d.getUser_id(), -1);
         diagramdao.setActionDiagramToSynch("DELETE",d.getId());
         diagramdao.setNeedSynch(true,d.getId());

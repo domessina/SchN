@@ -20,7 +20,7 @@ public class PersistenceConfiguration {
     @Autowired
     private PGSimpleDataSource dataSource;
 
-    @Bean
+    @Bean()
     //seen by breakpoint=> spring creates first dataSource, because jdbcTemplate need it
     public JdbcTemplate jdbcTemplate()
     {

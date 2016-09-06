@@ -47,7 +47,7 @@ public class DiagramSpecificController extends AbstractController {
     /*@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<IdResponse> newFromClient(@RequestParam Diagram diagramClient){
 
-        IdResponse idSrv =new IdResponse(dao.create(diagramClient), NarrativeComponentType.NC_Diagram.toString());
+        IdResponse idSrv =new IdResponse(diagramDao.create(diagramClient), NarrativeComponentType.NC_Diagram.toString());
         synchDao.setIdClientServer(diagramClient.getId(),idSrv.id);
         return new ResponseEntity<>(idSrv,HttpStatus.CREATED);
     }

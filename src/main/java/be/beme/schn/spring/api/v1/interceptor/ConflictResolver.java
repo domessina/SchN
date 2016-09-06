@@ -11,12 +11,17 @@ import org.springframework.stereotype.Component;
  * Created by Dorito on 26-08-16.
  */
 @Component
+//proxymode is needed because we autowire a request bean in a singleton bean. proxymode calls AOP
+//the real good scope is request , however all the fields are null in synchornizationControlle. I am not the only one byt no response on Intenet.
+//@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ConflictResolver {
 
 
     public String resolution;
     public String choices;
     private NarrativeComponent nc;
+
+    @Autowired
     private DiagramSynchDaoImpl diagramSynchDao;
 
     private NarrativeComponent responsenc;//atention pour ça faudra remettre le deserialisation json pour narrative compoenent
@@ -26,7 +31,6 @@ public class ConflictResolver {
 
     public ConflictResolver()
     {
-
     }
 
     public void resolve(NarrativeComponent nc,String type, String clientAction){

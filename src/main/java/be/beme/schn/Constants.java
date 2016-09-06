@@ -12,8 +12,8 @@ public final class Constants {
     }
 
     //System
-    //    public static final String BASE_DIR="C:\\Users\\Dorito\\TFEFiles\\NarrativeScheme\\";
-    public static final String BASE_DIR = "D:\\Téléchargements\\TFEFiles\\NarrativeScheme\\";
+        public static final String BASE_DIR="C:\\Users\\Dorito\\TFEFiles\\NarrativeScheme\\";
+//    public static final String BASE_DIR = "D:\\Téléchargements\\TFEFiles\\NarrativeScheme\\";
 
     //UI
     public static final Action ACTION_ADD = new Action("Add");

@@ -47,6 +47,20 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
 
+    @ExceptionHandler(BadJsonObject.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public @ResponseBody ErrorResponse handleBadJsonObject(Exception e, HttpServletRequest request) {
+        if (log.isErrorEnabled()) {
+            log.error("Error in API controller", e);
+        }
+        ErrorResponse response=new ErrorResponse();
+        response.setTimestamp(new Date().getTime());
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setError(e.getClass().getName());
+        response.setMessage(e.getMessage());
+        response.setPath(request.getRequestURI());
+        return response;
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

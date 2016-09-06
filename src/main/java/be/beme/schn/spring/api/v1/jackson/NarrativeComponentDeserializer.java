@@ -2,6 +2,7 @@ package be.beme.schn.spring.api.v1.jackson;
 
 import be.beme.schn.narrative.component.*;
 import be.beme.schn.narrative.component.Character;
+import be.beme.schn.spring.api.v1.exception.BadJsonObject;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -21,17 +22,26 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         Iterator<String> iterator =node.fieldNames();
 
-        String next;
-        while(iterator.hasNext())
-        {
-            next=iterator.next();
-            switch (next)                                                                                               //pas de break car on fait directement un return
+        try{
+
+            String next;
+            while(iterator.hasNext())
             {
-                case "userId":return isDiagram(node);
-                case "phase":return isChapter(node);
-                case "chapterId":return isScene(node);
-                case "type":return  isCharacter(node);
-                case "characterId":return isTrait(node);
+                next=iterator.next();
+                switch (next)                                                                                               //pas de break car on fait directement un return
+                {
+                    case "userId":return isDiagram(node);
+                    case "phase":return isChapter(node);
+                    case "chapterId":return isScene(node);
+                    case "type":return  isCharacter(node);
+                    case "characterId":return isTrait(node);
+                }
+            }
+        }
+        catch(NullPointerException e){
+            try {
+                throw new BadJsonObject("One of the json object has problem with fields");
+            } catch (BadJsonObject badJsonObject) {
             }
         }
 

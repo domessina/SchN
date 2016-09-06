@@ -1,8 +1,10 @@
 package be.beme.schn.spring.api.v1.controller;
 
+import be.beme.schn.FileUtil;
 import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.dao.DiagramDao;
+import be.beme.schn.persistence.dao.UserDao;
 import be.beme.schn.spring.api.v1.interceptor.ClientChoicePerformer;
 import be.beme.schn.spring.api.v1.interceptor.ConflictResolver;
 import be.beme.schn.spring.api.v1.response.ActionDoneResponse;
@@ -19,12 +21,24 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/v1/api/sync/{userId}")
+@RequestMapping("/v1/api/sync")
 public class SynchronisationController extends AbstractController {
 
     @Autowired
-    DiagramDao dao;
+    DiagramDao diagramDao;
 
+    @Autowired
+    UserDao userDao;
+
+    @Autowired
+    ConflictResolver resolver;
+
+
+
+    @RequestMapping(value="/test", method= RequestMethod.GET)
+    public ResponseEntity<?> test(){
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
     @RequestMapping(value="/pushDiagram", method = RequestMethod.POST)
     public ResponseEntity<ActionDoneResponse> pushDiagrams(@RequestBody Diagram diagram, @RequestParam String action){
@@ -32,30 +46,39 @@ public class SynchronisationController extends AbstractController {
         ActionDoneResponse response=new ActionDoneResponse();
 
         //created on renvoie l'id diagram serveur et que c'est accepté
-        if(action.equals("CREATE")){
-            response.serverId=dao.create(diagram);
-            response.action="CREATED";
-            dao.setNeedSynch(false,response.serverId);
+        if(action.equals("CREATE")||(diagram.getId()==-1&&action.equals("UPDATE"))){
+            response.serverId= diagramDao.create(diagram);
+            response.action=action;
+            FileUtil.createDiagramTree(diagram.getUser_id(),response.serverId);
+            diagramDao.setNeedSynch(false,response.serverId);
+
+            if(userDao.getNbDiagrams(diagram.getUser_id())==0){
+                userDao.setActualDiagram(diagram.getUser_id(), response.serverId);
+            }
+            userDao.increaseNumberOfDiagrams(diagram.getUser_id());
         }
-        else if(action.equals("UPDATE")||action.equals("DELETE")){
-            ConflictResolver filter= new ConflictResolver();
-            filter.resolve(diagram,"diagram",action);
-            response.action=filter.resolution;
-            response.serverId= diagram.getId();
+        if(action.equals("UPDATE")||action.equals("DELETE")){
+
+            resolver.resolve(diagram,"diagram",action);
+            response.action=resolver.resolution;
+            if(diagram.getId()!=-1)
+                response.serverId= diagram.getId();
 
             //user-choice on renvoie les choix
             if(response.action.equals("CLIENT-CHOICE")){
-                response.choices=filter.choices;
+                response.choices=resolver.choices;
                 return new ResponseEntity<>(response,HttpStatus.CONFLICT);
             }
 
             //updated on renvoie que c'est accepté
             else if(response.action.equals("UPDATE")){
-                dao.update(diagram);
+                diagramDao.update(diagram);
             }
             //deleted on ne renvoie que c'est accepté
             else if(response.action.equals("DELETE")){
-                dao.delete(diagram.getId());
+                diagramDao.delete(diagram.getId());
+                FileUtil.deleteDiagramTree(diagram.getUser_id(),diagram.getUser_id());
+                userDao.decreaseNumberOfDiagrams(diagram.getUser_id());
             }
         }
         //no need to set clientId in the response because client alredy has it, and wait for server response
@@ -67,7 +90,7 @@ public class SynchronisationController extends AbstractController {
     public ResponseEntity<Diagram> performUserChoice(@RequestBody Diagram diagram, @RequestParam String clientAction){
 
         Diagram dResponse=new ClientChoicePerformer(diagram,clientAction).perform();
-        dao.setNeedSynch(false,diagram.getId());
+        diagramDao.setNeedSynch(false,diagram.getId());
         return new ResponseEntity<>(dResponse, HttpStatus.OK);
     }
 

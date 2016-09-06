@@ -18,6 +18,7 @@ public class DiagramSynchDaoImpl extends AbstractPersistenceService implements D
     @Autowired
     DiagramMapper mapper;
 
+
     @Override
     public void  setIdClientServer(int diagramIdClient, int diagramIdServer) {
         jdbcTemplate.update("insert into public.\"DiagramIdClientServer\" (client_id,server_id) values (?,?)",diagramIdClient,diagramIdServer);
