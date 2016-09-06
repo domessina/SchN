@@ -33,7 +33,8 @@ public class DiagramSynchDaoImpl extends AbstractPersistenceService implements D
 
     @Override
     public boolean isDiagramToSynch(int diagramId) {
-        return jdbcTemplate.queryForObject("select exists (select * from public.\"DiagramToSynch\" where diagram_id=? )",new Object[]{diagramId},Boolean.class);
+//        return jdbcTemplate.queryForObject("select exists (select * from public.\"DiagramToSynch\" where diagram_id=? )",new Object[]{diagramId},Boolean.class);
+        return jdbcTemplate.queryForObject("select (need_synch) from public.\"DiagramToSynch\" where diagram_id=? ",new Object[]{diagramId},Boolean.class);
     }
 
 
@@ -41,7 +42,7 @@ public class DiagramSynchDaoImpl extends AbstractPersistenceService implements D
 
     @Override
     public String getServerAction(int diagramId) {
-        return jdbcTemplate.queryForObject("select action from public\"DiagramToSynch\" where diagram_id=?",new Object[]{diagramId},String.class);
+        return jdbcTemplate.queryForObject("select action from public.\"DiagramToSynch\" where diagram_id=?",new Object[]{diagramId},String.class);
     }
 
     @Override
@@ -56,9 +57,7 @@ public class DiagramSynchDaoImpl extends AbstractPersistenceService implements D
 
     }
 
-    public boolean isComponentToSynch(String tableType,String columnType, int componentId){
-        return jdbcTemplate.queryForObject("select exists (select * from public.\""+tableType+"ToSynch\" where"+columnType+"_id=?)",new Object[]{componentId},Boolean.class);
-    }
+
 
     public int getDiagramId(String type, int componentId){
 

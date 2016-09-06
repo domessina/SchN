@@ -86,11 +86,10 @@ public class ConflictResolver {
     private void diagramType(String clientAction){
 
         //whether the diagram was already changed on server side since last synch
-
         if(diagramSynchDao.isDiagramToSynch(this.nc.getId())){
             String serverAction=diagramSynchDao.getServerAction(this.nc.getId());
             resolution="CLIENT-CHOICE";
-            choices="C-"+clientAction+"|"+"S-"+serverAction;
+            choices="C-"+clientAction+":"+"S-"+serverAction;
 
             if(serverAction.equals("DELETE")&&serverAction.equals(clientAction)){
                 resolution="DELETE";

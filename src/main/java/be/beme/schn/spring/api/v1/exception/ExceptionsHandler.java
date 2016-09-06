@@ -47,7 +47,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(BadJsonObject.class)
+ /*   @ExceptionHandler(BadJsonObject.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse handleBadJsonObject(Exception e, HttpServletRequest request) {
         if (log.isErrorEnabled()) {
@@ -60,7 +60,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         response.setMessage(e.getMessage());
         response.setPath(request.getRequestURI());
         return response;
-    }
+    }*/
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

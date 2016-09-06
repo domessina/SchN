@@ -33,11 +33,16 @@ public class SynchronisationController extends AbstractController {
     @Autowired
     ConflictResolver resolver;
 
+    @Autowired
+    ClientChoicePerformer cCPerformer;
 
 
-    @RequestMapping(value="/test", method= RequestMethod.GET)
-    public ResponseEntity<?> test(){
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+
+    @RequestMapping(value="/pushUserChoice", method= RequestMethod.POST)
+    public ResponseEntity<Diagram> test(@RequestBody Diagram diagram,@RequestParam String action){
+        Diagram dResponse=cCPerformer.perform(diagram,action);
+        diagramDao.setNeedSynch(false,diagram.getId());
+        return new ResponseEntity<>(dResponse,HttpStatus.ACCEPTED);
     }
 
     @RequestMapping(value="/pushDiagram", method = RequestMethod.POST)
@@ -50,6 +55,7 @@ public class SynchronisationController extends AbstractController {
             response.serverId= diagramDao.create(diagram);
             response.action=action;
             FileUtil.createDiagramTree(diagram.getUser_id(),response.serverId);
+            diagramDao.createDiagramToSynch(diagram.getUser_id(),response.serverId);
             diagramDao.setNeedSynch(false,response.serverId);
 
             if(userDao.getNbDiagrams(diagram.getUser_id())==0){
@@ -86,13 +92,7 @@ public class SynchronisationController extends AbstractController {
     }
 
 
-    @RequestMapping(value="/pushUserChoice", method = RequestMethod.POST)
-    public ResponseEntity<Diagram> performUserChoice(@RequestBody Diagram diagram, @RequestParam String clientAction){
 
-        Diagram dResponse=new ClientChoicePerformer(diagram,clientAction).perform();
-        diagramDao.setNeedSynch(false,diagram.getId());
-        return new ResponseEntity<>(dResponse, HttpStatus.OK);
-    }
 
     @RequestMapping(value="/pullDiagrams",method = RequestMethod.GET)
     public ResponseEntity<List<Diagram>> pullDiagrams(@RequestParam int userId, @RequestParam String action){

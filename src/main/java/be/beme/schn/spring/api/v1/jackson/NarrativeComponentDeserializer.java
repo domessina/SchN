@@ -2,7 +2,6 @@ package be.beme.schn.spring.api.v1.jackson;
 
 import be.beme.schn.narrative.component.*;
 import be.beme.schn.narrative.component.Character;
-import be.beme.schn.spring.api.v1.exception.BadJsonObject;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -21,8 +20,10 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
     public Object deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         Iterator<String> iterator =node.fieldNames();
+/*
 
         try{
+*/
 
             String next;
             while(iterator.hasNext())
@@ -37,14 +38,14 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
                     case "characterId":return isTrait(node);
                 }
             }
-        }
+    /*    }
         catch(NullPointerException e){
             try {
                 throw new BadJsonObject("One of the json object has problem with fields");
             } catch (BadJsonObject badJsonObject) {
             }
         }
-
+*/
         return null;
     }
 

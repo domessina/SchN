@@ -1,29 +1,32 @@
 package be.beme.schn.spring.api.v1.interceptor;
 
 import be.beme.schn.narrative.component.Diagram;
-import be.beme.schn.persistence.daoimpl.DiagramDaoImpl;
+import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.persistence.daoimpl.synch.DiagramSynchDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Dorito on 26-08-16.
  */
+@Component
 public class ClientChoicePerformer {
 
 
     private String selectedAction;
-    private DiagramDaoImpl dao;
+    @Autowired
+    private DiagramDao dao;
+    @Autowired
     private DiagramSynchDaoImpl synchDao;
     private Diagram diagramClient;
     private Diagram diagramResponse;
 
-    public ClientChoicePerformer(Diagram dClient, String selectedAction){
-        dao=new DiagramDaoImpl();
-        synchDao=new DiagramSynchDaoImpl();
+
+
+    public Diagram perform(Diagram dClient, String selectedAction){
+
         this.diagramClient=dClient;
         this.selectedAction=selectedAction;
-    }
-
-    public Diagram perform(){
         synchDao.setLastSelectedAction(selectedAction,diagramClient.getId());
         switch (selectedAction){
             case "S-DELETE":  sDelete();     break;
