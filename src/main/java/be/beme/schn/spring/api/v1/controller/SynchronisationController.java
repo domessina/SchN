@@ -39,7 +39,7 @@ public class SynchronisationController extends AbstractController {
 
 
     @RequestMapping(value="/pushUserChoice", method= RequestMethod.POST)
-    public ResponseEntity<Diagram> test(@RequestBody Diagram diagram,@RequestParam String action){
+    public ResponseEntity<Diagram> test(@RequestBody(required = false) Diagram diagram, @RequestParam String action){
         Diagram dResponse=cCPerformer.perform(diagram,action);
         diagramDao.setNeedSynch(false,diagram.getId());
         return new ResponseEntity<>(dResponse,HttpStatus.ACCEPTED);
@@ -54,16 +54,16 @@ public class SynchronisationController extends AbstractController {
         if(action.equals("CREATE")||(diagram.getId()==-1&&action.equals("UPDATE"))){
             response.serverId= diagramDao.create(diagram);
             response.action=action;
-            FileUtil.createDiagramTree(diagram.getUser_id(),response.serverId);
-            diagramDao.createDiagramToSynch(diagram.getUser_id(),response.serverId);
+            FileUtil.createDiagramTree(diagram.getUserId(),response.serverId);
+            diagramDao.createDiagramToSynch(diagram.getUserId(),response.serverId);
             diagramDao.setNeedSynch(false,response.serverId);
 
-            if(userDao.getNbDiagrams(diagram.getUser_id())==0){
-                userDao.setActualDiagram(diagram.getUser_id(), response.serverId);
+            if(userDao.getNbDiagrams(diagram.getUserId())==0){
+                userDao.setActualDiagram(diagram.getUserId(), response.serverId);
             }
-            userDao.increaseNumberOfDiagrams(diagram.getUser_id());
+            userDao.increaseNumberOfDiagrams(diagram.getUserId());
         }
-        if(action.equals("UPDATE")||action.equals("DELETE")){
+        if((action.equals("UPDATE")||action.equals("DELETE"))&&(diagram.getId()!=-1)){
 
             resolver.resolve(diagram,"diagram",action);
             response.action=resolver.resolution;
@@ -83,9 +83,12 @@ public class SynchronisationController extends AbstractController {
             //deleted on ne renvoie que c'est accepté
             else if(response.action.equals("DELETE")){
                 diagramDao.delete(diagram.getId());
-                FileUtil.deleteDiagramTree(diagram.getUser_id(),diagram.getUser_id());
-                userDao.decreaseNumberOfDiagrams(diagram.getUser_id());
+                FileUtil.deleteDiagramTree(diagram.getUserId(),diagram.getUserId());
+                userDao.decreaseNumberOfDiagrams(diagram.getUserId());
             }
+        }
+        if(action.equals("DELETE")&&diagram.getId()==-1){
+            response.action=action;
         }
         //no need to set clientId in the response because client alredy has it, and wait for server response
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);

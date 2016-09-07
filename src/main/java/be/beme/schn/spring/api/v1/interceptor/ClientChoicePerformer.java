@@ -40,18 +40,22 @@ public class ClientChoicePerformer {
 
     private void sDelete(){
         dao.delete(diagramClient.getId());
+//        FileUtil.deleteDiagramTree(diagramResponse.getUserId(),diagramClient.getId());
         diagramResponse=null;
     }
 
 
     private void cDelete(){
         dao.delete(diagramClient.getId());
+//        FileUtil.deleteDiagramTree(diagramClient.getUserId(),diagramResponse.getId());
         diagramResponse=null;
 
     }
 
     private void cUpdate(){
         dao.update(diagramClient);
+        //in case of c-update:s-delete
+        dao.setDiagramEnabled(diagramClient.getId(),true);
         diagramResponse=null;
     }
 

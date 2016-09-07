@@ -1,7 +1,6 @@
 package be.beme.schn;
 
 import be.beme.schn.narrative.component.Diagram;
-import com.vaadin.server.VaadinSession;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -41,7 +40,7 @@ public final class FileUtil  {
     }
 
     public static File getDiagramPicture(Diagram d){
-        return FileUtils.getFile(Constants.BASE_DIR+"Users\\"+d.getUser_id()+"\\Diagrams\\"+d.getId()+"\\"+d.getPictureId());
+        return FileUtils.getFile(Constants.BASE_DIR+"Users\\"+d.getUserId()+"\\Diagrams\\"+d.getId()+"\\"+d.getPictureId());
     }
 
 

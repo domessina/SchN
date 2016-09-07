@@ -30,7 +30,7 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
     @Override
     public int create(NarrativeComponent component) {            //le diagram_id est unique dans toute la DB
         Diagram d=(Diagram)component;
-        jdbcTemplate.update( "insert into public.\"Diagram\" (user_id,title,picture_id) values (?,?,?)",d.getUser_id(), d.getTitle(),d.getPictureId());
+        jdbcTemplate.update( "insert into public.\"Diagram\" (user_id,title,picture_id) values (?,?,?)",d.getUserId(), d.getTitle(),d.getPictureId());
 
         return jdbcTemplate.queryForObject("select id from public.\"Diagram\" order by id desc limit 1",Integer.class);
     }
@@ -47,7 +47,7 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
 
     @Override
     public int delete(int diagramId) {
-        int userId = getDiagramById(diagramId).getUser_id();
+        int userId = getDiagramById(diagramId).getUserId();
         return jdbcTemplate.update("delete from public.\"Diagram\" where id=?", diagramId);
     }
 
@@ -80,8 +80,8 @@ public class DiagramDaoImpl extends AbstractPersistenceService implements Diagra
     @Override
     public void setDiagramEnabled(int diagramId, boolean isEnabled) {
 
-        jdbcTemplate.update("UPDATE public.\"Diagram\" SET enabled=? WHERE id=?",new Object[]{isEnabled},new int[]{
-                Types.BOOLEAN});
+        jdbcTemplate.update("UPDATE public.\"Diagram\" SET enabled=? WHERE id=?",new Object[]{isEnabled,diagramId},new int[]{
+                Types.BOOLEAN,Types.INTEGER});
     }
 
     @Override

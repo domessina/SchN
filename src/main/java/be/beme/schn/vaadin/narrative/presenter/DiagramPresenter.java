@@ -29,9 +29,9 @@ public class DiagramPresenter implements WrapperPanelPresenter {
     public Diagram save() {
         Diagram d = view.getDiagram();
         d.setId(diagramdao.create(view.getDiagram()));
-        FileUtil.createDiagramTree(d.getUser_id(),d.getId());
-        userDao.increaseNumberOfDiagrams(d.getUser_id());
-        diagramdao.createDiagramToSynch(d.getUser_id(),d.getId());
+        FileUtil.createDiagramTree(d.getUserId(),d.getId());
+        userDao.increaseNumberOfDiagrams(d.getUserId());
+        diagramdao.createDiagramToSynch(d.getUserId(),d.getId());
         diagramdao.setActionDiagramToSynch("CREATE",d.getId());
         diagramdao.setNeedSynch(true,d.getId());
         return d;
@@ -45,10 +45,11 @@ public class DiagramPresenter implements WrapperPanelPresenter {
     @Override
     public boolean erase() {
         Diagram d = view.getDiagram();
-        diagramdao.setDiagramEnabled(save().getId(),false);
-        FileUtil.deleteDiagramTree(d.getUser_id(),d.getId());
-        userDao.decreaseNumberOfDiagrams(d.getUser_id());
-        userDao.setActualDiagram(d.getUser_id(), -1);
+        diagramdao.setDiagramEnabled(d.getId(),false);
+        //TODO AVANT D UTILISER PERSONNELLEMENT comme tu useras pas de l'app android, uncomment this line
+//        FileUtil.deleteDiagramTree(d.getUserId(),d.getId());
+        userDao.decreaseNumberOfDiagrams(d.getUserId());
+        userDao.setActualDiagram(d.getUserId(), -1);
         diagramdao.setActionDiagramToSynch("DELETE",d.getId());
         diagramdao.setNeedSynch(true,d.getId());
         return true;

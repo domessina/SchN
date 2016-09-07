@@ -54,7 +54,7 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         d.setId(node.get("id").intValue());
         d.setTitle(node.get("title").textValue());
         d.setPictureId(node.get("pictureId").textValue());
-        d.setUser_id(node.get("userId").intValue());
+        d.setUserId(node.get("userId").intValue());
         return d;
     }
 

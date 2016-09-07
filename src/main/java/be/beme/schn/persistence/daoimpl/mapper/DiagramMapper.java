@@ -16,7 +16,7 @@ public  final class DiagramMapper implements RowMapper<Diagram> {
     public Diagram mapRow(ResultSet rs, int rowNum) throws SQLException {
         Diagram diagram = new Diagram();
         diagram.setId(rs.getInt("id"));
-        diagram.setUser_id(rs.getInt("user_id"));
+        diagram.setUserId(rs.getInt("user_id"));
         diagram.setTitle(rs.getString("title"));
         diagram.setPictureId(rs.getString(("picture_id")));
         return diagram;

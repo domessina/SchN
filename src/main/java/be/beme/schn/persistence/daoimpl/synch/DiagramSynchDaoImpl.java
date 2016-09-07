@@ -38,8 +38,6 @@ public class DiagramSynchDaoImpl extends AbstractPersistenceService implements D
     }
 
 
-
-
     @Override
     public String getServerAction(int diagramId) {
         return jdbcTemplate.queryForObject("select action from public.\"DiagramToSynch\" where diagram_id=?",new Object[]{diagramId},String.class);

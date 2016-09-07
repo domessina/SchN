@@ -82,7 +82,7 @@ public class DiagramEditionView extends CustomComponent implements NarrativeView
                     //diagram currently displayed. When we want to create a new diagram, we know the id
                     //of the new diagram only when save is pressed. So we must to change the path , for to
                     //indicate the good id
-                    imageUploadPanel.setPath(Constants.BASE_DIR+"Users\\"+ diagram.getUser_id()+"\\Diagrams\\"+ diagram.getId()+"\\");
+                    imageUploadPanel.setPath(Constants.BASE_DIR+"Users\\"+ diagram.getUserId()+"\\Diagrams\\"+ diagram.getId()+"\\");
                 }
                 else{ presenter.update();}
 
