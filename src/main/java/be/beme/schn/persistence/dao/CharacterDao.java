@@ -1,9 +1,6 @@
 package be.beme.schn.persistence.dao;
 
-import be.beme.schn.narrative.component.Chapter;
 import be.beme.schn.narrative.component.Character;
-import be.beme.schn.narrative.component.NarrativeComponent;
-import be.beme.schn.persistence.Dao;
 
 import java.util.List;
 
@@ -24,6 +21,8 @@ public interface CharacterDao  extends NarrativeComponentDao {
     void setPicture(int characterId, String pictureURL);
 
     List<Character> getAllCharactersByDiagram(int diagramId);
+
+    void deleteAllByDiagram(int diagramId);
 
 
 

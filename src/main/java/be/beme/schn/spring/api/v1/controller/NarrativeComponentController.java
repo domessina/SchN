@@ -2,9 +2,8 @@ package be.beme.schn.spring.api.v1.controller;
 
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.dao.NarrativeComponentDao;
-import be.beme.schn.spring.api.v1.narrative.NarrativeComponentDaoRegistry;
 import be.beme.schn.spring.api.v1.exception.BadParamException;
-import be.beme.schn.spring.api.v1.response.IdResponse;
+import be.beme.schn.spring.api.v1.narrative.NarrativeComponentDaoRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,18 +25,16 @@ public class NarrativeComponentController extends AbstractController {
     private NarrativeComponentDaoRegistry daoRegistry;
 
 @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<IdResponse> create(@PathVariable String type, @RequestBody NarrativeComponent component)
+    public ResponseEntity<Integer> create(@PathVariable String type, @RequestBody NarrativeComponent component)
     {
         NarrativeComponentDao service=daoRegistry.getDao(type);
-        IdResponse response=new IdResponse();
-        response.id=service.create(component);
-        response.type=type;
+        int responseId=service.create(component);
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newCharURI = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(response.id).toUri();
+                .buildAndExpand(responseId).toUri();
         responseHeaders.setLocation(newCharURI);
-        return new ResponseEntity<>(response,responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseId,responseHeaders, HttpStatus.CREATED);
     }
 
 

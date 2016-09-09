@@ -1,8 +1,10 @@
 package be.beme.schn.spring.api.v1.controller;
 
 import be.beme.schn.FileUtil;
+import be.beme.schn.narrative.component.CharacterScene;
 import be.beme.schn.narrative.component.Diagram;
 import be.beme.schn.narrative.component.NarrativeComponent;
+import be.beme.schn.persistence.dao.CharacterSceneDao;
 import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.persistence.dao.UserDao;
 import be.beme.schn.spring.api.v1.interceptor.ClientChoicePerformer;
@@ -29,6 +31,9 @@ public class SynchronisationController extends AbstractController {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    CharacterSceneDao cSDao;
 
     @Autowired
     ConflictResolver resolver;
@@ -94,10 +99,23 @@ public class SynchronisationController extends AbstractController {
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
+    @RequestMapping(value = "/charscene", method = RequestMethod.POST)
+    public ResponseEntity<?> charSceneLink(@RequestBody CharacterScene cs){
+            cSDao.addCharacterInScene(cs.diagramId, cs.characterId, cs.sceneId);
+
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+
+    @RequestMapping(value = "/charscene", method = RequestMethod.GET)
+    public ResponseEntity<List<CharacterScene>> charAllSceneByDiagram(@RequestParam int diagramId) {
+        List<CharacterScene> list=cSDao.getAllCharacterSceneByDiagram(diagramId);
+        return new ResponseEntity<List<CharacterScene>>(list,HttpStatus.ACCEPTED);
+    }
 
 
 
-    @RequestMapping(value="/pullDiagrams",method = RequestMethod.GET)
+        @RequestMapping(value="/pullDiagrams",method = RequestMethod.GET)
     public ResponseEntity<List<Diagram>> pullDiagrams(@RequestParam int userId, @RequestParam String action){
 
 

@@ -24,7 +24,7 @@ public class SceneDaoImpl extends AbstractPersistenceService implements SceneDao
     @Override
     public int create(NarrativeComponent component) {
         Scene s=(Scene)component;
-        jdbcTemplate.update("insert into \"Scene\" (chapter_id,tag,place,picture,notes) values (?,?,?,?,?,?)"
+        jdbcTemplate.update("insert into \"Scene\" (chapter_id,tag,place,picture,notes,diagram_id) values (?,?,?,?,?,?)"
                 ,s.getChapterId(),s.getTag(),s.getPlace(),s.getPicture(),s.getNote(),s.getDiagramId());
 
         return jdbcTemplate.queryForObject("select max(id) from \"Scene\" where chapter_id=?",
