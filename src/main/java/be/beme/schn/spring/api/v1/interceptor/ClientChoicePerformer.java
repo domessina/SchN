@@ -1,8 +1,6 @@
 package be.beme.schn.spring.api.v1.interceptor;
 
 import be.beme.schn.narrative.component.Diagram;
-import be.beme.schn.persistence.dao.ChapterDao;
-import be.beme.schn.persistence.dao.CharacterDao;
 import be.beme.schn.persistence.dao.DiagramDao;
 import be.beme.schn.persistence.daoimpl.synch.DiagramSynchDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +16,6 @@ public class ClientChoicePerformer {
     private String selectedAction;
     @Autowired
     private DiagramDao dao;
-
-    @Autowired
-    ChapterDao chapterDao;
-
-    @Autowired
-    CharacterDao characterDao;
-
     @Autowired
     private DiagramSynchDaoImpl synchDao;
     private Diagram diagramClient;
@@ -65,8 +56,6 @@ public class ClientChoicePerformer {
         dao.update(diagramClient);
         //in case of c-update:s-delete
         dao.setDiagramEnabled(diagramClient.getId(),true);
-        chapterDao.deleteAllByDiagram(diagramClient.getId());
-        characterDao.deleteAllByDiagram(diagramClient.getId());
         diagramResponse=null;
     }
 

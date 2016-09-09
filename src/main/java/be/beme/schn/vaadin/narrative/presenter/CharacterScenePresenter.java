@@ -2,10 +2,13 @@ package be.beme.schn.vaadin.narrative.presenter;
 
 
 import be.beme.schn.narrative.component.Trait;
+import be.beme.schn.persistence.Dao;
 import be.beme.schn.persistence.dao.CharacterDao;
 import be.beme.schn.persistence.dao.CharacterSceneDao;
 import be.beme.schn.persistence.dao.TraitDao;
 import be.beme.schn.persistence.dao.TraitSceneDao;
+import be.beme.schn.persistence.daoimpl.CharacterSceneDaoImpl;
+import be.beme.schn.persistence.daoimpl.TraitDaoImpl;
 import be.beme.schn.vaadin.narrative.view.CharacterSceneView;
 import be.beme.schn.vaadin.narrative.view.NarrativeView;
 import com.vaadin.spring.annotation.UIScope;
@@ -32,9 +35,6 @@ public class CharacterScenePresenter implements NarrativePresenter {
 
     @Autowired
     private TraitDao traitService;
-
-    @Autowired
-    private CharacterDao charDao;
 
 /*    @Autowired
     private LinkDao linkDao;*/
@@ -163,9 +163,7 @@ public class CharacterScenePresenter implements NarrativePresenter {
     public void addCharacterInScene(int characterId, int sceneId)
     {
        try{
-           int diagramId=charDao.getNComponent(characterId).getDiagram_id();
-                   //TODO A FAIRE AVANT D UTILISER : retirer la colonne diagramId de characterScene. ainsi que des méthodes characterSceneDao
-           chScDao.addCharacterInScene(diagramId,characterId,sceneId);
+           chScDao.addCharacterInScene(characterId,sceneId);
        }
        catch (DuplicateKeyException e)
        {

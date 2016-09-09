@@ -1,7 +1,6 @@
 package be.beme.schn.persistence.daoimpl;
 
 import be.beme.schn.narrative.component.Character;
-import be.beme.schn.narrative.component.CharacterScene;
 import be.beme.schn.narrative.component.NarrativeComponent;
 import be.beme.schn.persistence.AbstractPersistenceService;
 import be.beme.schn.persistence.dao.CharacterSceneDao;
@@ -46,10 +45,10 @@ public class CharacterSceneDaoImpl extends AbstractPersistenceService implements
 
 
     @Override
-    public void addCharacterInScene(int diagramId, int characterId, int sceneId)
+    public void addCharacterInScene(int characterId, int sceneId)
     {
-        jdbcTemplate.update("insert into public.\"CharacterScene\" (diagram_id,character_id,scene_id) values (?,?,?)",
-                diagramId,characterId,sceneId);
+        jdbcTemplate.update("insert into public.\"CharacterScene\" (character_id,scene_id) values (?,?)"
+                ,characterId,sceneId);
     }
 
     @Override
@@ -68,21 +67,6 @@ public class CharacterSceneDaoImpl extends AbstractPersistenceService implements
                 new Object[]{sceneId},new CharacterMapper());
     }
 
-    @Override
-    public List<CharacterScene> getAllCharacterSceneByDiagram(int diagramId) {
-        return jdbcTemplate.query("select * from \"CharacterScene\" where diagram_id=?",new Object[]{diagramId},new CharacterSceneMapper());
-    }
-
-    private static final class CharacterSceneMapper implements RowMapper<CharacterScene>{
-        @Override
-        public CharacterScene mapRow(ResultSet rs, int rowNum) throws SQLException {
-            CharacterScene cs=new CharacterScene();
-            cs.diagramId=rs.getInt("diagram_id");
-            cs.sceneId=rs.getInt("scene_id");
-            cs.characterId=rs.getInt("character_id");
-            return cs;
-        }
-    }
 
     private static final class CharacterMapper implements RowMapper<Character> {
 

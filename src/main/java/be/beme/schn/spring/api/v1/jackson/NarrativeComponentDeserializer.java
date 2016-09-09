@@ -90,7 +90,7 @@ public class NarrativeComponentDeserializer extends JsonDeserializer {
         character.setNote(node.get("note").textValue());
         character.setName(node.get("name").textValue());
         character.setPicture(node.get("picture").textValue());
-        character.setDiagram_id(node.get("diagramId").intValue());
+        character.setDiagram_id(node.get("diagram_id").intValue());
         character.setType(node.get("type").textValue());
         return character;
     }

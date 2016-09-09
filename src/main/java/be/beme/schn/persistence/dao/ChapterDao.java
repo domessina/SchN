@@ -1,6 +1,7 @@
 package be.beme.schn.persistence.dao;
 
 import be.beme.schn.narrative.component.Chapter;
+import be.beme.schn.persistence.Dao;
 
 import java.util.List;
 
@@ -17,8 +18,6 @@ public interface ChapterDao extends NarrativeComponentDao {
     List<Chapter> getAllChaptersByPhase(short phase, int diagramId);
 
     List<Chapter> getAllChaptersByDiagram(int diagramId);
-
-    void deleteAllByDiagram(int diagramId);
 
     void setPosition(int pos, int id);
 }

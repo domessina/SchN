@@ -86,10 +86,7 @@ public class ChapterDaoImpl extends AbstractPersistenceService implements Chapte
     }
 
 
-    @Override
-    public void deleteAllByDiagram(int diagramId) {
-        jdbcTemplate.update("delete from \"Chapter\" where diagram_id=?",new Object[]{diagramId});
-    }
+
 
     private static final class ChapterMapper implements RowMapper<Chapter> {
 

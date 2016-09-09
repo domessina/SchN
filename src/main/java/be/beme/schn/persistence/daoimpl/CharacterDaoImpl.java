@@ -80,10 +80,8 @@ public class CharacterDaoImpl extends AbstractPersistenceService implements Char
         return true;
     }
 
-    @Override
-    public void deleteAllByDiagram(int diagramId) {
-        jdbcTemplate.update("delete from public.\"Character\" where diagram_id=?",new Object[]{diagramId});
-    }
+
+
 
     @Override
     public void setPicture(int characterId,String pictureURL) {
