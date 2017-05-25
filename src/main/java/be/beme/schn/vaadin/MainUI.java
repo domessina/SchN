@@ -240,7 +240,7 @@ public class MainUI extends UI implements TabSheet.SelectedTabChangeListener, Cr
         open.addItem("Diagram...",selectedItem1 -> {
             DiagramChoiceView dCV= new DiagramChoiceView(diagramPresenter.getDaoService().getAllDiagramsByUser(userId));
             dCV.setDiagramSelectListener(diaId -> {
-                s.toString();
+//                s.toString();
                 userPresenter.setActualDiagram(diaId);
                 Page.getCurrent().reload();
             });
