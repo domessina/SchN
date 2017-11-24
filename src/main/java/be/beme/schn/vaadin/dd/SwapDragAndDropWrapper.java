@@ -28,6 +28,9 @@ public class SwapDragAndDropWrapper extends DragAndDropWrapper {
         return super.getCompositionRoot();
     }
 
-
+    @Override
+    public DropHandler getDropHandler() {
+        return dropHandler;
+    }
 
 }
